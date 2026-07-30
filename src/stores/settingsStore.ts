@@ -33,6 +33,7 @@ import type {
   ChatAgentSettings,
 } from "../hooks/useSettings";
 import type { Snippet } from "../utils/snippets";
+import { AUTH_DISABLED } from "../lib/features";
 
 let _ReasoningService: typeof import("../services/ReasoningService").default | null = null;
 
@@ -408,6 +409,84 @@ function migrateLLMScopeKeys() {
 }
 
 migrateLLMScopeKeys();
+
+const ACCOUNTLESS_MIGRATION_KEY = "_accountlessModeMigrated";
+const ACCOUNT_CLOUD_MODES = new Set(["openwhispr", "spoken"]);
+
+function prepareAccountlessSettings() {
+  if (!isBrowser || !AUTH_DISABLED) return;
+
+  localStorage.setItem("isSignedIn", "false");
+  localStorage.setItem("authenticationSkipped", "true");
+  localStorage.setItem("skipAuth", "true");
+
+  if (localStorage.getItem(ACCOUNTLESS_MIGRATION_KEY) === "1") return;
+
+  let replacedAccountMode = false;
+  const migrateTranscriptionScope = (
+    modeKey: string,
+    useLocalKey: string,
+    cloudModeKey: string
+  ) => {
+    const mode = localStorage.getItem(modeKey);
+    const cloudMode = localStorage.getItem(cloudModeKey);
+    if (mode === null || ACCOUNT_CLOUD_MODES.has(mode)) {
+      localStorage.setItem(modeKey, "local");
+      localStorage.setItem(useLocalKey, "true");
+      replacedAccountMode = true;
+    }
+    if (cloudMode === null || ACCOUNT_CLOUD_MODES.has(cloudMode)) {
+      localStorage.setItem(cloudModeKey, "byok");
+      replacedAccountMode = true;
+    }
+  };
+
+  migrateTranscriptionScope("transcriptionMode", "useLocalWhisper", "cloudTranscriptionMode");
+  migrateTranscriptionScope(
+    "meetingTranscriptionMode",
+    "meetingUseLocalWhisper",
+    "meetingCloudTranscriptionMode"
+  );
+  migrateTranscriptionScope(
+    "uploadTranscriptionMode",
+    "uploadUseLocalWhisper",
+    "uploadCloudTranscriptionMode"
+  );
+
+  const migrateInferenceScope = (modeKey: string, cloudModeKey: string) => {
+    const mode = localStorage.getItem(modeKey);
+    const cloudMode = localStorage.getItem(cloudModeKey);
+    if (mode === null || ACCOUNT_CLOUD_MODES.has(mode)) {
+      localStorage.setItem(modeKey, "providers");
+      replacedAccountMode = true;
+    }
+    if (cloudMode === null || ACCOUNT_CLOUD_MODES.has(cloudMode)) {
+      localStorage.setItem(cloudModeKey, "byok");
+      replacedAccountMode = true;
+    }
+  };
+
+  migrateInferenceScope("cleanupMode", "cleanupCloudMode");
+  migrateInferenceScope("noteFormattingMode", "noteFormattingCloudMode");
+  migrateInferenceScope("translationMode", "translationCloudMode");
+  migrateInferenceScope("chatAgentMode", "chatAgentCloudMode");
+  migrateInferenceScope("dictationAgentMode", "dictationAgentCloudMode");
+
+  // Account-hosted reasoning has no anonymous equivalent. Keep the features
+  // off until the user explicitly chooses a local, BYOK, or self-hosted model.
+  localStorage.setItem("useCleanupModel", "false");
+  localStorage.setItem("useDictationAgent", "false");
+  localStorage.setItem("useDictationTranslation", "false");
+
+  if (replacedAccountMode && localStorage.getItem("onboardingCompleted") === "true") {
+    localStorage.removeItem("onboardingCompleted");
+    localStorage.setItem("onboardingCurrentStep", "0");
+  }
+
+  localStorage.setItem(ACCOUNTLESS_MIGRATION_KEY, "1");
+}
+
+prepareAccountlessSettings();
 
 export interface SettingsState
   extends
@@ -1086,7 +1165,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   keepTranscriptionInClipboard: readBoolean("keepTranscriptionInClipboard", false),
   noteFilesEnabled: readBoolean("noteFilesEnabled", false),
   noteFilesPath: readString("noteFilesPath", ""),
-  isSignedIn: readBoolean("isSignedIn", false),
+  isSignedIn: AUTH_DISABLED ? false : readBoolean("isSignedIn", false),
 
   transcriptionMode: (() => {
     const v = readString("transcriptionMode", "openwhispr");
@@ -1796,6 +1875,8 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
 
   updateTranscriptionSettings: (settings: Partial<TranscriptionSettings>) => {
     const s = useSettingsStore.getState();
+    if (settings.transcriptionMode !== undefined)
+      s.setTranscriptionMode(settings.transcriptionMode);
     if (settings.useLocalWhisper !== undefined) s.setUseLocalWhisper(settings.useLocalWhisper);
     if (settings.uiLanguage !== undefined) s.setUiLanguage(settings.uiLanguage);
     if (settings.whisperModel !== undefined) s.setWhisperModel(settings.whisperModel);

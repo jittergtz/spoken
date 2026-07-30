@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "./useAuth";
 import { CACHE_CONFIG } from "../config/constants";
 import { withSessionRefresh } from "../lib/auth";
+import { AUTH_DISABLED } from "../lib/features";
 
 interface UsageData {
   wordsUsed: number;
@@ -244,6 +245,34 @@ export function useUsage(): UseUsageResult | null {
     },
     []
   );
+
+  if (AUTH_DISABLED) {
+    return {
+      plan: "local",
+      status: "active",
+      isPastDue: false,
+      wordsUsed: 0,
+      wordsRemaining: Infinity,
+      limit: Infinity,
+      isSubscribed: false,
+      isTrial: false,
+      trialDaysLeft: null,
+      currentPeriodEnd: null,
+      billingInterval: null,
+      isOverLimit: false,
+      isApproachingLimit: false,
+      resetAt: null,
+      isLoading: false,
+      hasLoaded: true,
+      error: null,
+      checkoutLoading: false,
+      refetch: async () => {},
+      openCheckout: async () => ({ success: false, error: "Auth is disabled" }),
+      openBillingPortal: async () => ({ success: false, error: "Auth is disabled" }),
+      switchPlan: async () => ({ success: false, error: "Auth is disabled" }),
+      previewSwitchPlan: async () => ({ success: false, error: "Auth is disabled" }),
+    };
+  }
 
   if (!isSignedIn) return null;
 

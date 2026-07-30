@@ -12,7 +12,7 @@ export function resolveDictationAgentInference(settings, { isCloudAgent = false 
   const isSelfHosted =
     settings.dictationAgentMode === "self-hosted" && !!settings.dictationAgentRemoteUrl?.trim();
   const provider = isCloudAgent
-    ? "openwhispr"
+    ? "spoken"
     : settings.dictationAgentProvider?.trim() || undefined;
   const isCustom = settings.dictationAgentMode === "providers" && provider === "custom";
 

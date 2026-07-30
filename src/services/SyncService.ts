@@ -17,6 +17,8 @@ import {
   buildNoteUpdatePayload,
 } from "../helpers/cloudSyncGuards.js";
 
+import { AUTH_DISABLED } from "../lib/features.js";
+
 function isHttpStatus(err: unknown, status: number): boolean {
   return err instanceof CloudApiError && err.status === status;
 }
@@ -32,7 +34,7 @@ const AUTO_SYNC_THROTTLE_MS = 20000;
 const AUTO_SYNC_INTERVAL_MS = 5 * 60 * 1000;
 // Web Lock name serializing syncAll() across windows (each renderer has its
 // own SyncService instance, but localStorage and the local DB are shared).
-const SYNC_ALL_LOCK = "openwhispr-sync-all";
+const SYNC_ALL_LOCK = "spoken-sync-all";
 // localStorage keys gating canSync(); a change in another window means sync
 // may have just become possible (sign-in, subscription, backup enabled).
 const CAN_SYNC_KEYS = ["isSignedIn", "cloudBackupEnabled", "isSubscribed"];
@@ -46,6 +48,7 @@ class SyncService {
   private pushTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
   canSync(): boolean {
+    if (AUTH_DISABLED) return false;
     return (
       localStorage.getItem("isSignedIn") === "true" &&
       localStorage.getItem("cloudBackupEnabled") === "true" &&

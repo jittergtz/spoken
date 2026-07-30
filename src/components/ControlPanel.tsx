@@ -60,7 +60,7 @@ import {
   consumePendingInvitationToken,
   clearPendingInvitationToken,
 } from "../utils/pendingInvitationToken";
-import { WORKSPACES_ENABLED } from "../lib/features";
+import { WORKSPACES_ENABLED, AUTH_DISABLED } from "../lib/features";
 
 const platform = getCachedPlatform();
 
@@ -254,6 +254,7 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
   }, [updateError, toast, t]);
 
   useEffect(() => {
+    if (AUTH_DISABLED) return;
     const dispose = window.electronAPI?.onLimitReached?.(
       (data: { wordsUsed: number; limit: number }) => {
         if (!hasShownUpgradePrompt.current) {
@@ -312,7 +313,7 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
 
     cloudMigrationProcessed.current = true;
     setUseLocalWhisper(false);
-    setCloudTranscriptionMode("openwhispr");
+    setCloudTranscriptionMode("spoken");
     localStorage.removeItem("pendingCloudMigration");
     setShowCloudMigrationBanner(true);
   }, [authLoaded, isSignedIn, setUseLocalWhisper, setCloudTranscriptionMode]);

@@ -3,6 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useUsage } from "../hooks/useUsage";
 import { useSettingsStore } from "../stores/settingsStore";
+import { AUTH_DISABLED } from "../lib/features";
 
 interface UpgradePromptProps {
   open: boolean;
@@ -20,6 +21,8 @@ export default function UpgradePrompt({
   const { t } = useTranslation();
   const usage = useUsage();
   const isPastDue = usage?.isPastDue ?? false;
+
+  if (AUTH_DISABLED) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

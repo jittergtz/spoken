@@ -54,6 +54,7 @@ import { MAX_SPEAKER_COUNT } from "../../constants/speakerDetection.json";
 import BatchQueueView from "./BatchQueueView";
 import { generateNoteTitle } from "../../utils/generateTitle";
 import { getBaseLanguageCode } from "../../utils/languageSupport";
+import { AUTH_DISABLED } from "../../lib/features";
 
 type UploadState = "idle" | "selected" | "downloading" | "transcribing" | "complete" | "error";
 
@@ -270,7 +271,10 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
   const useCleanupModel = useSettingsStore((s) => s.useCleanupModel);
 
   const isOpenWhisprCloud =
-    isSignedIn && cloudTranscriptionMode === "openwhispr" && !useLocalWhisper;
+    !AUTH_DISABLED &&
+    isSignedIn &&
+    (cloudTranscriptionMode === "openwhispr" || cloudTranscriptionMode === "spoken") &&
+    !useLocalWhisper;
 
   // Mode detection
   const isSelfHosted = transcriptionMode === "self-hosted" && !useLocalWhisper;
@@ -294,7 +298,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
       // Self-hosted / custom endpoints (e.g. local whisper.cpp): no file size restrictions
     } else if (isByok) {
       byokTooLarge = file.sizeBytes > BYOK_MAX_FILE_SIZE;
-      if (byokTooLarge && !isSignedIn) {
+      if (!AUTH_DISABLED && byokTooLarge && !isSignedIn) {
         requiresAccount = true;
       }
     } else {
@@ -1540,13 +1544,15 @@ function SelectedView({
           <p className="text-xs text-foreground/35 leading-relaxed mt-1.5">
             {t("notes.upload.byokTooLargeDetail")}
           </p>
-          <p className="text-xs text-foreground/50 leading-relaxed mt-1.5 font-medium">
-            {requiresAccount
-              ? t("notes.upload.byokTooLargeNeedsAccount")
-              : isProUser
-                ? t("notes.upload.switchToCloudForLargeFiles")
-                : t("notes.upload.byokTooLargeNeedsUpgrade")}
-          </p>
+          {!AUTH_DISABLED && (
+            <p className="text-xs text-foreground/50 leading-relaxed mt-1.5 font-medium">
+              {requiresAccount
+                ? t("notes.upload.byokTooLargeNeedsAccount")
+                : isProUser
+                  ? t("notes.upload.switchToCloudForLargeFiles")
+                  : t("notes.upload.byokTooLargeNeedsUpgrade")}
+            </p>
+          )}
         </div>
       )}
 
@@ -1568,7 +1574,7 @@ function SelectedView({
 
       <div className="flex items-center gap-2 justify-center flex-wrap">
         {/* BYOK too large — not signed in: Create Account */}
-        {byokTooLarge && requiresAccount && (
+        {!AUTH_DISABLED && byokTooLarge && requiresAccount && (
           <Button
             variant="default"
             size="sm"
@@ -1580,7 +1586,7 @@ function SelectedView({
         )}
 
         {/* BYOK too large — signed in, Pro: Switch to Cloud */}
-        {byokTooLarge && !requiresAccount && isProUser && (
+        {!AUTH_DISABLED && byokTooLarge && !requiresAccount && isProUser && (
           <Button
             variant="default"
             size="sm"
@@ -1592,14 +1598,14 @@ function SelectedView({
         )}
 
         {/* BYOK too large — signed in, Free: Upgrade */}
-        {byokTooLarge && !requiresAccount && !isProUser && (
+        {!AUTH_DISABLED && byokTooLarge && !requiresAccount && !isProUser && (
           <Button variant="default" size="sm" onClick={onUpgrade} className="h-8 text-xs px-5">
             {t("notes.upload.upgrade")}
           </Button>
         )}
 
         {/* Cloud requires upgrade */}
-        {!byokTooLarge && requiresUpgrade && (
+        {!AUTH_DISABLED && !byokTooLarge && requiresUpgrade && (
           <Button variant="default" size="sm" onClick={onUpgrade} className="h-8 text-xs px-5">
             {t("notes.upload.upgrade")}
           </Button>

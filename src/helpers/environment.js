@@ -6,6 +6,7 @@ const debugLogger = require("./debugLogger");
 const { normalizeUiLanguage } = require("./i18nMain");
 const secretCrypto = require("./secretCrypto");
 const { BYOK_API_KEYS } = require("../config/secretKeys");
+const { authDisabled } = require("../config/accountFeatures.cjs");
 
 const SECRET_KEYS = [
   ...BYOK_API_KEYS.map((k) => k.env),
@@ -66,6 +67,17 @@ let envWriteQueue = Promise.resolve();
 class EnvironmentManager {
   constructor() {
     this.loadEnvironmentVariables();
+    this.runtimeFeatureFlags = this.loadRuntimeFeatureFlags();
+  }
+
+  loadRuntimeFeatureFlags() {
+    const runtimeEnvPath = path.join(__dirname, "..", "dist", "runtime-env.json");
+    try {
+      if (fs.existsSync(runtimeEnvPath)) {
+        return JSON.parse(fs.readFileSync(runtimeEnvPath, "utf8"));
+      }
+    } catch {}
+    return {};
   }
 
   loadEnvironmentVariables() {
@@ -496,6 +508,10 @@ class EnvironmentManager {
     const result = this._saveKey("UI_LANGUAGE", normalized);
     this.saveAllKeysToEnvFile().catch(() => {});
     return { ...result, language: normalized };
+  }
+
+  isAuthDisabled() {
+    return authDisabled(process.env, this.runtimeFeatureFlags);
   }
 
   async saveAllKeysToEnvFile() {

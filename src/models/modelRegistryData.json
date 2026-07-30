@@ -1184,7 +1184,7 @@
       ]
     }
   ],
-  "openwhisprCloudModels": {
+  "spokenCloudModels": {
     "tiers": [
       {
         "id": "fast",

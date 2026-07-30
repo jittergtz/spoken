@@ -998,4 +998,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getUpdateNotificationData: () => ipcRenderer.invoke("get-update-notification-data"),
   updateNotificationReady: () => ipcRenderer.invoke("update-notification-ready"),
   updateNotificationRespond: (action) => ipcRenderer.invoke("update-notification-respond", action),
+  isAuthDisabledSync: () => {
+    try {
+      return ipcRenderer.sendSync("is-auth-disabled-sync");
+    } catch {
+      return false;
+    }
+  },
 });

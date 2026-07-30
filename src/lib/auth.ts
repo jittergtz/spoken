@@ -1,9 +1,9 @@
 import { createAuthClient } from "better-auth/react";
 import { ssoClient } from "@better-auth/sso/client";
-import { OPENWHISPR_API_URL } from "../config/constants";
+import { SPOKEN_API_URL, OPENWHISPR_API_URL } from "../config/constants";
 import { openExternalLink } from "../utils/externalLinks";
 
-export const AUTH_URL = import.meta.env.VITE_AUTH_URL || "https://auth.openwhispr.com";
+export const AUTH_URL = import.meta.env.VITE_AUTH_URL || "https://auth.spoken.com";
 export const authClient = createAuthClient({
   baseURL: AUTH_URL,
   plugins: [ssoClient()],
@@ -12,7 +12,7 @@ export const authClient = createAuthClient({
       type: "Bearer",
       token: async () => (await window.electronAPI?.authGetToken?.()) ?? "",
     },
-    headers: { "x-openwhispr-source": "desktop" },
+    headers: { "x-spoken-source": "desktop", "x-openwhispr-source": "desktop" },
     onSuccess: async (ctx: { response: Response }) => {
       const newToken = ctx.response.headers.get("set-auth-token");
       if (newToken) await window.electronAPI?.authSetToken?.(newToken);
@@ -22,7 +22,7 @@ export const authClient = createAuthClient({
 
 export type SocialProvider = "google" | "microsoft" | "apple";
 
-const LAST_SIGN_IN_STORAGE_KEY = "openwhispr:lastSignInTime";
+const LAST_SIGN_IN_STORAGE_KEY = "spoken:lastSignInTime";
 const GRACE_PERIOD_MS = 60_000;
 const GRACE_RETRY_COUNT = 6;
 const INITIAL_GRACE_RETRY_DELAY_MS = 500;
@@ -108,12 +108,13 @@ export function isWithinGracePeriod(): boolean {
 }
 
 export async function deleteAccount(): Promise<{ error?: Error }> {
-  if (!OPENWHISPR_API_URL) {
+  const apiUrl = SPOKEN_API_URL || OPENWHISPR_API_URL;
+  if (!apiUrl) {
     return { error: new Error("API not configured") };
   }
 
   try {
-    const res = await fetch(`${OPENWHISPR_API_URL}/api/auth/delete-account`, {
+    const res = await fetch(`${apiUrl}/api/auth/delete-account`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -170,7 +171,7 @@ export async function withSessionRefresh<T>(operation: () => Promise<T>): Promis
   }
 }
 
-const DESKTOP_OAUTH_CALLBACK_URL = "https://openwhispr.com/auth/desktop-callback";
+const DESKTOP_OAUTH_CALLBACK_URL = "https://spoken.com/auth/desktop-callback";
 
 export async function signInWithSocial(provider: SocialProvider): Promise<{ error?: Error }> {
   try {
@@ -181,7 +182,7 @@ export async function signInWithSocial(provider: SocialProvider): Promise<{ erro
       // the state cookie Better Auth sets has to land in the same cookie jar
       // that handles the /api/auth/callback/* round-trip. The shim endpoint
       // does the POST server-side and 302s with the cookies attached.
-      const protocol = (await window.electronAPI?.getOAuthProtocol?.()) || "openwhispr";
+      const protocol = (await window.electronAPI?.getOAuthProtocol?.()) || "spoken";
       const url = new URL(`${AUTH_URL}/api/desktop-signin/${provider}`);
       url.searchParams.set("callbackURL", `${DESKTOP_OAUTH_CALLBACK_URL}?protocol=${protocol}`);
       openExternalLink(url.toString());
@@ -204,7 +205,7 @@ export async function signInWithSSO(email: string): Promise<{ error?: Error }> {
       // Same browser-handoff rationale as signInWithSocial: the SSO state cookie
       // must land in the browser's cookie jar. The /sso shim routes by work-email
       // domain and 302s to the workspace's IdP with the cookies attached.
-      const protocol = (await window.electronAPI?.getOAuthProtocol?.()) || "openwhispr";
+      const protocol = (await window.electronAPI?.getOAuthProtocol?.()) || "spoken";
       const url = new URL(`${AUTH_URL}/api/desktop-signin/sso`);
       url.searchParams.set("email", email);
       url.searchParams.set("callbackURL", `${DESKTOP_OAUTH_CALLBACK_URL}?protocol=${protocol}`);
@@ -224,7 +225,7 @@ export async function requestPasswordReset(email: string): Promise<{ error?: Err
   try {
     await authClient.requestPasswordReset({
       email: email.trim(),
-      redirectTo: "https://openwhispr.com/reset-password",
+      redirectTo: "https://spoken.com/reset-password",
     });
     return {};
   } catch (error) {

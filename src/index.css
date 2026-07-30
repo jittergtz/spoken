@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
+
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* OpenWhispr Theme — registers color tokens with Tailwind v4.
+  /* Spoken Theme — registers color tokens with Tailwind v4.
      These are the light-mode defaults; .dark overrides them below. */
   --color-primary: #2563eb;
   --color-primary-foreground: #ffffff;
@@ -43,9 +45,16 @@
   --color-border-subtle: #e5e5e5;
   --color-border-hover: #d4d4d4;
   --color-border-active: #2563eb;
+
+
+
+
 }
 
 :root {
+
+
+
   /* Typography */
   --font-family-sans:
     "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
@@ -57,10 +66,10 @@
   --opacity-high: 0.9;
 
   /* Border Radius — ultra-tight, premium macOS-style rounding */
-  --radius: 0.375rem; /* 6px - default for buttons, inputs */
-  --radius-sm: 0.25rem; /* 4px - minimal rounding */
-  --radius-md: 0.375rem; /* 6px - standard */
-  --radius-lg: 0.5rem; /* 8px - cards, panels */
+  --radius: 0.875rem; /* 6px - default for buttons, inputs */
+  --radius-sm: 0.65rem; /* 4px - minimal rounding */
+  --radius-md: 0.775rem; /* 6px - standard */
+  --radius-lg: 0.8rem; /* 8px - cards, panels */
   --radius-xl: 0.625rem; /* 10px - large cards */
 
   /* Custom Light Mode Brand Colors (Parchment Theme) */
@@ -83,17 +92,17 @@
   /* Dark mode — charcoal surfaces with clear elevation hierarchy
      Base L=0.22 (charcoal) with 0.05 steps between layers.
      Hue 260 (neutral blue) with minimal chroma for sophistication. */
-  --color-background: oklch(0.22 0.006 260);
+  --color-background: oklch(0% 0 0);
   --color-foreground: oklch(0.93 0 0);
-  --color-card: oklch(0.27 0.008 260);
+  --color-card: oklch(16.376% 0.00002 271.152);
   --color-card-foreground: oklch(0.93 0 0);
   --color-popover: oklch(0.29 0.009 260);
   --color-popover-foreground: oklch(0.93 0 0);
-  --color-primary: oklch(0.65 0.2 260);
-  --color-primary-foreground: oklch(0.99 0 0);
-  --color-secondary: oklch(0.28 0.007 260);
-  --color-secondary-foreground: oklch(0.9 0 0);
-  --color-muted: oklch(0.24 0.006 260);
+  --color-primary: oklch(93.16% 0.10444 164.206);
+  --color-primary-foreground: oklch(37.909% 0.00004 271.152);
+  --color-secondary: oklch(25.967% 0.00241 248.201);
+  --color-secondary-foreground: oklch(96.416% 0.00011 271.152);
+  --color-muted: oklch(29.247% 0.0192 111.845);
   --color-muted-foreground: oklch(0.65 0 0);
   --color-accent: oklch(0.68 0.18 285);
   --color-accent-foreground: oklch(0.99 0 0);
@@ -111,10 +120,10 @@
 
   /* Surface hierarchy — charcoal depth system (0.22 → 0.33) */
   --color-surface-0: oklch(0.22 0.006 260);
-  --color-surface-1: oklch(0.25 0.007 260);
-  --color-surface-2: oklch(0.27 0.008 260);
-  --color-surface-3: oklch(0.3 0.009 260);
-  --color-surface-raised: oklch(0.33 0.01 260);
+  --color-surface-1: oklch(17.304% 0.00002 271.152);
+  --color-surface-2: oklch(27.581% 0.00146 198.253);
+  --color-surface-3: oklch(20.989% 0.00393 285.975);
+  --color-surface-raised: oklch(26.033% 0.00003 271.152);
 
   /* Border states */
   --color-border-subtle: oklch(0.33 0.006 260);
@@ -188,7 +197,7 @@
   }
 }
 
-/* OpenWhispr Brand Typography */
+/* Spoken Brand Typography */
 .brand-heading {
   font-family: var(--font-family-sans);
   font-weight: 600;

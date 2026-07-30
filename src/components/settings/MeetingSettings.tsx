@@ -9,6 +9,7 @@ import TranscriptionModelPicker from "../TranscriptionModelPicker";
 import SelfHostedPanel from "../SelfHostedPanel";
 import type { InferenceMode } from "../../types/electron";
 import { useStartOnboarding } from "../../hooks/useStartOnboarding";
+import { AUTH_DISABLED } from "../../lib/features";
 
 export function MeetingSpeakerDetectionRow() {
   const { t } = useTranslation();
@@ -54,14 +55,18 @@ export function MeetingTranscriptionPanel() {
   } = useSettingsStore();
 
   const transcriptionModes: InferenceModeOption[] = [
-    {
-      id: "openwhispr",
-      label: t("settingsPage.transcription.modes.openwhispr"),
-      description: t("settingsPage.transcription.modes.openwhisprDesc"),
-      icon: <Cloud className="w-4 h-4" />,
-      disabled: !isSignedIn,
-      badge: !isSignedIn ? t("common.freeAccountRequired") : undefined,
-    },
+    ...(!AUTH_DISABLED
+      ? [
+          {
+            id: "openwhispr" as const,
+            label: t("settingsPage.transcription.modes.openwhispr"),
+            description: t("settingsPage.transcription.modes.openwhisprDesc"),
+            icon: <Cloud className="w-4 h-4" />,
+            disabled: !isSignedIn,
+            badge: !isSignedIn ? t("common.freeAccountRequired") : undefined,
+          },
+        ]
+      : []),
     {
       id: "providers",
       label: t("settingsPage.transcription.modes.providers"),
@@ -83,7 +88,7 @@ export function MeetingTranscriptionPanel() {
   ];
 
   const handleTranscriptionModeSelect = (mode: InferenceMode) => {
-    if (mode === "openwhispr" && !isSignedIn) {
+    if (!AUTH_DISABLED && mode === "openwhispr" && !isSignedIn) {
       startOnboarding();
       return;
     }

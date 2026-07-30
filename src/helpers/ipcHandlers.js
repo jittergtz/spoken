@@ -133,7 +133,7 @@ const CLOUD_INLINE_LIMIT = 4 * 1024 * 1024;
 const CLOUD_CHUNK_SEGMENT_SECONDS = 240;
 
 const { createAbortError } = require("./abortError");
-const { applyOpenWhisprOriginHeader } = require("./sessionHeaders");
+const { applySpokenOriginHeader, applyOpenWhisprOriginHeader } = require("./sessionHeaders");
 const {
   CLOUD_UPLOAD_TIMEOUT_MS,
   CLOUD_CHUNK_MAX_ATTEMPTS,
@@ -159,7 +159,7 @@ let cloudUploadSession = null;
 function getCloudUploadSession() {
   if (!cloudUploadSession) {
     cloudUploadSession = session.fromPartition(CLOUD_UPLOAD_SESSION_PARTITION);
-    applyOpenWhisprOriginHeader(cloudUploadSession);
+    applySpokenOriginHeader(cloudUploadSession);
   }
   return cloudUploadSession;
 }
@@ -222,7 +222,7 @@ function resolveAllowedAudioPath(filePath) {
 }
 
 function buildMultipartBody(fileBuffer, fileName, contentType, fields = {}) {
-  const boundary = `----OpenWhispr${Date.now()}`;
+  const boundary = `----Spoken${Date.now()}`;
   const parts = [];
 
   parts.push(
@@ -1106,6 +1106,14 @@ class IPCHandlers {
 
     ipcMain.handle("get-audio-storage-usage", async () => {
       return this.audioStorageManager.getStorageUsage();
+    });
+
+    ipcMain.on("is-auth-disabled-sync", (event) => {
+      event.returnValue = Boolean(this.environmentManager?.isAuthDisabled());
+    });
+
+    ipcMain.handle("is-auth-disabled", async () => {
+      return Boolean(this.environmentManager?.isAuthDisabled());
     });
 
     ipcMain.on("retention-settings-changed", (_event, incoming) => {
@@ -7149,6 +7157,17 @@ class IPCHandlers {
     );
 
     ipcMain.handle("cloud-usage", async (event) => {
+      if (this.environmentManager?.isAuthDisabled()) {
+        return {
+          success: true,
+          wordsUsed: 0,
+          wordsRemaining: Infinity,
+          limit: Infinity,
+          plan: "local",
+          isSubscribed: true,
+          status: "active",
+        };
+      }
       try {
         const apiUrl = getApiUrl();
         if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
@@ -7179,6 +7198,9 @@ class IPCHandlers {
     });
 
     const fetchStripeUrl = async (event, endpoint, errorPrefix, body) => {
+      if (this.environmentManager?.isAuthDisabled()) {
+        return { success: false, error: "Auth is disabled" };
+      }
       try {
         const apiUrl = getApiUrl();
         if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
@@ -7357,6 +7379,7 @@ class IPCHandlers {
     });
 
     ipcMain.handle("get-stt-config", async (event) => {
+      if (this.environmentManager?.isAuthDisabled()) return null;
       try {
         const apiUrl = getApiUrl();
         if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
@@ -7387,6 +7410,7 @@ class IPCHandlers {
     });
 
     ipcMain.handle("get-note-recording-config", async (event) => {
+      if (this.environmentManager?.isAuthDisabled()) return null;
       try {
         const apiUrl = getApiUrl();
         if (!apiUrl) throw new Error("OpenWhispr API URL not configured");

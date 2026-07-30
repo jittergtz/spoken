@@ -4,7 +4,7 @@ export function deriveReasoningMode(cloudMode, provider) {
   if (cloudMode === "byok") {
     return provider === "custom" ? "self-hosted" : "providers";
   }
-  return "openwhispr";
+  return "spoken";
 }
 
 // Whether a scope may borrow the fallback scope's API key along with its endpoint.
@@ -60,6 +60,6 @@ export function buildCortiOnboardingPayloads(
           cleanupModel: cortiModel,
           cleanupCloudMode: "byok",
         }
-      : { useCleanupModel: true, cleanupCloudMode: "openwhispr" };
+      : { useCleanupModel: true, cleanupCloudMode: "spoken" };
   return { transcription, reasoning };
 }

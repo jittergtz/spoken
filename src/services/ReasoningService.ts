@@ -338,7 +338,7 @@ class ReasoningService extends BaseReasoningService {
       ? "lan"
       : resolveInferenceProvider(config.provider, trimmedModel);
 
-    if (!trimmedModel && providerId !== "openwhispr" && providerId !== "lan") {
+    if (!trimmedModel && providerId !== "spoken" && providerId !== "openwhispr" && providerId !== "lan") {
       throw new Error("No reasoning model selected");
     }
 

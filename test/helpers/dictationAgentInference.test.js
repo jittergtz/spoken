@@ -62,7 +62,7 @@ test("cloud is reachable with no model", async () => {
 
   assert.equal(result.reachable, true);
   assert.equal(result.model, "");
-  assert.equal(result.config.provider, "openwhispr");
+  assert.equal(result.config.provider, "spoken");
 });
 
 test("a custom provider forwards its base url and api key", async () => {

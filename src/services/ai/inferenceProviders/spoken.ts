@@ -1,0 +1,51 @@
+import type { InferenceProvider } from "./types";
+import { withSessionRefresh } from "../../../lib/auth";
+import { getSettings } from "../../../stores/settingsStore";
+import logger from "../../../utils/logger";
+
+export const spokenProvider: InferenceProvider = {
+  id: "spoken",
+  async call({ text, model, agentName, config, ctx }) {
+    logger.logReasoning("SPOKEN_START", { model, agentName });
+
+    const customPrompt = config.systemPrompt
+      ? undefined
+      : getSettings().customPrompts.cleanup || undefined;
+
+    const result = await withSessionRefresh(async () => {
+      const res = await window.electronAPI?.cloudReason?.(text, {
+        agentName,
+        customDictionary: ctx.getCustomDictionary(),
+        customPrompt,
+        systemPrompt: config.systemPrompt,
+        // Routing already decided this is cleanup — stop the server from
+        // flipping to the action prompt on an agent-name mention.
+        promptMode: config.systemPrompt ? undefined : "cleanup",
+        language: config.language || ctx.getPreferredLanguage(),
+        locale: ctx.getUiLanguage(),
+      });
+
+      if (!res?.success) {
+        const err: Error & { code?: string } = new Error(
+          res?.error || "Spoken cloud reasoning failed"
+        );
+        err.code = res?.code;
+        throw err;
+      }
+
+      return res;
+    });
+
+    logger.logReasoning("SPOKEN_SUCCESS", {
+      model: result.model,
+      provider: result.provider,
+      resultLength: result.text.length,
+      promptMode: result.promptMode,
+      matchType: result.matchType,
+    });
+
+    return result.text;
+  },
+};
+
+export const openwhisprProvider = spokenProvider;

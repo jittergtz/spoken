@@ -43,11 +43,11 @@ try {
 
 const VALID_CHANNELS = new Set(["development", "staging", "production"]);
 const DEFAULT_OAUTH_PROTOCOL_BY_CHANNEL = {
-  development: "openwhispr-dev",
-  staging: "openwhispr-staging",
-  production: "openwhispr",
+  development: "spoken-dev",
+  staging: "spoken-staging",
+  production: "spoken",
 };
-const BASE_WINDOWS_APP_ID = "com.gizmolabs.openwhispr";
+const BASE_WINDOWS_APP_ID = "com.gizmolabs.spoken";
 const DEFAULT_AUTH_BRIDGE_PORT = 5199;
 
 function isElectronBinaryExec() {
@@ -67,7 +67,7 @@ function inferDefaultChannel() {
 }
 
 function resolveAppChannel() {
-  const rawChannel = (process.env.OPENWHISPR_CHANNEL || process.env.VITE_OPENWHISPR_CHANNEL || "")
+  const rawChannel = (process.env.SPOKEN_CHANNEL || process.env.VITE_SPOKEN_CHANNEL || process.env.OPENWHISPR_CHANNEL || process.env.VITE_OPENWHISPR_CHANNEL || "")
     .trim()
     .toLowerCase();
 
@@ -79,14 +79,14 @@ function resolveAppChannel() {
 }
 
 const APP_CHANNEL = resolveAppChannel();
-process.env.OPENWHISPR_CHANNEL = APP_CHANNEL;
+process.env.SPOKEN_CHANNEL = APP_CHANNEL;
 
 function configureChannelUserDataPath() {
   if (APP_CHANNEL === "production") {
     return;
   }
 
-  const isolatedPath = path.join(app.getPath("appData"), `OpenWhispr-${APP_CHANNEL}`);
+  const isolatedPath = path.join(app.getPath("appData"), `Spoken-${APP_CHANNEL}`);
   app.setPath("userData", isolatedPath);
 }
 
@@ -129,7 +129,7 @@ if (process.platform === "win32") {
 }
 
 function getOAuthProtocol() {
-  const fromEnv = (process.env.VITE_OPENWHISPR_PROTOCOL || process.env.OPENWHISPR_PROTOCOL || "")
+  const fromEnv = (process.env.VITE_SPOKEN_PROTOCOL || process.env.SPOKEN_PROTOCOL || process.env.VITE_OPENWHISPR_PROTOCOL || process.env.OPENWHISPR_PROTOCOL || "")
     .trim()
     .toLowerCase();
 
@@ -177,7 +177,7 @@ function restoreHtmlHandlerIfChanged(original) {
   }
 }
 
-// True source of truth for whether openwhispr:// resolves on Linux — the same
+// True source of truth for whether spoken:// resolves on Linux — the same
 // MIME database xdg-open consults. Returns true for deb/rpm/flatpak/AUR installs
 // (scheme registered via the packaged .desktop MimeType) and false for AppImage/
 // tar.gz runs where it genuinely isn't registered, so we never enable a dead-end
@@ -200,7 +200,7 @@ function isOAuthSchemeRegistered() {
 // Register custom protocol for OAuth callbacks.
 // In development, always include the app path argument so macOS/Windows/Linux
 // can launch the project app instead of opening bare Electron.
-function registerOpenWhisprProtocol() {
+function registerSpokenProtocol() {
   const protocol = OAUTH_PROTOCOL;
   const htmlHandler = process.platform === "linux" ? getDefaultHtmlHandler() : null;
 
@@ -223,7 +223,7 @@ function registerOpenWhisprProtocol() {
 // fall back to probing the system MIME database for an actual handler. This keeps
 // OAuth enabled where the callback can resolve (deb/rpm/flatpak/AUR) and correctly
 // gated where it can't (AppImage/tar.gz with no scheme registration).
-const protocolRegistered = registerOpenWhisprProtocol() || isOAuthSchemeRegistered();
+const protocolRegistered = registerSpokenProtocol() || isOAuthSchemeRegistered();
 if (!protocolRegistered) {
   console.warn(`[Auth] Failed to register ${OAUTH_PROTOCOL}:// protocol handler`);
 }
@@ -237,8 +237,8 @@ if (!gotSingleInstanceLock) {
 const isLiveWindow = (window) => window && !window.isDestroyed();
 
 // Ensure macOS menus use the proper casing for the app name
-if (process.platform === "darwin" && app.getName() !== "OpenWhispr") {
-  app.setName("OpenWhispr");
+if (process.platform === "darwin" && app.getName() !== "Spoken") {
+  app.setName("Spoken");
 }
 
 // Add global error handling for uncaught exceptions
@@ -284,7 +284,7 @@ const LinuxPortalAudioManager = require("./src/helpers/linuxPortalAudioManager")
 const WindowsLoopbackAudioManager = require("./src/helpers/windowsLoopbackAudioManager");
 const MeetingAecManager = require("./src/helpers/meetingAecManager");
 const MeetingDetectionEngine = require("./src/helpers/meetingDetectionEngine");
-const { applyOpenWhisprOriginHeader } = require("./src/helpers/sessionHeaders");
+const { applySpokenOriginHeader } = require("./src/helpers/sessionHeaders");
 const { i18nMain, changeLanguage } = require("./src/helpers/i18nMain");
 const { ensureYdotool } = require("./src/helpers/ensureYdotool");
 const sidecarRegistry = require("./src/helpers/sidecarRegistry");
@@ -326,7 +326,7 @@ const WHISPER_WAKE_REWARM_DELAY_MS = 3000;
 let wakeRewarmTimer = null;
 
 function parseAuthBridgePort() {
-  const raw = (process.env.OPENWHISPR_AUTH_BRIDGE_PORT || "").trim();
+  const raw = (process.env.SPOKEN_AUTH_BRIDGE_PORT || process.env.OPENWHISPR_AUTH_BRIDGE_PORT || "").trim();
   if (!raw) return DEFAULT_AUTH_BRIDGE_PORT;
 
   const parsed = Number(raw);
@@ -648,14 +648,14 @@ function resolveAuthUrl() {
     process.env.AUTH_URL ||
     process.env.VITE_AUTH_URL ||
     runtimeEnv.VITE_AUTH_URL ||
-    "https://auth.openwhispr.com"
+    "https://auth.spoken.com"
   );
 }
 
 function getOauthCookieName() {
   return process.env.NODE_ENV === "production"
-    ? "__Secure-openwhispr.session_token"
-    : "openwhispr.session_token";
+    ? "__Secure-spoken.session_token"
+    : "spoken.session_token";
 }
 
 // Older website builds send the signed cookie value as `?token=`; trade it
@@ -838,7 +838,7 @@ function startAuthBridgeServer() {
 
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(
-      "<html><body><h3>OpenWhispr sign-in complete.</h3><p>You can close this tab.</p></body></html>"
+      "<html><body><h3>Spoken sign-in complete.</h3><p>You can close this tab.</p></body></html>"
     );
   });
 
@@ -865,7 +865,10 @@ async function startApp() {
   initializeCoreManagers();
   await environmentManager.init();
   registerSidecars();
-  startAuthBridgeServer();
+  const authDisabled = environmentManager.isAuthDisabled();
+  if (!authDisabled) {
+    startAuthBridgeServer();
+  }
 
   cliBridge = new CliBridge(ipcHandlers);
   cliBridge.start().catch((err) => {
@@ -873,9 +876,10 @@ async function startApp() {
     cliBridge = null;
   });
 
-  await migrateCookieToBearerToken();
-
-  applyOpenWhisprOriginHeader(session.defaultSession);
+  if (!authDisabled) {
+    await migrateCookieToBearerToken();
+    applySpokenOriginHeader(session.defaultSession);
+  }
 
   windowManager.setActivationModeCache(environmentManager.getActivationMode());
   windowManager.setFloatingIconAutoHide(environmentManager.getFloatingIconAutoHide());

@@ -95,8 +95,8 @@ export function useChatStreaming({
       setAgentState("thinking");
 
       const settings = getSettings();
-      const chatAgentMode = settings.chatAgentMode || "openwhispr";
-      const isCloudAgent = chatAgentMode === "openwhispr" && settings.isSignedIn;
+      const chatAgentMode = settings.chatAgentMode || "spoken";
+      const isCloudAgent = (chatAgentMode === "spoken" || chatAgentMode === "openwhispr") && settings.isSignedIn;
       const isLanAgent = chatAgentMode === "self-hosted" && !!settings.chatAgentRemoteUrl;
       const isCustomAgent =
         chatAgentMode === "providers" && settings.chatAgentProvider === "custom";

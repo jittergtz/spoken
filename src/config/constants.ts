@@ -101,12 +101,17 @@ const computeBaseUrl = (candidates: Array<string | undefined>, fallback: string)
 };
 
 const DEFAULT_OPENAI_BASE = computeBaseUrl(
-  [env.OPENWHISPR_OPENAI_BASE_URL as string | undefined, env.OPENAI_BASE_URL as string | undefined],
+  [
+    env.SPOKEN_OPENAI_BASE_URL as string | undefined,
+    env.OPENWHISPR_OPENAI_BASE_URL as string | undefined,
+    env.OPENAI_BASE_URL as string | undefined,
+  ],
   "https://api.openai.com/v1"
 );
 
 const DEFAULT_TRANSCRIPTION_BASE = computeBaseUrl(
   [
+    env.SPOKEN_TRANSCRIPTION_BASE_URL as string | undefined,
     env.OPENWHISPR_TRANSCRIPTION_BASE_URL as string | undefined,
     env.WHISPER_BASE_URL as string | undefined,
   ],
@@ -163,8 +168,10 @@ export const CACHE_CONFIG = {
   PASTE_DELAY_MS: 50, // Delay before paste simulation to allow clipboard to settle
 } as const;
 
-// OpenWhispr Cloud API
-export const OPENWHISPR_API_URL = (env.VITE_OPENWHISPR_API_URL as string) || "";
+// Spoken Cloud API
+export const SPOKEN_API_URL =
+  (env.VITE_SPOKEN_API_URL as string) || (env.VITE_OPENWHISPR_API_URL as string) || "";
+export const OPENWHISPR_API_URL = SPOKEN_API_URL;
 
 // Retry Configuration
 export const RETRY_CONFIG = {

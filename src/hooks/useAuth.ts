@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { authClient, isWithinGracePeriod } from "../lib/auth";
 import logger from "../utils/logger";
 import { useSettingsStore } from "../stores/settingsStore";
+import { AUTH_DISABLED } from "../lib/features";
 
 const useStaticSession = () => ({
   data: null,
@@ -11,7 +12,11 @@ const useStaticSession = () => ({
 });
 
 export function useAuth() {
-  const useSession = authClient?.useSession ?? useStaticSession;
+  // Selecting the static hook here prevents Better Auth from issuing session
+  // requests at all in accountless builds while preserving a stable hook order.
+  const useSession = AUTH_DISABLED
+    ? useStaticSession
+    : (authClient?.useSession ?? useStaticSession);
   const { data: session, isPending } = useSession();
   const user = session?.user ?? null;
   const rawIsSignedIn = Boolean(user);
@@ -24,6 +29,10 @@ export function useAuth() {
   const lastSyncedRef = useRef(false);
 
   useEffect(() => {
+    if (AUTH_DISABLED) {
+      useSettingsStore.getState().setIsSignedIn(false);
+      return;
+    }
     if (!isPending && isSignedIn && !lastSyncedRef.current) {
       logger.debug(
         "Auth state sync",
@@ -35,11 +44,23 @@ export function useAuth() {
     }
   }, [isSignedIn, rawIsSignedIn, gracePeriodActive, isPending]);
 
+  if (AUTH_DISABLED) {
+    return {
+      isSignedIn: false,
+      isGracePeriodOnly: false,
+      isLoaded: true,
+      session: null,
+      user: null,
+      authDisabled: true,
+    };
+  }
+
   return {
     isSignedIn,
     isGracePeriodOnly: !rawIsSignedIn && gracePeriodActive,
     isLoaded: !isPending,
     session,
     user,
+    authDisabled: false,
   };
 }

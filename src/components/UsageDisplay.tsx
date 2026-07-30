@@ -6,6 +6,7 @@ import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
 import { Button } from "./ui/button";
 import { useSettingsStore } from "../stores/settingsStore";
+import { AUTH_DISABLED } from "../lib/features";
 
 export default function UsageDisplay() {
   const { t } = useTranslation();
@@ -15,6 +16,7 @@ export default function UsageDisplay() {
 
   // One-time toast when approaching limit (>80%)
   useEffect(() => {
+    if (AUTH_DISABLED) return;
     if (usage?.isApproachingLimit && !hasShownApproachingToast.current) {
       hasShownApproachingToast.current = true;
       toast({
@@ -28,7 +30,7 @@ export default function UsageDisplay() {
     }
   }, [usage?.isApproachingLimit, usage?.wordsUsed, usage?.limit, toast, t]);
 
-  if (!usage) return null;
+  if (AUTH_DISABLED || !usage) return null;
 
   // Pro plan or trial — minimal display
   if (usage.isSubscribed) {

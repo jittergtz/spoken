@@ -16,7 +16,12 @@ const LOOPBACK_ADDRESSES = new Set(["127.0.0.1", "::1", "::ffff:127.0.0.1"]);
 const NO_CONTENT = Symbol("CliBridge.NoContent");
 
 function getBridgeFilePath() {
-  return path.join(os.homedir(), ".openwhispr", "cli-bridge.json");
+  const spokenPath = path.join(os.homedir(), ".spoken", "cli-bridge.json");
+  const openwhisprPath = path.join(os.homedir(), ".openwhispr", "cli-bridge.json");
+  if (!fs.existsSync(spokenPath) && fs.existsSync(openwhisprPath)) {
+    return openwhisprPath;
+  }
+  return spokenPath;
 }
 
 async function findAvailablePort() {

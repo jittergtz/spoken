@@ -21,7 +21,8 @@ export interface FileTranscriptionConfig {
   localTranscriptionProvider: string;
   whisperModel: string;
   parakeetModel: string;
-  isOpenWhisprCloud: boolean;
+  isSpokenCloud?: boolean;
+  isOpenWhisprCloud?: boolean;
   getApiKey: () => string;
   cloudTranscriptionProvider: string;
   cloudTranscriptionBaseUrl: string;
@@ -42,7 +43,7 @@ export async function transcribeFile(
   diarize: boolean,
   opts: { requestId?: string } = {}
 ): Promise<FileTranscriptionResult> {
-  if (cfg.isOpenWhisprCloud) {
+  if (cfg.isSpokenCloud || cfg.isOpenWhisprCloud) {
     return withSessionRefresh(async () => {
       const r = await window.electronAPI.transcribeAudioFileCloud!(filePath, opts);
       if (!r.success && r.code) {
@@ -89,6 +90,7 @@ export function shouldUseByokDiarize(
   return (
     diarizationEnabled &&
     !cfg.useLocalWhisper &&
+    !cfg.isSpokenCloud &&
     !cfg.isOpenWhisprCloud &&
     cfg.transcriptionMode !== "self-hosted" &&
     (cfg.cloudTranscriptionProvider === "openai" || cfg.cloudTranscriptionProvider === "mistral")

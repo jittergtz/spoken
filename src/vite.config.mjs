@@ -37,6 +37,9 @@ export default defineConfig(({ mode }) => {
           const runtimeEnv = {
             VITE_OPENWHISPR_API_URL: env.VITE_OPENWHISPR_API_URL || "",
             VITE_AUTH_URL: env.VITE_AUTH_URL || "",
+            VITE_ACCOUNT_FEATURES_ENABLED:
+              env.VITE_ACCOUNT_FEATURES_ENABLED || env.ACCOUNT_FEATURES_ENABLED || "",
+            VITE_AUTH_DISABLED: env.VITE_AUTH_DISABLED || env.AUTH_DISABLED || "",
           };
           fs.writeFileSync(
             path.resolve(__dirname, "dist", "runtime-env.json"),
@@ -47,6 +50,7 @@ export default defineConfig(({ mode }) => {
     ],
     base: "./", // Use relative paths for file:// protocol in Electron
     envDir, // Load .env from project root
+    envPrefix: ["VITE_", "ACCOUNT_FEATURES_ENABLED", "AUTH_DISABLED", "DISABLE_AUTH"],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "."),

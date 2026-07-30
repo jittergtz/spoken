@@ -13,6 +13,7 @@ import {
   UserPlus,
   X,
   Search,
+  Laptop,
 } from "lucide-react";
 import logoIcon from "../assets/icon.png";
 import { useTranslation } from "react-i18next";
@@ -23,7 +24,7 @@ import WorkspaceSwitcher from "./WorkspaceSwitcher";
 import InviteTeammateDialog from "./InviteTeammateDialog";
 import CreateWorkspaceDialog from "./CreateWorkspaceDialog";
 import { useWorkspace } from "../hooks/useWorkspace";
-import { WORKSPACES_ENABLED } from "../lib/features";
+import { WORKSPACES_ENABLED, AUTH_DISABLED } from "../lib/features";
 
 const platform = getCachedPlatform();
 
@@ -80,8 +81,9 @@ export default function ControlPanelSidebar({
   const [createWorkspaceOpen, setCreateWorkspaceOpen] = useState(false);
   const { active: activeWorkspace } = useWorkspace();
 
-  const showLimitBanner = authLoaded && isSignedIn && !isProUser && isOverLimit;
+  const showLimitBanner = !AUTH_DISABLED && authLoaded && isSignedIn && !isProUser && isOverLimit;
   const showUpgradeBanner =
+    !AUTH_DISABLED &&
     !showLimitBanner &&
     authLoaded &&
     (!isSignedIn || usageLoaded !== false) &&
@@ -287,29 +289,43 @@ export default function ControlPanelSidebar({
         <div className="mx-1 h-px bg-border/10 dark:bg-white/6 my-1.5!" />
 
         <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md">
-          {userImage ? (
+          {AUTH_DISABLED ? (
+            <>
+              <Laptop size={18} className="shrink-0 text-foreground/50 dark:text-foreground/45" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-foreground/80 dark:text-foreground/80 truncate leading-tight font-medium">
+                  Local Mode
+                </p>
+                <p className="text-[10px] text-foreground/50 dark:text-foreground/50 truncate leading-tight">
+                  No account required
+                </p>
+              </div>
+            </>
+          ) : userImage ? (
             <img src={userImage} alt="" className="w-6 h-6 rounded-full shrink-0 object-cover" />
           ) : (
             <UserCircle size={18} className="shrink-0 text-foreground/50 dark:text-foreground/45" />
           )}
-          <div className="flex-1 min-w-0">
-            {isSignedIn && (userName || userEmail) ? (
-              <>
-                <p className="text-xs text-foreground/80 dark:text-foreground/80 truncate leading-tight">
-                  {userName || t("sidebar.defaultUser")}
-                </p>
-                {userEmail && (
-                  <p className="text-xs text-foreground/55 dark:text-foreground/55 truncate leading-tight">
-                    {userEmail}
+          {!AUTH_DISABLED && (
+            <div className="flex-1 min-w-0">
+              {isSignedIn && (userName || userEmail) ? (
+                <>
+                  <p className="text-xs text-foreground/80 dark:text-foreground/80 truncate leading-tight">
+                    {userName || t("sidebar.defaultUser")}
                   </p>
-                )}
-              </>
-            ) : authLoaded && !isSignedIn ? (
-              <p className="text-xs text-foreground/45 dark:text-foreground/55">
-                {t("sidebar.notSignedIn")}
-              </p>
-            ) : null}
-          </div>
+                  {userEmail && (
+                    <p className="text-xs text-foreground/55 dark:text-foreground/55 truncate leading-tight">
+                      {userEmail}
+                    </p>
+                  )}
+                </>
+              ) : authLoaded && !isSignedIn ? (
+                <p className="text-xs text-foreground/45 dark:text-foreground/55">
+                  {t("sidebar.notSignedIn")}
+                </p>
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
 

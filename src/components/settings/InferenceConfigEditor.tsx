@@ -21,6 +21,7 @@ import {
   getCloudModel,
   getLocalModel,
 } from "../../models/ModelRegistry";
+import { AUTH_DISABLED } from "../../lib/features";
 
 function isProviderValidForMode(provider: string, mode: InferenceMode): boolean {
   switch (mode) {
@@ -66,14 +67,18 @@ export default function InferenceConfigEditor({ scope, onModeChange }: Inference
 
   const prefix = MODE_LABEL_PREFIX[scope];
   const modes: InferenceModeOption[] = [
-    {
-      id: "openwhispr",
-      label: t(`${prefix}.openwhispr`),
-      description: t(`${prefix}.openwhisprDesc`),
-      icon: <Cloud className="w-4 h-4" />,
-      disabled: !isSignedIn,
-      badge: !isSignedIn ? t("common.freeAccountRequired") : undefined,
-    },
+    ...(!AUTH_DISABLED
+      ? [
+          {
+            id: "openwhispr" as const,
+            label: t(`${prefix}.openwhispr`),
+            description: t(`${prefix}.openwhisprDesc`),
+            icon: <Cloud className="w-4 h-4" />,
+            disabled: !isSignedIn,
+            badge: !isSignedIn ? t("common.freeAccountRequired") : undefined,
+          },
+        ]
+      : []),
     {
       id: "providers",
       label: t(`${prefix}.providers`),
@@ -110,7 +115,7 @@ export default function InferenceConfigEditor({ scope, onModeChange }: Inference
 
   const handleModeSelect = useCallback(
     (mode: InferenceMode) => {
-      if (mode === "openwhispr" && !isSignedIn) {
+      if (!AUTH_DISABLED && mode === "openwhispr" && !isSignedIn) {
         startCloudOnboarding();
         return;
       }

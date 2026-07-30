@@ -1,10 +1,10 @@
 {
-  "appId": "com.gizmolabs.openwhispr",
+  "appId": "com.gizmolabs.spoken",
   "afterPack": "scripts/afterPack.js",
-  "productName": "OpenWhispr",
+  "productName": "Spoken",
   "protocols": {
-    "name": "OpenWhispr Protocol",
-    "schemes": ["openwhispr"]
+    "name": "Spoken Protocol",
+    "schemes": ["spoken"]
   },
   "directories": {
     "output": "dist"
@@ -158,10 +158,10 @@
     ],
     "extendInfo": {
       "LSUIElement": false,
-      "CFBundleIconName": "openwhispr",
-      "NSMicrophoneUsageDescription": "OpenWhispr uses the microphone to capture your voice for transcription.",
-      "NSAudioCaptureUsageDescription": "OpenWhispr uses system audio to capture other participants' audio from calls and meetings.",
-      "NSAccessibilityUsageDescription": "OpenWhispr needs accessibility permissions to paste transcribed text into other applications."
+      "CFBundleIconName": "spoken",
+      "NSMicrophoneUsageDescription": "Spoken uses the microphone to capture your voice for transcription.",
+      "NSAudioCaptureUsageDescription": "Spoken uses system audio to capture other participants' audio from calls and meetings.",
+      "NSAccessibilityUsageDescription": "Spoken needs accessibility permissions to paste transcribed text into other applications."
     }
   },
   "win": {
@@ -169,8 +169,8 @@
     "icon": "src/assets/icon.ico",
     "azureSignOptions": {
       "endpoint": "https://eus.codesigning.azure.net/",
-      "certificateProfileName": "openwhispr-release",
-      "codeSigningAccountName": "OpenWhispr",
+      "certificateProfileName": "spoken-release",
+      "codeSigningAccountName": "Spoken",
       "publisherName": "CN=Gizmo Labs Inc., O=Gizmo Labs Inc., L=Wilmington, S=Delaware, C=US"
     },
     "extraResources": [
@@ -254,7 +254,7 @@
     "include": "resources/nsis/installer.nsh"
   },
   "dmg": {
-    "title": "OpenWhispr",
+    "title": "Spoken",
     "icon": "src/assets/icon.icns",
     "window": {
       "width": 540,
@@ -263,8 +263,8 @@
   },
   "publish": {
     "provider": "github",
-    "owner": "OpenWhispr",
-    "repo": "openwhispr",
+    "owner": "Spoken",
+    "repo": "spoken",
     "private": false,
     "releaseType": "draft"
   }

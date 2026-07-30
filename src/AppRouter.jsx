@@ -9,6 +9,7 @@ import WindowControls from "./components/WindowControls.tsx";
 import { Card, CardContent } from "./components/ui/card.tsx";
 import { useAuth } from "./hooks/useAuth";
 import { useTheme } from "./hooks/useTheme";
+import { AUTH_DISABLED } from "./lib/features";
 
 const ControlPanel = React.lazy(() => import("./components/ControlPanel.tsx"));
 const OnboardingFlow = React.lazy(() => import("./components/OnboardingFlow.tsx"));
@@ -60,7 +61,7 @@ function MainApp() {
 
     // Sync runs in every non-agent window, so tray-only sessions where the
     // control panel is never opened still stay fresh.
-    if (!isAgentPanel) {
+    if (!isAgentPanel && !AUTH_DISABLED) {
       import("./services/SyncService.js")
         .then(({ syncService }) => syncService.startAutoSync())
         .catch(() => {});
@@ -70,8 +71,14 @@ function MainApp() {
   useEffect(() => {
     if (!authLoaded) return;
 
+    if (AUTH_DISABLED) {
+      localStorage.setItem("authenticationSkipped", "true");
+      localStorage.setItem("skipAuth", "true");
+    }
+
     const onboardingCompleted = localStorage.getItem("onboardingCompleted") === "true";
     const authSkipped =
+      AUTH_DISABLED ||
       localStorage.getItem("authenticationSkipped") === "true" ||
       localStorage.getItem("skipAuth") === "true";
     const onboardingInProgress = localStorage.getItem("onboardingCurrentStep") !== null;

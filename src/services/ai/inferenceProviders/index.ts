@@ -4,7 +4,7 @@ import { geminiProvider } from "./gemini";
 import { groqProvider } from "./groq";
 import { localProvider } from "./local";
 import { enterpriseProvider } from "./enterprise";
-import { openwhisprProvider } from "./openwhispr";
+import { spokenProvider } from "./spoken";
 import { lanProvider } from "./lan";
 import { openaiProvider } from "./openai";
 import { tinfoilProvider } from "./tinfoil";
@@ -23,7 +23,8 @@ export const PROVIDER_REGISTRY: Readonly<Record<string, InferenceProvider>> = Ob
   bedrock: enterpriseProvider,
   azure: enterpriseProvider,
   vertex: enterpriseProvider,
-  openwhispr: openwhisprProvider,
+  spoken: spokenProvider,
+  openwhispr: spokenProvider,
   lan: lanProvider,
 });
 

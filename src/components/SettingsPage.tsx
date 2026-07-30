@@ -103,7 +103,7 @@ import { formatBytes } from "../utils/formatBytes";
 import { clearMissingLocalModelSelections, useSettingsStore } from "../stores/settingsStore";
 import { canManageSystemAudioInApp } from "../utils/systemAudioAccess";
 import WorkspaceSection from "./settings/WorkspaceSection";
-import { WORKSPACES_ENABLED } from "../lib/features";
+import { WORKSPACES_ENABLED, AUTH_DISABLED } from "../lib/features";
 
 const formatAmount = (cents: number, currency: string) =>
   (cents / 100).toLocaleString(undefined, { style: "currency", currency });
@@ -265,14 +265,22 @@ function TranscriptionSection({
   const { t } = useTranslation();
 
   const transcriptionModes: InferenceModeOption[] = [
-    {
-      id: "openwhispr",
-      label: t("settingsPage.transcription.modes.openwhispr"),
-      description: t("settingsPage.transcription.modes.openwhisprDesc"),
-      icon: <Cloud className="w-4 h-4" />,
-      disabled: !isSignedIn,
-      badge: !isSignedIn ? t("common.freeAccountRequired") : undefined,
-    },
+    ...(!AUTH_DISABLED
+      ? [
+          {
+            id: "spoken" as const,
+            label:
+              t("settingsPage.transcription.modes.spoken") ||
+              t("settingsPage.transcription.modes.openwhispr"),
+            description:
+              t("settingsPage.transcription.modes.spokenDesc") ||
+              t("settingsPage.transcription.modes.openwhisprDesc"),
+            icon: <Cloud className="w-4 h-4" />,
+            disabled: !isSignedIn,
+            badge: !isSignedIn ? t("common.freeAccountRequired") : undefined,
+          },
+        ]
+      : []),
     {
       id: "providers",
       label: t("settingsPage.transcription.modes.providers"),
@@ -294,7 +302,7 @@ function TranscriptionSection({
   ];
 
   const handleTranscriptionModeSelect = (mode: InferenceMode) => {
-    if (mode === "openwhispr" && !isSignedIn) {
+    if ((mode === "spoken" || mode === "openwhispr") && !isSignedIn) {
       startOnboarding();
       return;
     }
@@ -302,9 +310,10 @@ function TranscriptionSection({
     setTranscriptionMode(mode);
     setUseLocalWhisper(mode === "local");
     updateTranscriptionSettings({ useLocalWhisper: mode === "local" });
-    setCloudTranscriptionMode(mode === "openwhispr" ? "openwhispr" : "byok");
+    setCloudTranscriptionMode(mode === "spoken" || mode === "openwhispr" ? "spoken" : "byok");
 
     const toastKey = {
+      spoken: "switchedCloud",
       openwhispr: "switchedCloud",
       providers: "switchedProviders",
       local: "switchedLocal",
@@ -412,6 +421,7 @@ interface AiModelsSectionProps {
 }
 
 const CLEANUP_MODE_TOAST_KEY: Record<InferenceMode, string> = {
+  spoken: "switchedCloud",
   openwhispr: "switchedCloud",
   providers: "switchedProviders",
   local: "switchedLocal",
@@ -829,8 +839,8 @@ export default function SettingsPage({
   const [isRemovingModels, setIsRemovingModels] = useState(false);
   const cachePathHint =
     typeof navigator !== "undefined" && /Windows/i.test(navigator.userAgent)
-      ? "%USERPROFILE%\\.cache\\openwhispr"
-      : "~/.cache/openwhispr";
+      ? "%USERPROFILE%\\.cache\\spoken"
+      : "~/.cache/spoken";
 
   const {
     status: updateStatus,
@@ -1291,6 +1301,7 @@ export default function SettingsPage({
           } else {
             // Every local model is gone, so no local selection can still resolve.
             clearMissingLocalModelSelections(() => false);
+            window.dispatchEvent(new Event("spoken-models-cleared"));
             window.dispatchEvent(new Event("openwhispr-models-cleared"));
             showAlertDialog({
               title: t("settingsPage.developer.removeModels.successTitle"),
@@ -1592,7 +1603,15 @@ export default function SettingsPage({
   );
 
   const renderSectionContent = () => {
-    switch (activeSection) {
+    const visibleSection =
+      AUTH_DISABLED &&
+      (activeSection === "account" ||
+        activeSection === "plansBilling" ||
+        activeSection === "workspace")
+        ? "general"
+        : activeSection;
+
+    switch (visibleSection) {
       case "account":
         return (
           <div className="space-y-5">
@@ -2058,7 +2077,7 @@ export default function SettingsPage({
                       size="sm"
                       className="mt-2 w-full h-6 text-[10px]"
                       onClick={() =>
-                        window.electronAPI?.openExternal?.("https://openwhispr.com/contact-sales")
+                        window.electronAPI?.openExternal?.("https://spoken.com/contact-sales")
                       }
                     >
                       <Mail size={10} />

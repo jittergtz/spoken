@@ -9,20 +9,12 @@ import { formatHotkeyListLabel } from "./utils/hotkeys";
 import { useWindowDrag } from "./hooks/useWindowDrag";
 import { useAudioRecording } from "./hooks/useAudioRecording";
 import { useSettingsStore } from "./stores/settingsStore";
+import { ThinkingOrb } from 'thinking-orbs';
 
 // Sound Wave Icon Component (for idle/hover states)
-const SoundWaveIcon = ({ size = 16 }) => {
+const SoundWaveIcon = ({ size = 10 }) => {
   return (
     <div className="flex items-center justify-center gap-1">
-      <div
-        className={`bg-white rounded-full`}
-        style={{ width: size * 0.25, height: size * 0.6 }}
-      ></div>
-      <div className={`bg-white rounded-full`} style={{ width: size * 0.25, height: size }}></div>
-      <div
-        className={`bg-white rounded-full`}
-        style={{ width: size * 0.25, height: size * 0.6 }}
-      ></div>
     </div>
   );
 };
@@ -31,18 +23,7 @@ const SoundWaveIcon = ({ size = 16 }) => {
 const VoiceWaveIndicator = ({ isListening }) => {
   return (
     <div className="flex items-center justify-center gap-0.5">
-      {[...Array(4)].map((_, i) => (
-        <div
-          key={i}
-          className={`w-0.5 bg-white rounded-full transition-[height] duration-150 ${
-            isListening ? "animate-pulse h-4" : "h-2"
-          }`}
-          style={{
-            animationDelay: isListening ? `${i * 0.1}s` : "0s",
-            animationDuration: isListening ? `${0.6 + i * 0.1}s` : "0s",
-          }}
-        />
-      ))}
+      <ThinkingOrb state="solving" size={20} speed={2.00} />
     </div>
   );
 };
@@ -309,28 +290,28 @@ export default function App() {
 
   const getMicButtonProps = () => {
     const baseClasses =
-      "rounded-full w-10 h-10 flex items-center justify-center relative overflow-hidden border-2 border-white/70 cursor-pointer";
+      "rounded-full w-9 h-2 border  border-white/50 flex items-center justify-center relative overflow-hidden  cursor-pointer";
 
     switch (micState) {
       case "idle":
       case "hover":
         return {
-          className: `${baseClasses} bg-black/50 cursor-pointer`,
+          className: `${baseClasses} bg-black/60 cursor-pointer`,
           tooltip: formatHotkeyListLabel(hotkey),
         };
       case "recording":
         return {
-          className: `${baseClasses} bg-primary cursor-pointer`,
+          className: `${baseClasses} bg-black h-8 w-8  cursor-pointer`,
           tooltip: t("app.mic.recording"),
         };
       case "unavailable":
         return {
-          className: `${baseClasses} bg-amber-500 cursor-pointer`,
+          className: `${baseClasses} bg-amber-500 h-8 w-8 cursor-pointer`,
           tooltip: t("app.mic.waitingForMicrophone"),
         };
       case "processing":
         return {
-          className: `${baseClasses} bg-accent cursor-not-allowed`,
+          className: `${baseClasses} bg-black h-8 w-8 cursor-not-allowed`,
           tooltip: t("app.mic.processing"),
         };
       default:
@@ -345,10 +326,10 @@ export default function App() {
   const micProps = getMicButtonProps();
 
   return (
-    <div className="dictation-window">
+    <div className="dictation-window ">
       {/* Voice button - position determined by panelStartPosition setting */}
       <div
-        className={`fixed bottom-1 z-50 ${
+        className={`fixed bottom-1  z-50 ${
           panelStartPosition === "bottom-left"
             ? "left-1"
             : panelStartPosition === "center"
@@ -458,7 +439,7 @@ export default function App() {
               <div
                 className="absolute inset-0 transition-colors duration-150"
                 style={{
-                  backgroundColor: micState === "hover" ? "rgba(0,0,0,0.1)" : "transparent",
+                  backgroundColor: micState === "hover" ? "rgba(0,50,0,0.1)" : "transparent",
                 }}
               ></div>
 
@@ -466,7 +447,7 @@ export default function App() {
               {micState === "idle" || micState === "hover" ? (
                 <SoundWaveIcon size={micState === "idle" ? 12 : 14} />
               ) : micState === "recording" ? (
-                <LoadingDots />
+                 <ThinkingOrb state="composing" size={20} speed={2.00}  />
               ) : micState === "processing" ? (
                 <VoiceWaveIndicator isListening={true} />
               ) : micState === "unavailable" ? (

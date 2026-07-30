@@ -22,9 +22,10 @@ import type {
   ShareSettings,
   ShareVisibility,
 } from "../../types/electron";
+import { AUTH_DISABLED } from "../../lib/features";
 
-const SHARE_VIEWER_BASE_URL = "https://notes.openwhispr.com";
-const LAST_VISIBILITY_KEY = "openwhispr.shareDefaultVisibility";
+const SHARE_VIEWER_BASE_URL = "https://notes.spoken.com";
+const LAST_VISIBILITY_KEY = "spoken.shareDefaultVisibility";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface ShareNoteDialogProps {
@@ -248,6 +249,24 @@ export default function ShareNoteDialog({ open, onOpenChange, note }: ShareNoteD
       void handleInvite();
     }
   };
+
+  if (AUTH_DISABLED) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-md gap-3 p-5">
+          <DialogTitle className="text-base">Share Note</DialogTitle>
+          <p className="text-xs text-muted-foreground">
+            Cloud note sharing is disabled in Local Mode. You can export notes locally from the note action menu.
+          </p>
+          <div className="flex justify-end pt-2">
+            <Button size="sm" onClick={() => onOpenChange(false)}>
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   // NoteEditor only renders the dialog when cloud_id is set, so cloudId is
   // guaranteed non-null here. We early-return for type-narrowing.

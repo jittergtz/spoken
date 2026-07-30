@@ -1,31 +1,31 @@
 const { execFileSync } = require("child_process");
 const debugLogger = require("./debugLogger");
 
-const DBUS_SERVICE_NAME = "com.openwhispr.App";
-const DBUS_OBJECT_PATH = "/com/openwhispr/App";
-const DBUS_INTERFACE = "com.openwhispr.App";
+const DBUS_SERVICE_NAME = "com.spoken.App";
+const DBUS_OBJECT_PATH = "/com/spoken/App";
+const DBUS_INTERFACE = "com.spoken.App";
 
 // Per-slot gsettings paths and display names
 const SLOT_CONFIG = {
   dictation: {
-    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/openwhispr/",
-    name: "OpenWhispr Toggle",
+    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken/",
+    name: "Spoken Toggle",
   },
   agent: {
-    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/openwhispr-agent/",
-    name: "OpenWhispr Agent",
+    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken-agent/",
+    name: "Spoken Agent",
   },
   meeting: {
-    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/openwhispr-meeting/",
-    name: "OpenWhispr Meeting",
+    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken-meeting/",
+    name: "Spoken Meeting",
   },
   voiceAgent: {
-    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/openwhispr-voice-agent/",
-    name: "OpenWhispr Voice Agent",
+    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken-voice-agent/",
+    name: "Spoken Voice Agent",
   },
   translation: {
-    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/openwhispr-translation/",
-    name: "OpenWhispr Translation",
+    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken-translation/",
+    name: "Spoken Translation",
   },
 };
 

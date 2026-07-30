@@ -57,6 +57,7 @@ import MeetingSetupStep from "./onboarding/MeetingSetupStep";
 import FinishStep from "./onboarding/FinishStep";
 import { USE_CASE_IDS } from "./onboarding/useCases";
 import { cloudPost } from "../services/cloudApi";
+import { AUTH_DISABLED } from "../lib/features";
 
 // Highest possible step index across flow variants (skip-auth with meeting step).
 const MAX_STEP_INDEX = 7;
@@ -134,8 +135,8 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [hotkey, setHotkey] = useState(
     () => parseHotkeyList(dictationKey)[0] || getDefaultHotkey()
   );
-  const [agentName, setAgentName] = useState("OpenWhispr");
-  const [skipAuth, setSkipAuth] = useState(false);
+  const [agentName, setAgentName] = useState("Spoken");
+  const [skipAuth, setSkipAuth] = useState(() => AUTH_DISABLED || false);
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   const [isModelDownloaded, setIsModelDownloaded] = useState(false);
   const { isUsingNativeShortcut, isUsingHyprland, hyprlandConfigStatus, supportsPushToTalk } =
@@ -381,7 +382,10 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     // Non-signed-in users in cloud mode default to BYOK to avoid
     // "OpenWhispr Cloud requires sign-in" errors.
     if (!isSignedIn && !useLocalWhisper) {
-      updateTranscriptionSettings({ cloudTranscriptionMode: "byok" });
+      updateTranscriptionSettings({
+        cloudTranscriptionMode: "byok",
+        transcriptionMode: "providers",
+      });
     }
 
     try {
@@ -472,7 +476,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         }
 
         const cloudHealthCheck = window.electronAPI?.cloudHealthCheck;
-        if (useLocalWhisper || !cloudHealthCheck) {
+        if (AUTH_DISABLED || useLocalWhisper || !cloudHealthCheck) {
           removeCurrentStep();
           onComplete({ openSettings });
           return;
@@ -520,6 +524,30 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const renderStep = () => {
     switch (currentStepId) {
       case "welcome":
+        if (AUTH_DISABLED) {
+          return (
+            <div className="flex flex-col items-center justify-center py-6 text-center space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
+                S
+              </div>
+              <div className="space-y-1 max-w-sm">
+                <h3 className="text-lg font-semibold text-foreground">Welcome to Spoken</h3>
+                <p className="text-xs text-muted-foreground">
+                  Running in Local & Custom API Key mode. No account or cloud login required.
+                </p>
+              </div>
+              <Button
+                onClick={() => {
+                  setSkipAuth(true);
+                  nextStep();
+                }}
+                className="w-full max-w-xs mt-4"
+              >
+                Get Started
+              </Button>
+            </div>
+          );
+        }
         if (pendingVerificationEmail) {
           return (
             <EmailVerificationStep
@@ -644,6 +672,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
               onModeChange={(isLocal) => {
                 updateTranscriptionSettings({
                   useLocalWhisper: isLocal,
+                  transcriptionMode: isLocal ? "local" : "providers",
                   ...(!isLocal && !isSignedIn ? { cloudTranscriptionMode: "byok" } : {}),
                 });
               }}
