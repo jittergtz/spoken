@@ -30,13 +30,13 @@ const COLOR_CONFIG: Record<
 > = {
   purple: {
     selected:
-      "border-primary/30 bg-primary/8 dark:bg-primary/6 dark:border-primary/20 shadow-[0_0_0_1px_oklch(0.62_0.22_260/0.12),0_0_10px_-3px_oklch(0.62_0.22_260/0.18)]",
+      "border-primary/30 bg-primary/8 dark:bg-primary/6 dark:border-primary/20 shadow-[0_0_0_1px_oklch(0.62_0_0/0.12),0_0_10px_-3px_oklch(0.62_0_0/0.18)]",
     default:
       "border-border bg-surface-1 hover:border-border-hover hover:bg-muted dark:border-white/5 dark:bg-white/3 dark:hover:border-white/20 dark:hover:bg-white/8",
   },
   blue: {
     selected:
-      "border-primary/30 bg-primary/10 dark:bg-primary/6 shadow-[0_0_0_1px_oklch(0.62_0.22_260/0.15),0_0_12px_-3px_oklch(0.62_0.22_260/0.2)]",
+      "border-primary/30 bg-primary/10 dark:bg-primary/6 shadow-[0_0_0_1px_oklch(0.62_0_0/0.15),0_0_12px_-3px_oklch(0.62_0_0/0.2)]",
     default:
       "border-border bg-surface-1 hover:border-border-hover hover:bg-muted dark:border-white/5 dark:bg-white/3 dark:hover:border-white/20 dark:hover:bg-white/8",
   },
@@ -90,16 +90,16 @@ export function ModelCard({
   const getStatusDotClass = () => {
     if (!isLocalMode) {
       return isSelected
-        ? "bg-primary shadow-[0_0_6px_oklch(0.62_0.22_260/0.6)]"
+        ? "bg-primary shadow-[0_0_6px_oklch(0.62_0_0/0.6)]"
         : "bg-muted-foreground/30";
     }
     if (isDownloaded) {
       return isSelected
-        ? "bg-primary shadow-[0_0_6px_oklch(0.62_0.22_260/0.6)]"
-        : "bg-success shadow-[0_0_4px_rgba(34,197,94,0.5)]";
+        ? "bg-primary shadow-[0_0_6px_oklch(0.62_0_0/0.6)]"
+        : "bg-success shadow-[0_0_4px_rgba(255,255,255,0.3)]";
     }
     if (isDownloading) {
-      return "bg-amber-500 shadow-[0_0_4px_rgba(245,158,11,0.5)]";
+      return "bg-neutral-500 shadow-[0_0_4px_rgba(255,255,255,0.3)]";
     }
     return "bg-muted-foreground/20";
   };

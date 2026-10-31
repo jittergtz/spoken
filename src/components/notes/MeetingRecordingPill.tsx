@@ -99,7 +99,7 @@ export default function MeetingRecordingPill({
                 key={i}
                 className={cn(
                   "w-0.75 rounded-full origin-bottom",
-                  isWaitingForMic ? "bg-amber-500" : "bg-primary/60 dark:bg-primary/70"
+                  isWaitingForMic ? "bg-neutral-500" : "bg-primary/60 dark:bg-primary/70"
                 )}
                 style={{ height: computeBarHeight(micLevel, i) }}
               />

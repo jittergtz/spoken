@@ -99,12 +99,12 @@ function LocalModelCard({
             <div
               className={`w-1.5 h-1.5 rounded-full ${
                 isSelected
-                  ? "bg-primary shadow-[0_0_6px_oklch(0.62_0.22_260/0.6)] animate-[pulse-glow_2s_ease-in-out_infinite]"
-                  : "bg-success shadow-[0_0_4px_rgba(34,197,94,0.5)]"
+                  ? "bg-primary shadow-[0_0_6px_oklch(0.62_0_0/0.6)] animate-[pulse-glow_2s_ease-in-out_infinite]"
+                  : "bg-success shadow-[0_0_4px_rgba(255,255,255,0.3)]"
               }`}
             />
           ) : isDownloading ? (
-            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_4px_rgba(245,158,11,0.5)] animate-[spinner-rotate_1s_linear_infinite]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-neutral-500 shadow-[0_0_4px_rgba(255,255,255,0.3)] animate-[spinner-rotate_1s_linear_infinite]" />
           ) : (
             <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/20" />
           )}

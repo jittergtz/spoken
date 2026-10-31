@@ -27,25 +27,25 @@ const BUBBLE_STYLES = {
 } as const;
 
 const SPEAKER_COLORS = [
-  "text-blue-400",
-  "text-green-400",
-  "text-purple-400",
-  "text-orange-400",
-  "text-pink-400",
-  "text-cyan-400",
-  "text-yellow-400",
-  "text-red-400",
+  "text-neutral-400",
+  "text-neutral-400",
+  "text-neutral-400",
+  "text-neutral-400",
+  "text-neutral-400",
+  "text-neutral-400",
+  "text-neutral-400",
+  "text-neutral-400",
 ];
 
 const SPEAKER_BORDER_COLORS = [
-  "border-l-blue-400/50",
-  "border-l-green-400/50",
-  "border-l-purple-400/50",
-  "border-l-orange-400/50",
-  "border-l-pink-400/50",
-  "border-l-cyan-400/50",
-  "border-l-yellow-400/50",
-  "border-l-red-400/50",
+  "border-l-neutral-400/50",
+  "border-l-neutral-400/50",
+  "border-l-neutral-400/50",
+  "border-l-neutral-400/50",
+  "border-l-neutral-400/50",
+  "border-l-neutral-400/50",
+  "border-l-neutral-400/50",
+  "border-l-neutral-400/50",
 ];
 
 const STICKY_SCROLL_THRESHOLD_PX = 80;
@@ -423,7 +423,7 @@ function SpeakerLabel({
           onClick={() =>
             onConfirm?.(speakerId, segment.suggestedName!, segment.suggestedProfileId!)
           }
-          className="opacity-0 group-hover:opacity-100 p-0.5 rounded transition-opacity cursor-pointer text-muted-foreground hover:text-emerald-500"
+          className="opacity-0 group-hover:opacity-100 p-0.5 rounded transition-opacity cursor-pointer text-muted-foreground hover:text-neutral-500"
         >
           <Check size={12} />
         </button>

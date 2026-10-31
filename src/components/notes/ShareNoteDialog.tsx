@@ -313,7 +313,7 @@ export default function ShareNoteDialog({ open, onOpenChange, note }: ShareNoteD
           </Button>
         </div>
 
-        {inputError && <p className="text-xs text-red-500/90 -mt-1">{inputError}</p>}
+        {inputError && <p className="text-xs text-neutral-500/90 -mt-1">{inputError}</p>}
 
         {/* Members list */}
         <div className="flex flex-col gap-1.5 mt-1">
@@ -356,7 +356,7 @@ export default function ShareNoteDialog({ open, onOpenChange, note }: ShareNoteD
                         {t("noteEditor.share.dialog.resend")}
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-xs text-red-500"
+                        className="text-xs text-neutral-500"
                         onClick={() => void handleRevoke(invitation)}
                       >
                         {t("noteEditor.share.dialog.revoke")}

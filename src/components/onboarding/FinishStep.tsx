@@ -175,8 +175,8 @@ export default function FinishStep({
   return (
     <div className="space-y-4">
       <div className="text-center space-y-0.5">
-        <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
-          <Check className="w-6 h-6 text-green-500" />
+        <div className="w-12 h-12 bg-neutral-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
+          <Check className="w-6 h-6 text-neutral-500" />
         </div>
         <h2 className="text-lg font-semibold text-foreground tracking-tight">
           {t("onboarding.finish.title")}

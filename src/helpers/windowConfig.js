@@ -64,7 +64,7 @@ const MAIN_WINDOW_CONFIG = {
 const CONTROL_PANEL_CONFIG = {
   width: 1200,
   height: 800,
-  backgroundColor: "#1c1c2e",
+  backgroundColor: "#1c1c1c",
   webPreferences: {
     preload: path.join(__dirname, "..", "..", "preload.js"),
     nodeIntegration: false,
@@ -87,8 +87,10 @@ const CONTROL_PANEL_CONFIG = {
   ...(process.platform === "darwin" && {
     titleBarStyle: "hiddenInset",
     trafficLightPosition: { x: 20, y: 20 },
+    transparent: true,
+    backgroundColor: "#00000000",
+    vibrancy: "under-window",
   }),
-  transparent: false,
   minimizable: true,
   maximizable: true,
   closable: true,

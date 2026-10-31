@@ -998,7 +998,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
           )}
 
           {batchUrlNotice && (
-            <p className="text-[10px] text-amber-500/60 mt-2 text-center">{batchUrlNotice}</p>
+            <p className="text-[10px] text-neutral-500/60 mt-2 text-center">{batchUrlNotice}</p>
           )}
 
           {batch.hasQueue && (
@@ -1228,7 +1228,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
               !isOpenWhisprCloud &&
               !isSelfHosted &&
               cloudTranscriptionProvider === "groq" && (
-                <p className="text-[10px] text-amber-500/60 mt-1.5">
+                <p className="text-[10px] text-neutral-500/60 mt-1.5">
                   {t("notes.upload.groqDiarizeNote")}
                 </p>
               )}

@@ -7,31 +7,31 @@
 @theme {
   /* Spoken Theme — registers color tokens with Tailwind v4.
      These are the light-mode defaults; .dark overrides them below. */
-  --color-primary: #2563eb;
+  --color-primary: #171717;
   --color-primary-foreground: #ffffff;
   --color-secondary: #f5f5f5;
   --color-secondary-foreground: #171717;
   --color-muted: #f5f5f5;
   --color-muted-foreground: #525252;
-  --color-accent: oklch(0.55 0.22 285);
+  --color-accent: #262626;
   --color-accent-foreground: #ffffff;
-  --color-destructive: #dc2626;
+  --color-destructive: #404040;
   --color-destructive-foreground: #ffffff;
   --color-border: #e5e5e5;
-  --color-input: #f9f6f1;
-  --color-ring: #2563eb;
+  --color-input: #f5f5f5;
+  --color-ring: #737373;
   --color-background: #ffffff;
   --color-foreground: #171717;
   --color-card: #ffffff;
   --color-card-foreground: #171717;
   --color-popover: #ffffff;
   --color-popover-foreground: #171717;
-  --color-link: #2563eb;
-  --color-success: #16a34a;
+  --color-link: #262626;
+  --color-success: #404040;
   --color-success-foreground: #ffffff;
-  --color-warning: #d97706;
+  --color-warning: #525252;
   --color-warning-foreground: #ffffff;
-  --color-info: #2563eb;
+  --color-info: #404040;
   --color-info-foreground: #ffffff;
 
   /* Surface hierarchy — light mode equivalents */
@@ -44,7 +44,7 @@
   /* Border states — light mode equivalents */
   --color-border-subtle: #e5e5e5;
   --color-border-hover: #d4d4d4;
-  --color-border-active: #2563eb;
+  --color-border-active: #737373;
 
 
 
@@ -72,16 +72,16 @@
   --radius-lg: 0.8rem; /* 8px - cards, panels */
   --radius-xl: 0.625rem; /* 10px - large cards */
 
-  /* Custom Light Mode Brand Colors (Parchment Theme) */
-  --color-parchment-bg: #f9f6f1;
-  --color-parchment-border: #ddd4c7;
-  --color-parchment-text: #2b1f14;
-  --color-parchment-accent: #c0a77d;
-  --color-brand-primary: #2b1f14;
-  --color-brand-accent: #4b2e2b;
-  --color-brand-highlight: #c0a77d;
-  --color-brand-link: #2e3659;
-  --color-pattern: #e7e5e4;
+  /* Neutral brand colors */
+  --color-parchment-bg: #f5f5f5;
+  --color-parchment-border: #d4d4d4;
+  --color-parchment-text: #262626;
+  --color-parchment-accent: #a3a3a3;
+  --color-brand-primary: #262626;
+  --color-brand-accent: #404040;
+  --color-brand-highlight: #a3a3a3;
+  --color-brand-link: #404040;
+  --color-pattern: #e5e5e5;
 
   /* Model picker premium effects (light mode) */
   --shadow-metallic-light: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -89,47 +89,45 @@
 }
 
 .dark {
-  /* Dark mode — charcoal surfaces with clear elevation hierarchy
-     Base L=0.22 (charcoal) with 0.05 steps between layers.
-     Hue 260 (neutral blue) with minimal chroma for sophistication. */
+  /* Dark mode — neutral surfaces with a clear elevation hierarchy. */
   --color-background: oklch(0% 0 0);
   --color-foreground: oklch(0.93 0 0);
-  --color-card: oklch(16.376% 0.00002 271.152);
+  --color-card: oklch(0.24 0 0);
   --color-card-foreground: oklch(0.93 0 0);
-  --color-popover: oklch(0.29 0.009 260);
+  --color-popover: oklch(0.32 0 0);
   --color-popover-foreground: oklch(0.93 0 0);
-  --color-primary: oklch(93.16% 0.10444 164.206);
-  --color-primary-foreground: oklch(37.909% 0.00004 271.152);
-  --color-secondary: oklch(25.967% 0.00241 248.201);
-  --color-secondary-foreground: oklch(96.416% 0.00011 271.152);
-  --color-muted: oklch(29.247% 0.0192 111.845);
+  --color-primary: oklch(0.93 0 0);
+  --color-primary-foreground: oklch(0.16 0 0);
+  --color-secondary: oklch(25.967% 0 0);
+  --color-secondary-foreground: oklch(96.416% 0 0);
+  --color-muted: oklch(0.29 0 0);
   --color-muted-foreground: oklch(0.65 0 0);
-  --color-accent: oklch(0.68 0.18 285);
+  --color-accent: oklch(0.33 0 0);
   --color-accent-foreground: oklch(0.99 0 0);
-  --color-destructive: oklch(0.62 0.22 25);
+  --color-destructive: oklch(0.45 0 0);
   --color-destructive-foreground: oklch(0.99 0 0);
-  --color-border: oklch(0.35 0.007 260);
-  --color-input: oklch(0.19 0.005 260);
-  --color-ring: oklch(0.65 0.2 260);
-  --color-success: oklch(0.7 0.18 145);
-  --color-success-foreground: oklch(0.99 0 0);
-  --color-warning: oklch(0.75 0.15 70);
+  --color-border: oklch(0.35 0 0);
+  --color-input: oklch(0.23 0 0);
+  --color-ring: oklch(0.72 0 0);
+  --color-success: oklch(0.75 0 0);
+  --color-success-foreground: oklch(0.16 0 0);
+  --color-warning: oklch(0.75 0 0);
   --color-warning-foreground: oklch(0.15 0 0);
-  --color-info: oklch(0.68 0.18 240);
+  --color-info: oklch(0.65 0 0);
   --color-info-foreground: oklch(0.99 0 0);
 
-  /* Surface hierarchy — charcoal depth system (0.22 → 0.33) */
-  --color-surface-0: oklch(0.22 0.006 260);
-  --color-surface-1: oklch(17.304% 0.00002 271.152);
-  --color-surface-2: oklch(27.581% 0.00146 198.253);
-  --color-surface-3: oklch(20.989% 0.00393 285.975);
-  --color-surface-raised: oklch(26.033% 0.00003 271.152);
+  /* Each step is lighter than the surface below it. */
+  --color-surface-0: oklch(0.18 0 0);
+  --color-surface-1: oklch(0.22 0 0);
+  --color-surface-2: oklch(0.26 0 0);
+  --color-surface-3: oklch(0.30 0 0);
+  --color-surface-raised: oklch(0.34 0 0);
 
   /* Border states */
-  --color-border-subtle: oklch(0.33 0.006 260);
-  --color-border-hover: oklch(0.42 0.01 260);
-  --color-border-active: oklch(0.5 0.15 260);
-  --color-link: oklch(0.67 0.1 250);
+  --color-border-subtle: oklch(0.33 0 0);
+  --color-border-hover: oklch(0.42 0 0);
+  --color-border-active: oklch(0.65 0 0);
+  --color-link: oklch(0.82 0 0);
 
   /* Card depth shadows — softer for charcoal, with top highlight for premium depth */
   --shadow-card: 0 1px 3px oklch(0 0 0 / 0.2), inset 0 1px 0 oklch(1 0 0 / 0.03);
@@ -140,7 +138,7 @@
   /* Premium effects */
   --shadow-metallic-dark: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(0, 0, 0, 0.2);
   --shadow-selected-glow:
-    inset 0 0 0 1px oklch(0.65 0.2 260 / 0.2), 0 0 16px -4px oklch(0.65 0.2 260 / 0.2);
+    inset 0 0 0 1px oklch(0.65 0 0 / 0.2), 0 0 16px -4px oklch(0.65 0 0 / 0.2);
   --shadow-card-hover-subtle: 0 2px 8px -2px rgba(0, 0, 0, 0.12);
 }
 
@@ -184,6 +182,39 @@
   body:has(.dictation-window) #root,
   body:has(.meeting-notification-window) #root {
     background: transparent;
+  }
+}
+
+/* Native macOS vibrancy sits behind the web content. Leave the window and
+   main surfaces translucent so the desktop can show through the material. */
+body:has(.control-panel-glass),
+body:has(.control-panel-glass) #root {
+  background: transparent;
+}
+
+.control-panel-glass {
+  background: rgb(255 255 255 / 75%);
+}
+
+.dark .control-panel-glass {
+  background: rgb(0 0 0 / 58%);
+}
+
+.control-panel-glass .control-panel-sidebar {
+  background: rgb(255 255 255 / 24%);
+}
+
+.dark .control-panel-glass .control-panel-sidebar {
+  background: rgb(255 255 255 / 4%);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .control-panel-glass {
+    background: var(--color-background);
+  }
+
+  .control-panel-glass .control-panel-sidebar {
+    background: var(--color-surface-1);
   }
 }
 
@@ -379,8 +410,8 @@ a:hover {
   height: 1px;
   background: linear-gradient(
     90deg,
-    oklch(0.65 0.2 260 / 0.5),
-    oklch(0.7 0.18 280 / 0.3),
+    oklch(0.65 0 0 / 0.5),
+    oklch(0.7 0 0 / 0.3),
     transparent 80%
   );
   pointer-events: none;
@@ -399,8 +430,8 @@ a:hover {
 
 /* Toast — opaque dark HUD surface, same in light & dark mode */
 .toast-surface {
-  background: oklch(0.15 0.006 260);
-  border: 1px solid oklch(0.25 0.006 260);
+  background: oklch(0.15 0 0);
+  border: 1px solid oklch(0.25 0 0);
   box-shadow:
     inset 0 1px 0 oklch(1 0 0 / 0.04),
     0 8px 24px -4px oklch(0 0 0 / 0.5),
@@ -420,11 +451,11 @@ a:hover {
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 0 6px oklch(0.65 0.2 260 / 0.4);
+    box-shadow: 0 0 6px oklch(0.65 0 0 / 0.4);
     opacity: 0.8;
   }
   50% {
-    box-shadow: 0 0 8px oklch(0.65 0.2 260 / 0.6);
+    box-shadow: 0 0 8px oklch(0.65 0 0 / 0.6);
     opacity: 1;
   }
 }
@@ -611,7 +642,7 @@ a:hover {
 .referral-mesh-bg::before {
   width: 300px;
   height: 300px;
-  background: oklch(0.65 0.2 260);
+  background: oklch(0.65 0 0);
   opacity: 0.04;
   top: -80px;
   right: -60px;
@@ -620,7 +651,7 @@ a:hover {
 .referral-mesh-bg::after {
   width: 250px;
   height: 250px;
-  background: oklch(0.6 0.18 180);
+  background: oklch(0.6 0 0);
   opacity: 0.04;
   bottom: -60px;
   left: -40px;
@@ -681,11 +712,11 @@ a:hover {
   border-radius: inherit;
   background: conic-gradient(
     from 180deg at 50% 50%,
-    oklch(0.65 0.2 260 / 0.2),
-    oklch(0.55 0.2 320 / 0.1),
-    oklch(0.6 0.18 180 / 0.15),
-    oklch(0.55 0.2 100 / 0.1),
-    oklch(0.65 0.2 260 / 0.2)
+    oklch(0.65 0 0 / 0.2),
+    oklch(0.55 0 0 / 0.1),
+    oklch(0.6 0 0 / 0.15),
+    oklch(0.55 0 0 / 0.1),
+    oklch(0.65 0 0 / 0.2)
   );
   z-index: -1;
   opacity: 0;
@@ -709,7 +740,7 @@ a:hover {
   left: 0;
   right: 0;
   height: 2px;
-  background: oklch(0.65 0.2 260 / 0.4);
+  background: oklch(0.65 0 0 / 0.4);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
@@ -839,7 +870,7 @@ body:has(.agent-overlay-window) #root {
     background: linear-gradient(
       90deg,
       transparent 0%,
-      oklch(0.65 0.2 260 / 0.04) 50%,
+      oklch(0.65 0 0 / 0.04) 50%,
       transparent 100%
     );
     background-position: -100% 0;
@@ -886,10 +917,10 @@ body:has(.agent-overlay-window) #root {
 .thinking-shimmer-text {
   background: linear-gradient(
     90deg,
-    oklch(0.65 0.01 260) 0%,
-    oklch(0.85 0.02 240) 40%,
-    oklch(0.65 0.01 260) 60%,
-    oklch(0.78 0.015 250) 100%
+    oklch(0.65 0 0) 0%,
+    oklch(0.85 0 0) 40%,
+    oklch(0.65 0 0) 60%,
+    oklch(0.78 0 0) 100%
   );
   background-size: 200% 100%;
   animation: thinking-shimmer 2s ease-in-out infinite;
@@ -1017,7 +1048,7 @@ body:has(.agent-overlay-window) #root {
 }
 
 .rich-text-editor-content ::selection {
-  background: oklch(0.62 0.22 260 / 0.15);
+  background: oklch(0.62 0 0 / 0.15);
 }
 
 /* Task list (checkboxes) */

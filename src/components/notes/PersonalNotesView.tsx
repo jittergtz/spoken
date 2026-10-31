@@ -681,7 +681,7 @@ export default function PersonalNotesView({
                       !isMeetings &&
                       "bg-primary/12 dark:bg-primary/15 ring-1 ring-primary/25 scale-[1.02]",
                     isDropSuccess &&
-                      "bg-emerald-500/10 dark:bg-emerald-400/10 ring-1 ring-emerald-500/20"
+                      "bg-neutral-500/10 dark:bg-neutral-400/10 ring-1 ring-neutral-500/20"
                   )}
                 >
                   <FolderOpen
@@ -707,7 +707,7 @@ export default function PersonalNotesView({
                   {isDropSuccess ? (
                     <Check
                       size={10}
-                      className="text-emerald-500 dark:text-emerald-400 shrink-0 animate-[scale-in_200ms_ease-out]"
+                      className="text-neutral-500 dark:text-neutral-400 shrink-0 animate-[scale-in_200ms_ease-out]"
                     />
                   ) : (
                     <span

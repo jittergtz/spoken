@@ -821,7 +821,7 @@ export default function NoteEditor({
                       {t("notes.editor.enhanced")}
                       {enhancement.isStale && (
                         <span
-                          className="w-1 h-1 rounded-full bg-amber-400/60"
+                          className="w-1 h-1 rounded-full bg-neutral-400/60"
                           title={t("notes.editor.staleIndicator")}
                         />
                       )}
@@ -848,7 +848,7 @@ export default function NoteEditor({
                     className={cn(
                       "transition-colors",
                       isShared
-                        ? "text-blue-600 dark:text-blue-400"
+                        ? "text-neutral-600 dark:text-neutral-400"
                         : "text-foreground/50 dark:text-foreground/40"
                     )}
                   />

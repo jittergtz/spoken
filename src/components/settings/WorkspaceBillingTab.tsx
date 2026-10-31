@@ -85,9 +85,9 @@ export default function WorkspaceBillingTab({ workspace }: Props) {
             className={
               "text-[10px] font-medium px-2 py-0.5 rounded-md uppercase tracking-wide " +
               (workspace.status === "active" || workspace.status === "trialing"
-                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                ? "bg-neutral-500/10 text-neutral-600 dark:text-neutral-400"
                 : workspace.status === "past_due"
-                  ? "bg-amber-500/12 text-amber-600 dark:text-amber-400"
+                  ? "bg-neutral-500/12 text-neutral-600 dark:text-neutral-400"
                   : "bg-foreground/8 text-foreground/65")
             }
           >

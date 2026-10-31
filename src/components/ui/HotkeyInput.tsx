@@ -518,7 +518,7 @@ export function HotkeyInput({
             disabled
               ? "bg-muted/30 border-border cursor-not-allowed opacity-50"
               : isCapturing
-                ? "bg-primary/5 border-primary/30 shadow-[0_0_0_2px_rgba(37,99,212,0.1)]"
+                ? "bg-primary/5 border-primary/30 shadow-[0_0_0_2px_rgba(128,128,128,0.15)]"
                 : "bg-surface-1 border-border hover:border-border-hover hover:bg-surface-2"
           }
         `}
@@ -557,7 +557,7 @@ export function HotkeyInput({
             {validationWarning && (
               <div className="flex items-center gap-1.5 mt-2 px-3 py-1.5 rounded-md bg-warning/8 border border-warning/20 dark:bg-warning/12 dark:border-warning/25">
                 <AlertTriangle className="w-3 h-3 text-warning shrink-0" />
-                <span className="text-xs text-warning dark:text-amber-400">
+                <span className="text-xs text-warning dark:text-neutral-400">
                   {validationWarning}
                 </span>
               </div>
@@ -623,7 +623,7 @@ export function HotkeyInput({
           disabled
             ? "bg-muted/30 border-border cursor-not-allowed opacity-50"
             : isCapturing
-              ? "bg-primary/5 border-primary/30 shadow-[0_0_0_2px_rgba(37,99,212,0.1)]"
+              ? "bg-primary/5 border-primary/30 shadow-[0_0_0_2px_rgba(128,128,128,0.15)]"
               : "bg-surface-1 border-border hover:border-border-hover hover:bg-surface-2"
         }
       `}
@@ -665,7 +665,7 @@ export function HotkeyInput({
             {validationWarning && (
               <div className="flex items-center gap-1.5 mt-1.5 px-3 py-1.5 rounded-md bg-warning/8 border border-warning/20 dark:bg-warning/12 dark:border-warning/25">
                 <AlertTriangle className="w-3 h-3 text-warning shrink-0" />
-                <span className="text-xs text-warning dark:text-amber-400">
+                <span className="text-xs text-warning dark:text-neutral-400">
                   {validationWarning}
                 </span>
               </div>

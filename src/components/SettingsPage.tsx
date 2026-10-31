@@ -2066,7 +2066,7 @@ export default function SettingsPage({
                         >
                           <Check
                             size={9}
-                            className="mt-[2px] text-purple-500 dark:text-purple-400 shrink-0"
+                            className="mt-[2px] text-neutral-500 dark:text-neutral-400 shrink-0"
                           />
                           {feature}
                         </li>
@@ -2118,7 +2118,7 @@ export default function SettingsPage({
                             className={cn(
                               "text-sm font-semibold",
                               switchPreview.immediateAmount < 0
-                                ? "text-emerald-600 dark:text-emerald-400"
+                                ? "text-neutral-600 dark:text-neutral-400"
                                 : "text-foreground"
                             )}
                           >
@@ -2196,7 +2196,7 @@ export default function SettingsPage({
                           <SettingsPanelRow>
                             <Alert
                               variant="warning"
-                              className="dark:bg-amber-950/50 dark:border-amber-800 dark:text-amber-200 dark:[&>svg]:text-amber-400"
+                              className="dark:bg-neutral-950/50 dark:border-neutral-800 dark:text-neutral-200 dark:[&>svg]:text-neutral-400"
                             >
                               <AlertTriangle className="h-4 w-4" />
                               <AlertTitle>{t("settingsPage.account.pastDue.title")}</AlertTitle>
@@ -3131,7 +3131,7 @@ EOF`,
                           <SettingsPanelRow>
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <CircleCheck className="h-4 w-4 text-emerald-500" />
+                                <CircleCheck className="h-4 w-4 text-neutral-500" />
                                 <span className="text-sm">
                                   {t("settingsPage.general.waylandPaste.allGoodDesc", {
                                     defaultValue: "Auto-paste is ready to go.",
@@ -3155,9 +3155,9 @@ EOF`,
                                 <div key={item.key} className="px-4 py-3">
                                   <div className="flex items-center gap-2.5">
                                     {item.ok ? (
-                                      <CircleCheck className="h-4 w-4 shrink-0 text-emerald-500" />
+                                      <CircleCheck className="h-4 w-4 shrink-0 text-neutral-500" />
                                     ) : (
-                                      <CircleX className="h-4 w-4 shrink-0 text-red-500" />
+                                      <CircleX className="h-4 w-4 shrink-0 text-neutral-500" />
                                     )}
                                     <div className="flex-1 min-w-0">
                                       <span className="text-sm font-medium">{item.label}</span>
@@ -3165,7 +3165,7 @@ EOF`,
                                         {item.desc}
                                       </span>
                                       {item.note && (
-                                        <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-0.5">
+                                        <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-0.5">
                                           {item.note}
                                         </p>
                                       )}

@@ -138,9 +138,9 @@ export default function App() {
                 }
               }}
               className="text-[10px] font-medium px-2.5 py-1 rounded-sm whitespace-nowrap
-                text-emerald-100/90 hover:text-white
-                bg-emerald-500/15 hover:bg-emerald-500/25
-                border border-emerald-400/20 hover:border-emerald-400/35
+                text-neutral-100/90 hover:text-white
+                bg-neutral-500/15 hover:bg-neutral-500/25
+                border border-neutral-400/20 hover:border-neutral-400/35
                 transition-all duration-150"
             >
               {t("app.toasts.undo")}
@@ -306,7 +306,7 @@ export default function App() {
         };
       case "unavailable":
         return {
-          className: `${baseClasses} bg-amber-500 h-8 w-8 cursor-pointer`,
+          className: `${baseClasses} bg-neutral-500 h-8 w-8 cursor-pointer`,
           tooltip: t("app.mic.waitingForMicrophone"),
         };
       case "processing":
@@ -439,7 +439,7 @@ export default function App() {
               <div
                 className="absolute inset-0 transition-colors duration-150"
                 style={{
-                  backgroundColor: micState === "hover" ? "rgba(0,50,0,0.1)" : "transparent",
+                  backgroundColor: micState === "hover" ? "rgba(255,255,255,0.08)" : "transparent",
                 }}
               ></div>
 
@@ -459,7 +459,7 @@ export default function App() {
                 <div className="absolute inset-0 rounded-full border-2 border-primary/50 animate-pulse"></div>
               )}
               {micState === "unavailable" && (
-                <div className="absolute inset-0 rounded-full border-2 border-amber-200/70 animate-pulse"></div>
+                <div className="absolute inset-0 rounded-full border-2 border-neutral-200/70 animate-pulse"></div>
               )}
 
               {/* State indicator ring for processing */}
