@@ -22,7 +22,9 @@ const IDLE_TIMEOUT_MS = 5 * 60 * 1000;
 const DEFAULT_CONTEXT_SIZE = 4096;
 
 class LlamaServerManager {
-  constructor() {
+  constructor(options = {}) {
+    this.pidName = options.pidName || "llama";
+    this.mmprojPath = null;
     this.process = null;
     this.port = null;
     this.ready = false;
@@ -114,7 +116,12 @@ class LlamaServerManager {
     // A change in drafter presence for the same model must still restart the
     // server so the new speculative-decoding flags take effect.
     const requestedDraftPath = options.draftModelPath || null;
-    if (this.ready && this.modelPath === modelPath && this.draftModelPath === requestedDraftPath)
+    if (
+      this.ready &&
+      this.modelPath === modelPath &&
+      this.draftModelPath === requestedDraftPath &&
+      this.mmprojPath === (options.mmprojPath || null)
+    )
       return;
 
     if (this.process) {
@@ -139,6 +146,7 @@ class LlamaServerManager {
     // Store the REQUESTED drafter so start() compares against a stable value across
     // identical requests; activeDraftModelPath tracks what actually loaded (see ctor).
     this.draftModelPath = options.draftModelPath || null;
+    this.mmprojPath = options.mmprojPath || null;
     this.activeDraftModelPath = null;
 
     const baseArgs = [
@@ -156,6 +164,7 @@ class LlamaServerManager {
       String(options.contextSize || DEFAULT_CONTEXT_SIZE),
       "--jinja",
     ];
+    if (this.mmprojPath) baseArgs.push("--mmproj", this.mmprojPath);
 
     // Draft flags stay separate from baseArgs so the fallback ladder can retry without
     // them when a stale (pre-b9763) binary rejects the MTP args at parse time.
@@ -314,7 +323,7 @@ class LlamaServerManager {
         env,
         detached: process.platform !== "win32",
       });
-      sidecarPidFile.write("llama", this.process.pid);
+      sidecarPidFile.write(this.pidName, this.process.pid);
 
       let stderrBuffer = "";
       let exitCode = null;
@@ -349,7 +358,7 @@ class LlamaServerManager {
         this.ready = false;
         this.process = null;
         this.stopHealthCheck();
-        sidecarPidFile.clear("llama");
+        sidecarPidFile.clear(this.pidName);
       });
 
       const getProcessInfo = () => ({ stderr: stderrBuffer, exitCode, exitSignal });
@@ -631,6 +640,7 @@ class LlamaServerManager {
     this.ready = false;
     this.port = null;
     this.modelPath = null;
+    this.mmprojPath = null;
     this.draftModelPath = null;
     this.activeDraftModelPath = null;
     this.activeBackend = null;

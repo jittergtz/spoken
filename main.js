@@ -452,6 +452,8 @@ function initializeCoreManagers() {
 }
 
 function registerSidecars() {
+  if (ipcHandlers?.qwenTranscription)
+    sidecarRegistry.register("qwen", () => ipcHandlers.qwenTranscription.stop());
   if (whisperManager) sidecarRegistry.register("whisper", () => whisperManager.stopServer());
   if (parakeetManager) sidecarRegistry.register("parakeet", () => parakeetManager.stopServer());
   if (diarizationManager) {

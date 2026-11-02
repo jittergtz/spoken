@@ -102,6 +102,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     whisperModel,
     localTranscriptionProvider,
     parakeetModel,
+    qwenModel,
     cloudTranscriptionProvider,
     cloudTranscriptionModel,
     cloudTranscriptionBaseUrl,
@@ -258,7 +259,12 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   }, []);
 
   useEffect(() => {
-    const modelToCheck = localTranscriptionProvider === "nvidia" ? parakeetModel : whisperModel;
+    const modelToCheck =
+      localTranscriptionProvider === "qwen"
+        ? qwenModel
+        : localTranscriptionProvider === "nvidia"
+          ? parakeetModel
+          : whisperModel;
     if (!useLocalWhisper || !modelToCheck) {
       setIsModelDownloaded(false);
       return;
@@ -266,6 +272,11 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
     const checkStatus = async () => {
       try {
+        if (localTranscriptionProvider === "qwen") {
+          const result = await window.electronAPI?.qwenModelStatus(qwenModel);
+          setIsModelDownloaded(result?.installed ?? false);
+          return;
+        }
         const result =
           localTranscriptionProvider === "nvidia"
             ? await window.electronAPI?.checkParakeetModelStatus(modelToCheck)
@@ -278,7 +289,11 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     };
 
     checkStatus();
-  }, [useLocalWhisper, whisperModel, parakeetModel, localTranscriptionProvider]);
+    const unsubscribe = window.electronAPI?.onQwenModelFinished?.(() => {
+      void checkStatus();
+    });
+    return () => unsubscribe?.();
+  }, [useLocalWhisper, whisperModel, parakeetModel, qwenModel, localTranscriptionProvider]);
 
   // Auto-register default hotkey when entering the activation step
   const activationStepIndex = steps.findIndex((step) => step.id === "activation");
@@ -653,10 +668,16 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                 updateTranscriptionSettings({ cloudTranscriptionModel: model })
               }
               selectedLocalModel={
-                localTranscriptionProvider === "nvidia" ? parakeetModel : whisperModel
+                localTranscriptionProvider === "qwen"
+                  ? qwenModel
+                  : localTranscriptionProvider === "nvidia"
+                    ? parakeetModel
+                    : whisperModel
               }
-              onLocalModelSelect={(modelId) => {
-                if (localTranscriptionProvider === "nvidia") {
+              onLocalModelSelect={(modelId, provider) => {
+                if (provider === "qwen") {
+                  updateTranscriptionSettings({ qwenModel: modelId });
+                } else if (provider === "nvidia") {
                   updateTranscriptionSettings({ parakeetModel: modelId });
                 } else {
                   updateTranscriptionSettings({ whisperModel: modelId });
@@ -665,7 +686,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
               selectedLocalProvider={localTranscriptionProvider}
               onLocalProviderSelect={(provider) =>
                 updateTranscriptionSettings({
-                  localTranscriptionProvider: provider as "whisper" | "nvidia",
+                  localTranscriptionProvider: provider as "whisper" | "nvidia" | "qwen",
                 })
               }
               useLocalWhisper={useLocalWhisper}
@@ -938,7 +959,11 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         // For non-signed-in users: Setup - check if configuration is complete
         if (useLocalWhisper) {
           const modelToCheck =
-            localTranscriptionProvider === "nvidia" ? parakeetModel : whisperModel;
+            localTranscriptionProvider === "qwen"
+              ? qwenModel
+              : localTranscriptionProvider === "nvidia"
+                ? parakeetModel
+                : whisperModel;
           return modelToCheck !== "" && isModelDownloaded;
         } else {
           // For cloud mode, check if appropriate API key is set

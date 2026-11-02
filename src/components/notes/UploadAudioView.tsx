@@ -243,6 +243,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
     whisperModel,
     localTranscriptionProvider,
     parakeetModel,
+    qwenModel,
     cloudTranscriptionProvider,
     cloudTranscriptionModel,
     cloudTranscriptionBaseUrl,
@@ -371,7 +372,10 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
         }
         return;
       }
-      if (localTranscriptionProvider === "nvidia") {
+      if (localTranscriptionProvider === "qwen") {
+        const r = await window.electronAPI.qwenModelStatus(qwenModel);
+        if (!cancelled) setProviderReady(!!r?.installed);
+      } else if (localTranscriptionProvider === "nvidia") {
         const r = await window.electronAPI.listParakeetModels?.();
         if (!cancelled)
           setProviderReady(
@@ -395,6 +399,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
     remoteTranscriptionUrl,
     useLocalWhisper,
     localTranscriptionProvider,
+    qwenModel,
     cloudTranscriptionProvider,
     cloudTranscriptionBaseUrl,
     openaiApiKey,
@@ -410,6 +415,8 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
   const getActiveModelLabel = (): string => {
     if (isOpenWhisprCloud) return t("notes.upload.openwhisprCloud");
     if (useLocalWhisper) {
+      if (localTranscriptionProvider === "qwen")
+        return qwenModel === "qwen3-asr-0.6b-q8" ? "Qwen3-ASR 0.6B" : "Qwen3-ASR 1.7B";
       if (localTranscriptionProvider === "nvidia")
         return `Parakeet · ${parakeetModel || "default"}`;
       return `Whisper · ${whisperModel || "base"}`;
@@ -450,6 +457,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
     localTranscriptionProvider: localTranscriptionProvider as string,
     whisperModel,
     parakeetModel,
+    qwenModel,
     isOpenWhisprCloud,
     getApiKey: getActiveApiKey,
     cloudTranscriptionProvider: cloudTranscriptionProvider as string,

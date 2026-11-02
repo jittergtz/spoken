@@ -20,6 +20,8 @@ const { createTinfoilRealtimeSocket } = require("./tinfoilSecureClient");
 const { getTinfoilChatModels } = require("./tinfoilCatalog");
 const { transcribeWithTinfoil } = require("./tinfoilTranscription");
 const AudioStorageManager = require("./audioStorage");
+const { QwenModelInstaller } = require("./qwenModelInstaller");
+const { QwenTranscription } = require("./qwenTranscription");
 
 // Tinfoil's only realtime STT model — fallback when the renderer omits one.
 const TINFOIL_REALTIME_MODEL = "voxtral-mini-4b-realtime";
@@ -475,6 +477,8 @@ class IPCHandlers {
     this.clipboardManager = managers.clipboardManager;
     this.whisperManager = managers.whisperManager;
     this.parakeetManager = managers.parakeetManager;
+    this.qwenModelInstaller = new QwenModelInstaller();
+    this.qwenTranscription = new QwenTranscription(this.qwenModelInstaller);
     this.diarizationManager = managers.diarizationManager;
     this.windowManager = managers.windowManager;
     this.updateManager = managers.updateManager;
@@ -1956,6 +1960,8 @@ class IPCHandlers {
         const real = resolveAllowedAudioPath(filePath);
         if (!real) return { success: false, error: "File path not allowed" };
         const audioBuffer = fs.readFileSync(real);
+        if (options.provider === "qwen")
+          return await this.qwenTranscription.transcribe(audioBuffer, options.model);
         if (options.provider === "nvidia") {
           const result = await this.parakeetManager.transcribeLocalParakeet(audioBuffer, options);
           return result;
@@ -2439,6 +2445,45 @@ class IPCHandlers {
       }
     });
 
+    ipcMain.handle("transcribe-local-qwen", async (_event, audio, modelId) => {
+      try {
+        return await this.qwenTranscription.transcribe(audio, modelId);
+      } catch (error) {
+        return { success: false, error: error.message };
+      }
+    });
+    ipcMain.handle("qwen-model-status", async (_event, modelId) => this.qwenModelInstaller.status(modelId));
+    ipcMain.handle("qwen-model-install", async (event, modelId) => {
+      try {
+        const result = await this.qwenModelInstaller.install(modelId, (progress) => {
+          if (!event.sender.isDestroyed()) event.sender.send("qwen-model-progress", progress);
+        });
+        if (!event.sender.isDestroyed()) event.sender.send("qwen-model-finished", result);
+        return result;
+      } catch (error) {
+        const result = { success: false, error: error.message, code: error.code, modelId };
+        if (error.code !== "DOWNLOAD_IN_PROGRESS" && !event.sender.isDestroyed())
+          event.sender.send("qwen-model-finished", result);
+        return result;
+      }
+    });
+    ipcMain.handle("qwen-model-cancel", async (_event, modelId) => this.qwenModelInstaller.cancel(modelId));
+    ipcMain.handle("qwen-model-remove", async (_event, modelId) => {
+      try {
+        if (this.qwenTranscription.active)
+          return { success: false, error: "Qwen transcription is in progress" };
+        await this.qwenTranscription.stop();
+        return await this.qwenModelInstaller.remove(modelId);
+      } catch (error) {
+        return { success: false, error: error.message };
+      }
+    });
+    ipcMain.handle("qwen-model-remove-all", async () => {
+      if (this.qwenTranscription.active || this.qwenModelInstaller.active) return { success: false, error: "Qwen is currently in use" };
+      await this.qwenTranscription.stop();
+      return this.qwenModelInstaller.cancelAndRemove();
+    });
+
     ipcMain.handle("check-parakeet-installation", async () => {
       return this.parakeetManager.checkInstallation();
     });
@@ -2695,6 +2740,12 @@ class IPCHandlers {
         await this.parakeetManager?.deleteAllParakeetModels();
       } catch (e) {
         errors.push(`Parakeet models: ${e.message}`);
+      }
+      try {
+        await this.qwenTranscription.stop();
+        await this.qwenModelInstaller.cancelAndRemove();
+      } catch (e) {
+        errors.push(`Qwen models: ${e.message}`);
       }
       try {
         const modelManager = require("./modelManagerBridge").default;
@@ -3629,7 +3680,11 @@ class IPCHandlers {
       if (prefs.useLocalWhisper && prefs.model) {
         // Local mode with model selected - set provider and model for pre-warming
         setVars.LOCAL_TRANSCRIPTION_PROVIDER = prefs.localTranscriptionProvider;
-        if (prefs.localTranscriptionProvider === "nvidia") {
+        if (prefs.localTranscriptionProvider === "qwen") {
+          clearVars.push("LOCAL_WHISPER_MODEL", "PARAKEET_MODEL");
+          this.whisperManager.stopServer().catch(() => {});
+          this.parakeetManager.stopServer().catch(() => {});
+        } else if (prefs.localTranscriptionProvider === "nvidia") {
           setVars.PARAKEET_MODEL = prefs.model;
           clearVars.push("LOCAL_WHISPER_MODEL");
           this.whisperManager.stopServer().catch((err) => {
@@ -3662,6 +3717,7 @@ class IPCHandlers {
             error: err.message,
           });
         });
+        if (!this.qwenTranscription.active) this.qwenTranscription.stop().catch(() => {});
       }
 
       const localServer = resolveLocalServerNeeds(prefs);
@@ -4468,7 +4524,9 @@ class IPCHandlers {
             };
           }
         } else if (settings?.useLocalWhisper) {
-          if (settings.localTranscriptionProvider === "nvidia") {
+          if (settings.localTranscriptionProvider === "qwen") {
+            result = await this.qwenTranscription.transcribe(buffer, settings.qwenModel);
+          } else if (settings.localTranscriptionProvider === "nvidia") {
             const model =
               settings.parakeetModel || process.env.PARAKEET_MODEL || "parakeet-tdt-0.6b-v3";
             result = await this.parakeetManager.transcribeLocalParakeet(buffer, { model });
@@ -5800,7 +5858,9 @@ class IPCHandlers {
 
       try {
         let result;
-        if (meetingLocalProvider === "nvidia") {
+        if (meetingLocalProvider === "qwen") {
+          result = await this.qwenTranscription.transcribe(wav, meetingLocalModel);
+        } else if (meetingLocalProvider === "nvidia") {
           result = await this.parakeetManager.transcribeLocalParakeet(wav, {
             model: meetingLocalModel,
           });
@@ -6061,7 +6121,9 @@ class IPCHandlers {
         const wav = pcm16ToWav(pcm);
 
         let result;
-        if (dictationPreviewProvider === "nvidia") {
+        if (dictationPreviewProvider === "qwen") {
+          result = await this.qwenTranscription.transcribe(wav, dictationPreviewModel);
+        } else if (dictationPreviewProvider === "nvidia") {
           result = await this.parakeetManager.transcribeLocalParakeet(wav, {
             model: dictationPreviewModel,
           });

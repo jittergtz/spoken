@@ -1,7 +1,14 @@
 import type { ModelDefinition } from "../models/ModelRegistry";
 import type { TinfoilCatalogModel } from "../models/tinfoilModels";
 
-export type LocalTranscriptionProvider = "whisper" | "nvidia";
+export type LocalTranscriptionProvider = "whisper" | "nvidia" | "qwen";
+export interface QwenModelProgress {
+  modelId: string;
+  phase: "downloading" | "verifying" | "complete";
+  downloadedBytes: number;
+  totalBytes: number;
+  percentage: number;
+}
 
 export type InferenceMode =
   "spoken" | "openwhispr" | "providers" | "local" | "self-hosted" | "enterprise";
@@ -630,6 +637,7 @@ declare global {
           cloudTranscriptionModel: string;
           cloudTranscriptionBaseUrl?: string;
           parakeetModel: string;
+          qwenModel?: string;
           whisperModel: string;
           preferredLanguage?: string;
           transcriptionMode?: InferenceMode;
@@ -777,7 +785,7 @@ declare global {
       transcribeAudioFile: (
         filePath: string,
         options?: {
-          provider?: "whisper" | "nvidia";
+          provider?: "whisper" | "nvidia" | "qwen";
           model?: string;
           language?: string;
           [key: string]: unknown;
@@ -854,6 +862,10 @@ declare global {
 
       // Whisper operations (whisper.cpp)
       transcribeLocalWhisper: (audioBlob: Blob | ArrayBuffer, options?: any) => Promise<any>;
+      transcribeLocalQwen: (
+        audioBlob: ArrayBuffer,
+        modelId?: string
+      ) => Promise<{ success: boolean; text?: string; error?: string; message?: string }>;
       checkWhisperInstallation: () => Promise<WhisperCheckResult>;
       downloadWhisperModel: (modelName: string) => Promise<WhisperModelResult>;
       onWhisperDownloadProgress: (
@@ -874,6 +886,31 @@ declare global {
         message?: string;
         error?: string;
       }>;
+      qwenModelStatus: (modelId?: string) => Promise<{
+        success: boolean;
+        modelId: string;
+        installed: boolean;
+        downloading: boolean;
+        progress: QwenModelProgress | null;
+      }>;
+      qwenModelInstall: (modelId?: string) => Promise<{
+        success: boolean;
+        installed?: boolean;
+        error?: string;
+        code?: string;
+      }>;
+      qwenModelCancel: (modelId?: string) => Promise<{ success: boolean; error?: string }>;
+      qwenModelRemove: (modelId?: string) => Promise<{ success: boolean; error?: string }>;
+      qwenModelRemoveAll: () => Promise<{ success: boolean; error?: string }>;
+      onQwenModelProgress: (
+        callback: (event: unknown, data: QwenModelProgress) => void
+      ) => () => void;
+      onQwenModelFinished: (
+        callback: (
+          event: unknown,
+          result: { success: boolean; error?: string; code?: string; modelId?: string }
+        ) => void
+      ) => () => void;
 
       // CUDA GPU acceleration
       listGpus?: () => Promise<GpuDevice[]>;

@@ -540,6 +540,7 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
           cloudTranscriptionModel: s.cloudTranscriptionModel,
           cloudTranscriptionBaseUrl: s.cloudTranscriptionBaseUrl,
           parakeetModel: s.parakeetModel,
+          qwenModel: s.qwenModel,
           whisperModel: s.whisperModel,
           preferredLanguage: s.preferredLanguage,
           transcriptionMode: s.transcriptionMode,

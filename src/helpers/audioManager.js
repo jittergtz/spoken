@@ -808,6 +808,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
         localTranscriptionProvider,
         whisperModel,
         parakeetModel,
+        qwenModel,
       } = getSettings();
       const isNvidia = localTranscriptionProvider === "nvidia";
       // Online models stream+commit during capture, so PCM runs even with preview off.
@@ -832,8 +833,8 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
           };
           this._previewSource.connect(this._previewProcessor);
 
-          const provider = isNvidia ? "nvidia" : "whisper";
-          const model = isNvidia ? parakeetModel : whisperModel;
+          const provider = localTranscriptionProvider;
+          const model = localTranscriptionProvider === "qwen" ? qwenModel : isNvidia ? parakeetModel : whisperModel;
           const language = getBaseLanguageCode(getSettings().preferredLanguage);
           window.electronAPI?.startDictationPreview?.({
             provider,
@@ -1234,7 +1235,10 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
       let result;
       let activeModel;
       if (useLocalWhisper) {
-        if (localProvider === "nvidia") {
+        if (localProvider === "qwen") {
+          activeModel = settings.qwenModel || "qwen3-asr-1.7b-q8";
+          result = await this.processWithLocalWhisper(audioBlob, activeModel, metadata, "qwen");
+        } else if (localProvider === "nvidia") {
           activeModel = parakeetModel;
           result = await this.processWithLocalParakeet(audioBlob, parakeetModel, metadata);
         } else {
@@ -1330,7 +1334,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
     }
   }
 
-  async processWithLocalWhisper(audioBlob, model = "base", metadata = {}) {
+  async processWithLocalWhisper(audioBlob, model = "base", metadata = {}, provider = "whisper") {
     const timings = {};
 
     try {
@@ -1359,7 +1363,10 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
       );
 
       const transcriptionStart = performance.now();
-      const result = await window.electronAPI.transcribeLocalWhisper(arrayBuffer, options);
+      const result =
+        provider === "qwen"
+          ? await window.electronAPI.transcribeLocalQwen(arrayBuffer, model)
+          : await window.electronAPI.transcribeLocalWhisper(arrayBuffer, options);
       timings.transcriptionProcessingDurationMs = Math.round(
         performance.now() - transcriptionStart
       );
@@ -1383,14 +1390,20 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
         timings.reasoningProcessingDurationMs = Math.round(performance.now() - reasoningStart);
 
         if (text !== null && text !== undefined) {
-          return { success: true, text: text || result.text, rawText, source: "local", timings };
+          return {
+            success: true,
+            text: text || result.text,
+            rawText,
+            source: provider === "qwen" ? "local-qwen" : "local",
+            timings,
+          };
         } else {
           throw new Error("No text transcribed");
         }
       } else if (result.success === false && result.message === "No audio detected") {
         throw new Error("No audio detected");
       } else {
-        throw new Error(result.message || result.error || "Local Whisper transcription failed");
+        throw new Error(result.message || result.error || `Local ${provider} transcription failed`);
       }
     } catch (error) {
       if (error.message === "No audio detected") {
@@ -1405,11 +1418,11 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
           return { ...fallbackResult, source: "openai-fallback" };
         } catch (fallbackError) {
           throw new Error(
-            `Local Whisper failed: ${error.message}. OpenAI fallback also failed: ${fallbackError.message}`
+            `Local ${provider} failed: ${error.message}. OpenAI fallback also failed: ${fallbackError.message}`
           );
         }
       } else {
-        throw new Error(`Local Whisper failed: ${error.message}`);
+        throw new Error(`Local ${provider} failed: ${error.message}`);
       }
     }
   }

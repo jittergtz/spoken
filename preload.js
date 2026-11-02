@@ -244,6 +244,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Local Whisper functions (whisper.cpp)
   transcribeLocalWhisper: (audioBlob, options) =>
     ipcRenderer.invoke("transcribe-local-whisper", audioBlob, options),
+  transcribeLocalQwen: (audioBlob, modelId) => ipcRenderer.invoke("transcribe-local-qwen", audioBlob, modelId),
   checkWhisperInstallation: () => ipcRenderer.invoke("check-whisper-installation"),
   downloadWhisperModel: (modelName) => ipcRenderer.invoke("download-whisper-model", modelName),
   onWhisperDownloadProgress: registerListener("whisper-download-progress"),
@@ -252,6 +253,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
   deleteWhisperModel: (modelName) => ipcRenderer.invoke("delete-whisper-model", modelName),
   deleteAllWhisperModels: () => ipcRenderer.invoke("delete-all-whisper-models"),
   cancelWhisperDownload: () => ipcRenderer.invoke("cancel-whisper-download"),
+  qwenModelStatus: (modelId) => ipcRenderer.invoke("qwen-model-status", modelId),
+  qwenModelInstall: (modelId) => ipcRenderer.invoke("qwen-model-install", modelId),
+  qwenModelCancel: (modelId) => ipcRenderer.invoke("qwen-model-cancel", modelId),
+  qwenModelRemove: (modelId) => ipcRenderer.invoke("qwen-model-remove", modelId),
+  qwenModelRemoveAll: () => ipcRenderer.invoke("qwen-model-remove-all"),
+  onQwenModelProgress: registerListener("qwen-model-progress"),
+  onQwenModelFinished: registerListener("qwen-model-finished"),
   checkFFmpegAvailability: () => ipcRenderer.invoke("check-ffmpeg-availability"),
   getAudioDiagnostics: () => ipcRenderer.invoke("get-audio-diagnostics"),
 
