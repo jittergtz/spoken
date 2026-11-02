@@ -186,7 +186,25 @@ export default function QwenModelInstaller({
             {progress &&
               ` · ${progress.percentage}% · ${(progress.downloadedBytes / 1e9).toFixed(2)} / ${(progress.totalBytes / 1e9).toFixed(2)} GB`}
           </p>
-          <progress className="w-full h-1.5" value={progress?.percentage} max={100} />
+          <div
+            role="progressbar"
+            aria-label={t("qwenInstaller.downloadProgress", {
+              defaultValue: "Model download progress",
+            })}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress ? Math.min(100, Math.max(0, progress.percentage)) : undefined}
+            className="h-1.5 w-full overflow-hidden rounded-full bg-foreground/10"
+          >
+            <div
+              className={`h-full rounded-full bg-gradient-to-r from-green-200 to-green-500 transition-[width] duration-300 ease-out ${!progress ? "w-1/3 animate-pulse" : ""}`}
+              style={
+                progress
+                  ? { width: `${Math.min(100, Math.max(0, progress.percentage))}%` }
+                  : undefined
+              }
+            />
+          </div>
         </div>
       )}
       {error && (
