@@ -239,7 +239,7 @@ export default function SnippetsView() {
       )}
 
       {/* ─── Snippet list ─── */}
-      <div className="rounded-md border border-foreground/8 dark:border-white/6 bg-foreground/[0.02] dark:bg-white/[0.03] px-4 py-3">
+      <div className="rounded-md border border-transparent dark:border-white/6 bg-card/50 dark:bg-white/[0.03] px-4 py-3">
         {snippets.length > 0 && (
           <>
             <h3 className="text-xs font-semibold text-foreground/40">
@@ -264,7 +264,7 @@ export default function SnippetsView() {
                 {t("dictionary.snippets.new")}
               </Button>
             </div>
-            <div className="flex-1 min-w-[260px] rounded-md border border-foreground/8 dark:border-white/6 bg-foreground/[0.02] dark:bg-white/[0.03] px-3.5 py-3 flex flex-col gap-2.5">
+            <div className="flex-1 min-w-[260px] rounded-md border border-transparent dark:border-white/6 bg-card/50 dark:bg-white/[0.03] px-3.5 py-3 flex flex-col gap-2.5">
               {EXAMPLE_KEYS.map((key) => (
                 <div key={key} className="flex items-start gap-2">
                   <span className="shrink-0 inline-flex items-center gap-1 rounded-[5px] bg-primary/10 dark:bg-primary/15 border border-primary/15 dark:border-primary/20 px-1.5 py-0.5 text-xs text-primary">

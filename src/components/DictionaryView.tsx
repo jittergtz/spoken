@@ -233,7 +233,7 @@ export default function DictionaryView() {
           )}
 
           {/* ─── Agent name (always recognized) ─── */}
-          <div className="rounded-md border border-primary/15 dark:border-primary/20 bg-primary/3 dark:bg-primary/6 px-4 py-2.5 flex items-center justify-between gap-3">
+          <div className="rounded-md border border-transparent dark:border-primary/20 bg-card/50 dark:bg-primary/6 px-4 py-2.5 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 min-w-0">
               <Sparkles size={11} className="text-primary/70 shrink-0" />
               <span className="text-xs font-medium text-primary truncate">{agentName}</span>
@@ -244,7 +244,7 @@ export default function DictionaryView() {
           </div>
 
           {/* ─── Dictionary list ─── */}
-          <div className="rounded-md border border-foreground/8 dark:border-white/6 bg-foreground/[0.02] dark:bg-white/[0.03] px-4 py-3">
+          <div className="rounded-md border border-transparent dark:border-white/6 bg-card/50 dark:bg-white/[0.03] px-4 py-3">
             {userWords.length > 0 && (
               <>
                 <div className="flex items-center justify-between">

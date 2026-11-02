@@ -111,7 +111,7 @@ export default function UpdateNotificationOverlay() {
 
           <button
             onClick={() => respond("update")}
-            className="shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 text-[11px] font-medium px-2.5 py-1 rounded-md transition-colors"
+            className="shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 text-[11px] font-medium px-2.5 py-1 rounded-full transition-colors"
           >
             {t("updateNotification.cta")}
           </button>

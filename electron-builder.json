@@ -150,15 +150,8 @@
     "entitlementsInherit": "resources/mac/entitlements.mac.plist",
     "identity": "Gizmo Labs Inc. (T832773L2J)",
     "notarize": true,
-    "extraResources": [
-      {
-        "from": "src/assets/Assets.car",
-        "to": "Assets.car"
-      }
-    ],
     "extendInfo": {
       "LSUIElement": false,
-      "CFBundleIconName": "spoken",
       "NSMicrophoneUsageDescription": "Spoken uses the microphone to capture your voice for transcription.",
       "NSAudioCaptureUsageDescription": "Spoken uses system audio to capture other participants' audio from calls and meetings.",
       "NSAccessibilityUsageDescription": "Spoken needs accessibility permissions to paste transcribed text into other applications."

@@ -1507,7 +1507,7 @@ function SelectedView({
 
   return (
     <div style={{ animation: "float-up 0.3s ease-out" }}>
-      <div className="rounded-lg border border-foreground/8 dark:border-white/6 bg-surface-1/40 dark:bg-white/[0.03] backdrop-blur-sm p-4 mb-3">
+      <div className="rounded-lg border border-transparent dark:border-white/6 bg-card/50 dark:bg-white/[0.03] backdrop-blur-sm p-4 mb-3">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-[8px] bg-primary/8 dark:bg-primary/12 border border-primary/10 dark:border-primary/15 flex items-center justify-center shrink-0">
             <FileAudio size={15} className="text-primary/60" />
@@ -1537,7 +1537,7 @@ function SelectedView({
 
       {/* BYOK file too large — shared explanation */}
       {byokTooLarge && (
-        <div className="rounded-lg border border-primary/12 dark:border-primary/15 bg-primary/[0.03] px-3 py-2.5 mb-3">
+        <div className="rounded-lg border border-transparent dark:border-primary/15 bg-card/50 dark:bg-primary/[0.03] px-3 py-2.5 mb-3">
           <p className="text-xs text-foreground/50 leading-relaxed">
             {t("notes.upload.byokTooLarge")}
           </p>
@@ -1558,7 +1558,7 @@ function SelectedView({
 
       {/* Cloud free user, file > 25 MB → needs paid plan */}
       {requiresUpgrade && !fileTooLarge && (
-        <div className="rounded-lg border border-primary/12 dark:border-primary/15 bg-primary/[0.03] px-3 py-2.5 mb-3">
+        <div className="rounded-lg border border-transparent dark:border-primary/15 bg-card/50 dark:bg-primary/[0.03] px-3 py-2.5 mb-3">
           <p className="text-xs text-foreground/50 leading-relaxed">
             {t("notes.upload.paidPlanRequired")}
           </p>

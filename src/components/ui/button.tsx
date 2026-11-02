@@ -18,7 +18,7 @@ const buttonVariants = cva(
       variant: {
         // Primary CTA — ultra-premium with subtle depth
         default: [
-          "relative text-primary-foreground font-semibold tracking-[0.005em]",
+          "relative rounded-full text-primary-foreground font-semibold tracking-[0.005em]",
           "bg-primary",
           "border border-primary/60",
           "shadow-sm",

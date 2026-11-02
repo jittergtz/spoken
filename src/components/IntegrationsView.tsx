@@ -268,7 +268,7 @@ export default function IntegrationsView({ isPaid, onUpgrade }: IntegrationsView
       </div>
 
       {!hasAccounts && (
-        <div className="rounded-lg border border-border/40 dark:border-border-subtle/40 bg-muted/20 dark:bg-surface-2/30 p-4 flex items-start gap-3">
+        <div className="rounded-lg border border-transparent dark:border-border-subtle/40 bg-card/50 dark:bg-surface-2/30 p-4 flex items-start gap-3">
           <Info size={15} className="text-primary/60 shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-foreground/80">

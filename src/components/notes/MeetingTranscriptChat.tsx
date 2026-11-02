@@ -224,7 +224,7 @@ function AddContactButton({
             onClick={submit}
             disabled={!canSave}
             className={cn(
-              "px-2 py-1 rounded text-[11px] font-medium transition-colors cursor-pointer",
+              "px-2 py-1 rounded-full text-[11px] font-medium transition-colors cursor-pointer",
               "bg-primary text-primary-foreground hover:bg-primary/90",
               "disabled:bg-primary/20 disabled:text-primary-foreground/40 disabled:pointer-events-none"
             )}

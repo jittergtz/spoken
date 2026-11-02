@@ -91,7 +91,7 @@ export default function HistoryView({
       <div className={cn("mx-auto", isConnected ? "max-w-5xl" : "max-w-3xl")}>
         {history.length === 0 && <div className="mb-2 flex justify-end">{discardedToggle}</div>}
         {showCloudMigrationBanner && (
-          <div className="mb-3 relative rounded-lg border border-primary/20 bg-primary/5 dark:bg-primary/10 p-3">
+          <div className="mb-3 relative rounded-lg border border-transparent bg-card/50 dark:border-primary/20 dark:bg-primary/10 p-3">
             <button
               onClick={() => {
                 setShowCloudMigrationBanner(false);
@@ -131,7 +131,7 @@ export default function HistoryView({
         )}
 
         {!useCleanupModel && !aiCTADismissed && (
-          <div className="mb-3 relative rounded-lg border border-primary/20 bg-primary/5 dark:bg-primary/10 p-3">
+          <div className="mb-3 relative rounded-lg border border-transparent bg-card/50 dark:border-primary/20 dark:bg-primary/10 p-3">
             <button
               onClick={() => {
                 localStorage.setItem("aiCTADismissed", "true");
@@ -177,7 +177,7 @@ export default function HistoryView({
               </div>
             )}
             {!dataRetentionEnabled && (
-              <div className="mb-3 rounded-lg border border-neutral-500/30 bg-neutral-500/5 dark:bg-neutral-500/10 px-3.5 py-2.5 flex items-center gap-2.5">
+              <div className="mb-3 rounded-lg border border-transparent bg-card/50 dark:border-neutral-500/30 dark:bg-neutral-500/10 px-3.5 py-2.5 flex items-center gap-2.5">
                 <span className="text-neutral-600 dark:text-neutral-400 shrink-0 text-sm">⊘</span>
                 <p className="text-xs text-neutral-700 dark:text-neutral-300/90 leading-relaxed">
                   {t("controlPanel.history.dataRetentionDisabled")}

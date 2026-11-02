@@ -183,7 +183,7 @@ export default function ControlPanelSidebar({
 
       {showLimitBanner && (
         <div className="px-2 pb-2">
-          <div className="rounded-lg border border-destructive/25 bg-destructive/5 dark:bg-destructive/10 p-3">
+          <div className="rounded-lg border border-transparent bg-card/50 dark:border-destructive/25 dark:bg-destructive/10 p-3">
             <div className="flex flex-col items-center text-center">
               <img src={logoIcon} alt="" className="w-7 h-7 rounded-md mb-2" />
               <p className="text-xs font-medium text-foreground mb-0.5">
@@ -194,7 +194,7 @@ export default function ControlPanelSidebar({
               </p>
               <button
                 onClick={onUpgrade}
-                className="w-full h-7 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
+                className="w-full h-7 rounded-full bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
               >
                 {t("sidebar.viewPlans")}
               </button>
@@ -205,7 +205,7 @@ export default function ControlPanelSidebar({
 
       {showUpgradeBanner && (
         <div className="px-2 pb-2">
-          <div className="relative rounded-lg border border-primary/20 bg-primary/5 dark:bg-primary/10 p-3">
+          <div className="relative rounded-lg border border-transparent bg-card/50 dark:border-primary/20 dark:bg-primary/10 p-3">
             <button
               onClick={() => {
                 setUpgradeDismissed(true);
@@ -226,7 +226,7 @@ export default function ControlPanelSidebar({
               </p>
               <button
                 onClick={onUpgrade}
-                className="w-full h-7 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
+                className="w-full h-7 rounded-full bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
               >
                 {t("sidebar.learnMore")}
               </button>

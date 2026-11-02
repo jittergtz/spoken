@@ -926,7 +926,7 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
           <div className="flex-1 overflow-y-auto pt-1">
             {usage?.isPastDue && activeView === "home" && (
               <div className="max-w-3xl mx-auto w-full mb-3">
-                <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950/50 p-3">
+                <div className="rounded-lg border border-transparent dark:border-neutral-800 bg-card/50 dark:bg-neutral-950/50 p-3">
                   <div className="flex items-start gap-3">
                     <div className="shrink-0 w-8 h-8 rounded-md bg-neutral-100 dark:bg-neutral-900/50 flex items-center justify-center">
                       <AlertTriangle size={16} className="text-neutral-600 dark:text-neutral-400" />
@@ -960,7 +960,7 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
               activeView === "home" &&
               !gpuBannerDismissed && (
                 <div className="max-w-3xl mx-auto w-full mb-3">
-                  <div className="rounded-lg border border-primary/20 dark:border-primary/15 bg-primary/5 p-3">
+                  <div className="rounded-lg border border-transparent dark:border-primary/15 bg-card/50 dark:bg-primary/5 p-3">
                     <div className="flex items-start gap-3">
                       <div className="shrink-0 w-8 h-8 rounded-md bg-primary/10 dark:bg-primary/15 flex items-center justify-center">
                         <Zap size={16} className="text-primary" />

@@ -1713,7 +1713,7 @@ export default function SettingsPage({
                   </SettingsPanelRow>
                 </SettingsPanel>
 
-                <div className="rounded-lg border border-primary/20 dark:border-primary/15 bg-primary/3 dark:bg-primary/6 p-4">
+                <div className="rounded-lg border border-transparent dark:border-primary/15 bg-card/50 dark:bg-primary/6 p-4">
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-md bg-primary/10 dark:bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
                       <Sparkles className="w-4 h-4 text-primary" />

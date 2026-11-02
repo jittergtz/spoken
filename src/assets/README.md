@@ -1,6 +1,6 @@
 # Assets Directory
 
-This directory contains app icons and other assets for OpenWhispr.
+This directory contains app icons and other assets for Spoken.
 
 ## Required Icons
 
@@ -24,6 +24,6 @@ You can create these icons using:
 - Design tools like Figma, Sketch, or Photoshop
 - Command line tools like ImageMagick
 
-## Placeholder
-
-Until you add your own icons, the app will use system default icons during development.
+`SpokenV2.png` is the source artwork for these icons. The macOS icon includes
+transparent padding to fit alongside other macOS app icons. The legacy
+`openwhispr.icon` catalog is not used for packaging.
