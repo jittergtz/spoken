@@ -475,6 +475,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
   saveAllKeysToEnv: () => ipcRenderer.invoke("save-all-keys-to-env"),
   syncStartupPreferences: (prefs) => ipcRenderer.invoke("sync-startup-preferences", prefs),
 
+  chatgptSubscriptionStatus: () => ipcRenderer.invoke("chatgpt-subscription-status"),
+  chatgptSubscriptionSignIn: () => ipcRenderer.invoke("chatgpt-subscription-sign-in"),
+  chatgptSubscriptionDisconnect: () => ipcRenderer.invoke("chatgpt-subscription-disconnect"),
+  chatgptSubscriptionModels: () => ipcRenderer.invoke("chatgpt-subscription-models"),
+  chatgptSubscriptionGenerate: (request) => ipcRenderer.invoke("chatgpt-subscription-generate", request),
+
   // Local reasoning
   processLocalReasoning: (text, modelId, agentName, config) =>
     ipcRenderer.invoke("process-local-reasoning", text, modelId, agentName, config),

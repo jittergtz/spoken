@@ -597,6 +597,21 @@ class ReasoningService extends BaseReasoningService {
     config: ReasoningConfig & { systemPrompt: string },
     tools?: Record<string, import("ai").Tool>
   ): AsyncGenerator<AgentStreamChunk, void, unknown> {
+    if (provider === "chatgpt-subscription") {
+      if (tools && Object.keys(tools).length) {
+        throw new Error("Tools are not available with the ChatGPT subscription provider yet.");
+      }
+      const text = messages.filter((message) => message.role !== "system")
+        .map((message) => `${message.role}: ${message.content}`).join("\n\n");
+      const result = await window.electronAPI.chatgptSubscriptionGenerate({
+        text,
+        model,
+        instructions: config.systemPrompt,
+      });
+      yield { type: "content", text: result };
+      yield { type: "done", finishReason: "stop" };
+      return;
+    }
     const route = resolveChatRoute({
       provider,
       lanUrl: config.lanUrl,
@@ -920,6 +935,9 @@ class ReasoningService extends BaseReasoningService {
       }
 
       const settings = getSettings();
+      if (settings.cleanupProvider === "chatgpt-subscription") {
+        return (await window.electronAPI.chatgptSubscriptionStatus()).connected;
+      }
       if (settings.cleanupProvider === "custom" && settings.cleanupCloudBaseUrl?.trim()) {
         logger.logReasoning("API_KEY_CHECK", {
           customProvider: true,

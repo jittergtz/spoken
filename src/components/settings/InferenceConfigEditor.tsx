@@ -27,6 +27,7 @@ function isProviderValidForMode(provider: string, mode: InferenceMode): boolean 
   switch (mode) {
     case "providers":
       return (
+        provider === "chatgpt-subscription" ||
         provider === "custom" ||
         provider === "openrouter" ||
         modelRegistry.getCloudProviders().some((p) => p.id === provider)

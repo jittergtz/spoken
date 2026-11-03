@@ -1025,6 +1025,16 @@ declare global {
         config: any
       ) => Promise<{ success: boolean; text?: string; error?: string }>;
 
+      chatgptSubscriptionStatus: () => Promise<{ connected: boolean; email: string }>;
+      chatgptSubscriptionSignIn: () => Promise<{ connected: boolean; email: string }>;
+      chatgptSubscriptionDisconnect: () => Promise<{ success: boolean; revoked?: boolean }>;
+      chatgptSubscriptionModels: () => Promise<Array<{ value: string; label: string }>>;
+      chatgptSubscriptionGenerate: (request: {
+        text: string;
+        model: string;
+        instructions: string;
+      }) => Promise<string>;
+
       // Enterprise reasoning (Bedrock, Azure, Vertex)
       processEnterpriseReasoning: (
         text: string,

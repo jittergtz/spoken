@@ -342,6 +342,8 @@ export function getModelProvider(modelId: string): string {
 
   const storedProvider = getSettings().cleanupProvider;
 
+  if (storedProvider === "chatgpt-subscription") return storedProvider;
+
   if (storedProvider === "custom") {
     return "custom";
   }

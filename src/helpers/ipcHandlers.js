@@ -932,6 +932,17 @@ class IPCHandlers {
   }
 
   setupHandlers() {
+    const chatgpt = require("./chatgptSubscription");
+    ipcMain.handle("chatgpt-subscription-status", () => chatgpt.status());
+    ipcMain.handle("chatgpt-subscription-sign-in", () => chatgpt.signIn());
+    ipcMain.handle("chatgpt-subscription-disconnect", () => chatgpt.disconnect());
+    ipcMain.handle("chatgpt-subscription-models", () => chatgpt.models());
+    ipcMain.handle("chatgpt-subscription-generate", (_event, request) => {
+      if (!request || typeof request.text !== "string" || typeof request.model !== "string" || typeof request.instructions !== "string") {
+        throw new Error("Invalid ChatGPT request.");
+      }
+      return chatgpt.generate(request);
+    });
     ipcMain.handle("window-minimize", () => {
       if (this.windowManager.controlPanelWindow) {
         this.windowManager.controlPanelWindow.minimize();
