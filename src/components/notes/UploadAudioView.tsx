@@ -1197,9 +1197,9 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
                 className={cn(
                   "relative w-7 h-4 rounded-full transition-colors shrink-0",
                   diarizationDownloading
-                    ? "bg-primary/50 animate-pulse"
+                    ? "bg-switch/50 animate-pulse"
                     : diarizationEnabled
-                      ? "bg-primary"
+                      ? "bg-switch"
                       : "bg-muted"
                 )}
                 disabled={diarizationDownloading}

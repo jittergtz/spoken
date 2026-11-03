@@ -8,8 +8,6 @@ import {
   AlertTriangle,
   Zap,
   ChevronLeft,
-  PanelLeftOpen,
-  PanelLeftClose,
 } from "lucide-react";
 import UpgradePrompt from "./UpgradePrompt";
 import PostMigrationOnboarding from "./PostMigrationOnboarding";
@@ -21,7 +19,6 @@ import { useUpdater } from "../hooks/useUpdater";
 import { useSettings } from "../hooks/useSettings";
 import { useAuth } from "../hooks/useAuth";
 import { useUsage } from "../hooks/useUsage";
-import { useCollapsibleSidebar } from "../hooks/useCollapsibleSidebar";
 import {
   useTranscriptions,
   useShowDiscarded,
@@ -66,9 +63,6 @@ const platform = getCachedPlatform();
 
 const SIDEBAR_WIDTH_PX = 192;
 
-const toggleIconClass =
-  "text-foreground/60 group-hover:text-foreground/75 dark:text-foreground/50 dark:group-hover:text-foreground/65 transition-colors duration-150";
-
 const SettingsModal = React.lazy(() => import("./SettingsModal"));
 const ReferralModal = React.lazy(() => import("./ReferralModal"));
 const PersonalNotesView = React.lazy(() => import("./notes/PersonalNotesView"));
@@ -104,14 +98,6 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
   const showDiscarded = useShowDiscarded();
   const [showCloudMigrationBanner, setShowCloudMigrationBanner] = useState(false);
   const [activeView, setActiveView] = useState<ControlPanelView>("home");
-  const {
-    collapsed: sidebarCollapsed,
-    peek: sidebarPeek,
-    toggle: toggleSidebar,
-    showPeek: showSidebarPeek,
-    hidePeek: hideSidebarPeek,
-    leaveToggle: leaveSidebarToggle,
-  } = useCollapsibleSidebar();
   const isMeetingMode = useIsMeetingMode();
   const isNarrowWindow = useIsNarrowWindow();
   const activeNoteId = useActiveNoteId();
@@ -839,22 +825,11 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
       <div className="flex flex-1 overflow-hidden relative">
         <div
           className="shrink-0 transition-[width] duration-300 ease-out"
-          style={{ width: sidebarCollapsed || isSidePanelLayout ? 0 : SIDEBAR_WIDTH_PX }}
+          style={{ width: isSidePanelLayout ? 0 : SIDEBAR_WIDTH_PX }}
         />
         <div
-          className={`absolute inset-y-0 left-0 z-30 transition-transform duration-300 ease-out${
-            sidebarCollapsed && sidebarPeek && !isSidePanelLayout
-              ? " shadow-[10px_0_40px_-18px_rgba(0,0,0,0.2)]"
-              : ""
-          }`}
-          style={{
-            transform:
-              !isSidePanelLayout && (!sidebarCollapsed || sidebarPeek)
-                ? "translateX(0)"
-                : "translateX(-100%)",
-          }}
-          onMouseEnter={sidebarCollapsed ? showSidebarPeek : undefined}
-          onMouseLeave={sidebarCollapsed ? hideSidebarPeek : undefined}
+          className="absolute inset-y-0 left-0 z-30 transition-transform duration-300 ease-out"
+          style={{ transform: isSidePanelLayout ? "translateX(-100%)" : "translateX(0)" }}
         >
           <ControlPanelSidebar
             activeView={activeView}
@@ -871,8 +846,6 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
             }}
             isOverLimit={usage?.isOverLimit ?? false}
             userName={user?.name}
-            userEmail={user?.email}
-            userImage={user?.image}
             isSignedIn={isSignedIn}
             authLoaded={authLoaded}
             isProUser={!!(usage?.isSubscribed || usage?.isTrial)}
@@ -1076,28 +1049,6 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
             )}
           </div>
         </main>
-        {!isSidePanelLayout && (
-          <div
-            className={`absolute z-40 flex h-10 items-center ${
-              platform === "darwin" ? "left-21 top-2" : "left-2 top-0"
-            }`}
-            style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-            onMouseEnter={sidebarCollapsed ? showSidebarPeek : undefined}
-            onMouseLeave={sidebarCollapsed ? leaveSidebarToggle : undefined}
-          >
-            <button
-              onClick={toggleSidebar}
-              aria-label={sidebarCollapsed ? t("sidebar.expand") : t("sidebar.collapse")}
-              className="group flex items-center justify-center h-7 w-7 rounded-md outline-none hover:bg-foreground/5 dark:hover:bg-white/5 focus-visible:ring-1 focus-visible:ring-primary/30 transition-colors duration-150"
-            >
-              {sidebarCollapsed ? (
-                <PanelLeftOpen size={15} className={toggleIconClass} />
-              ) : (
-                <PanelLeftClose size={15} className={toggleIconClass} />
-              )}
-            </button>
-          </div>
-        )}
       </div>
       <BackgroundActionToastListener />
     </div>

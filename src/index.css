@@ -7,7 +7,8 @@
 @theme {
   /* Spoken Theme — registers color tokens with Tailwind v4.
      These are the light-mode defaults; .dark overrides them below. */
-  --color-primary: #171717;
+  --color-primary: oklch(51.853% 0.25058 265.362);
+  --color-switch: #007aff;
   --color-primary-foreground: #ffffff;
   --color-secondary: #f5f5f5;
   --color-secondary-foreground: #171717;
@@ -68,8 +69,8 @@
   /* Border Radius — ultra-tight, premium macOS-style rounding */
   --radius: 0.875rem; /* 6px - default for buttons, inputs */
   --radius-sm: 0.65rem; /* 4px - minimal rounding */
-  --radius-md: 0.775rem; /* 6px - standard */
-  --radius-lg: 0.8rem; /* 8px - cards, panels */
+  --radius-md: 0.875rem; /* 6px - standard */
+  --radius-lg: 0.9rem; /* 8px - cards, panels */
   --radius-xl: 0.625rem; /* 10px - large cards */
 
   /* Neutral brand colors */
@@ -90,13 +91,13 @@
 
 .dark {
   /* Dark mode — neutral surfaces with a clear elevation hierarchy. */
-  --color-background: oklch(0% 0 0);
-  --color-foreground: oklch(0.93 0 0);
+  --color-background: rgb(255, 255, 255);
+  --color-foreground: oklch(100% 0.00011 271.152);
   --color-card: oklch(0.24 0 0);
   --color-card-foreground: oklch(0.93 0 0);
   --color-popover: oklch(0.32 0 0);
   --color-popover-foreground: oklch(0.93 0 0);
-  --color-primary: oklch(0.93 0 0);
+  --color-primary: oklch(46.4% 0.00005 271.152);
   --color-primary-foreground: oklch(0.16 0 0);
   --color-secondary: oklch(25.967% 0 0);
   --color-secondary-foreground: oklch(96.416% 0 0);
@@ -118,13 +119,13 @@
 
   /* Each step is lighter than the surface below it. */
   --color-surface-0: oklch(0.18 0 0);
-  --color-surface-1: oklch(0.22 0 0);
+  --color-surface-1: oklch(19.574% 0.00002 271.152 / 0.771);
   --color-surface-2: oklch(0.26 0 0);
   --color-surface-3: oklch(0.30 0 0);
   --color-surface-raised: oklch(0.34 0 0);
 
   /* Border states */
-  --color-border-subtle: oklch(0.33 0 0);
+  --color-border-subtle: oklch(32.504% 0.00004 271.152 / 0.471);
   --color-border-hover: oklch(0.42 0 0);
   --color-border-active: oklch(0.65 0 0);
   --color-link: oklch(0.82 0 0);
@@ -200,21 +201,9 @@ body:has(.control-panel-glass) #root {
   background: rgb(0 0 0 / 58%);
 }
 
-.control-panel-glass .control-panel-sidebar {
-  background: rgb(255 255 255 / 24%);
-}
-
-.dark .control-panel-glass .control-panel-sidebar {
-  background: rgb(255 255 255 / 4%);
-}
-
 @media (prefers-reduced-transparency: reduce) {
   .control-panel-glass {
     background: var(--color-background);
-  }
-
-  .control-panel-glass .control-panel-sidebar {
-    background: var(--color-surface-1);
   }
 }
 
@@ -480,6 +469,19 @@ a:hover {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+@keyframes dictation-processing {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+.dictation-processing-dot {
+  animation: dictation-processing 900ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dictation-processing-dot { animation: none; }
 }
 
 @keyframes waveform-bar {

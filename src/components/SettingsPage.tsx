@@ -1880,7 +1880,7 @@ export default function SettingsPage({
                       className="flex items-center gap-1.5 mt-1"
                     >
                       <div
-                        className={`relative w-7 h-4 rounded-full transition-colors ${billingState.pro ? "bg-primary" : "bg-muted"}`}
+                        className={`relative w-7 h-4 rounded-full transition-colors ${billingState.pro ? "bg-switch" : "bg-muted"}`}
                       >
                         <div
                           className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform ${billingState.pro ? "translate-x-3" : ""}`}
@@ -1976,7 +1976,7 @@ export default function SettingsPage({
                       className="flex items-center gap-1.5 mt-1"
                     >
                       <div
-                        className={`relative w-7 h-4 rounded-full transition-colors ${billingState.business ? "bg-primary" : "bg-muted"}`}
+                        className={`relative w-7 h-4 rounded-full transition-colors ${billingState.business ? "bg-switch" : "bg-muted"}`}
                       >
                         <div
                           className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform ${billingState.business ? "translate-x-3" : ""}`}

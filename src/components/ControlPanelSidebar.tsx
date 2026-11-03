@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import {
-  Home,
-  MessageSquare,
   NotebookPen,
-  BookOpen,
   Upload,
   Blocks,
   Gift,
-  Settings,
-  HelpCircle,
-  UserCircle,
   UserPlus,
   X,
   Search,
-  Laptop,
 } from "lucide-react";
 import logoIcon from "../assets/icon.png";
+import homeIcon from "../assets/icons/sidebar/home.png";
+import chatIcon from "../assets/icons/sidebar/chat.png";
+import dictionaryIcon from "../assets/icons/sidebar/dictionary.png";
+import settingsIcon from "../assets/icons/sidebar/settings.png";
+import supportIcon from "../assets/icons/sidebar/support.png";
 import { useTranslation } from "react-i18next";
 import { cn } from "./lib/utils";
-import SupportDropdown from "./ui/SupportDropdown";
+import { createExternalLinkHandler } from "../utils/externalLinks";
 import { getCachedPlatform } from "../utils/platform";
 import WorkspaceSwitcher from "./WorkspaceSwitcher";
 import InviteTeammateDialog from "./InviteTeammateDialog";
@@ -47,8 +45,6 @@ interface ControlPanelSidebarProps {
   onUpgrade?: () => void;
   isOverLimit?: boolean;
   userName?: string | null;
-  userEmail?: string | null;
-  userImage?: string | null;
   isSignedIn?: boolean;
   authLoaded?: boolean;
   isProUser?: boolean;
@@ -65,8 +61,6 @@ export default function ControlPanelSidebar({
   onUpgrade,
   isOverLimit,
   userName,
-  userEmail,
-  userImage,
   isSignedIn,
   authLoaded,
   isProUser,
@@ -93,18 +87,19 @@ export default function ControlPanelSidebar({
   const navItems: {
     id: ControlPanelView;
     label: string;
-    icon: React.ComponentType<{ size?: number; className?: string }>;
+    icon?: React.ComponentType<{ size?: number; className?: string }>;
+    image?: string;
   }[] = [
-    { id: "home", label: t("sidebar.home"), icon: Home },
-    { id: "chat", label: t("sidebar.chat"), icon: MessageSquare },
+    { id: "home", label: t("sidebar.home"), image: homeIcon },
+    { id: "chat", label: t("sidebar.chat"), image: chatIcon },
     { id: "personal-notes", label: t("sidebar.notes"), icon: NotebookPen },
     { id: "upload", label: t("sidebar.upload"), icon: Upload },
-    { id: "dictionary", label: t("sidebar.dictionary"), icon: BookOpen },
+    { id: "dictionary", label: t("sidebar.dictionary"), image: dictionaryIcon },
     { id: "integrations", label: t("sidebar.integrations"), icon: Blocks },
   ];
 
   return (
-    <div className="control-panel-sidebar w-48 h-full shrink-0 border-r border-border/15 dark:border-white/6 flex flex-col bg-surface-1/60 dark:bg-surface-1">
+    <div className="control-panel-sidebar w-48 h-full shrink-0 border-r border-border/15 dark:border-white/6 flex flex-col bg-transparent">
       <div
         className="w-full h-10 shrink-0"
         style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
@@ -155,15 +150,21 @@ export default function ControlPanelSidebar({
                   : "hover:bg-foreground/4 dark:hover:bg-white/4 active:bg-foreground/6"
               )}
             >
-              <Icon
-                size={15}
-                className={cn(
-                  "shrink-0 transition-colors duration-150",
-                  isActive
-                    ? "text-primary"
-                    : "text-foreground/60 group-hover:text-foreground/75 dark:text-foreground/55 dark:group-hover:text-foreground/70"
-                )}
-              />
+              <span className="flex size-5 shrink-0 items-center justify-center">
+                {item.image ? (
+                  <img src={item.image} alt="" className="size-5" />
+                ) : Icon ? (
+                  <Icon
+                    size={15}
+                    className={cn(
+                      "shrink-0 transition-colors duration-150",
+                      isActive
+                        ? "text-primary"
+                        : "text-foreground/60 group-hover:text-foreground/75 dark:text-foreground/55 dark:group-hover:text-foreground/70"
+                    )}
+                  />
+                ) : null}
+              </span>
               <span
                 className={cn(
                   "text-xs transition-colors duration-150",
@@ -273,60 +274,21 @@ export default function ControlPanelSidebar({
           aria-label={t("sidebar.settings")}
           className={rowButtonClass}
         >
-          <Settings size={15} className={rowIconClass} />
+          <img src={settingsIcon} alt="" className="size-5 shrink-0" />
           <span className={rowLabelClass}>{t("sidebar.settings")}</span>
         </button>
 
-        <SupportDropdown
-          trigger={
-            <button aria-label={t("sidebar.support")} className={rowButtonClass}>
-              <HelpCircle size={15} className={rowIconClass} />
-              <span className={rowLabelClass}>{t("sidebar.support")}</span>
-            </button>
-          }
-        />
-
-        <div className="mx-1 h-px bg-border/10 dark:bg-white/6 my-1.5!" />
-
-        <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md">
-          {AUTH_DISABLED ? (
-            <>
-              <Laptop size={18} className="shrink-0 text-foreground/50 dark:text-foreground/45" />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-foreground/80 dark:text-foreground/80 truncate leading-tight font-medium">
-                  Local Mode
-                </p>
-                <p className="text-[10px] text-foreground/50 dark:text-foreground/50 truncate leading-tight">
-                  No account required
-                </p>
-              </div>
-            </>
-          ) : userImage ? (
-            <img src={userImage} alt="" className="w-6 h-6 rounded-full shrink-0 object-cover" />
-          ) : (
-            <UserCircle size={18} className="shrink-0 text-foreground/50 dark:text-foreground/45" />
-          )}
-          {!AUTH_DISABLED && (
-            <div className="flex-1 min-w-0">
-              {isSignedIn && (userName || userEmail) ? (
-                <>
-                  <p className="text-xs text-foreground/80 dark:text-foreground/80 truncate leading-tight">
-                    {userName || t("sidebar.defaultUser")}
-                  </p>
-                  {userEmail && (
-                    <p className="text-xs text-foreground/55 dark:text-foreground/55 truncate leading-tight">
-                      {userEmail}
-                    </p>
-                  )}
-                </>
-              ) : authLoaded && !isSignedIn ? (
-                <p className="text-xs text-foreground/45 dark:text-foreground/55">
-                  {t("sidebar.notSignedIn")}
-                </p>
-              ) : null}
-            </div>
-          )}
-        </div>
+        <a
+          href="https://github.com/jittergtz/spoken"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={createExternalLinkHandler("https://github.com/jittergtz/spoken")}
+          aria-label={t("sidebar.support")}
+          className={rowButtonClass}
+        >
+          <img src={supportIcon} alt="" className="size-5 shrink-0" />
+          <span className={rowLabelClass}>{t("sidebar.support")}</span>
+        </a>
       </div>
 
       {WORKSPACES_ENABLED && activeWorkspace && (

@@ -120,7 +120,7 @@ export default function SidebarModal<T extends string>({
 
               {/* Sidebar */}
               <div
-                className={`${actualSidebarWidth} shrink-0 border-r border-border/40 dark:border-border-subtle flex flex-col bg-white/25 dark:bg-surface-0 transition-[width] duration-200 ease-out`}
+                className={`${actualSidebarWidth} shrink-0 border-r border-border/40 dark:border-border-subtle flex flex-col bg-transparent transition-[width] duration-200 ease-out`}
               >
                 {/* Navigation */}
                 <nav

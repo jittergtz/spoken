@@ -16,12 +16,64 @@ export const useAudioRecording = (toast, options = {}) => {
   const [micCaptureStatus, setMicCaptureStatus] = useState("inactive");
   const [transcript, setTranscript] = useState("");
   const [partialTranscript, setPartialTranscript] = useState("");
+  const [audioLevel, setAudioLevel] = useState(0);
   const audioManagerRef = useRef(null);
   const startLockRef = useRef(false);
   const stopLockRef = useRef(false);
   const wasRecordingRef = useRef(false);
   const wasMicUnavailableRef = useRef(false);
   const { onToggle } = options;
+
+  useEffect(() => {
+    if (!options.monitorAudioLevel || !isRecording) {
+      setAudioLevel(0);
+      return;
+    }
+
+    let source = null;
+    let analyser = null;
+    let samples = null;
+    const interval = setInterval(() => {
+      const manager = audioManagerRef.current;
+      const nextSource = manager?.streamingSource || manager?._silenceSource;
+      if (nextSource !== source) {
+        if (source && analyser) {
+          try {
+            source.disconnect(analyser);
+          } catch {
+            // Source was already disconnected.
+          }
+          analyser.disconnect();
+        }
+        source = nextSource;
+        analyser = source?.context.createAnalyser() || null;
+        if (analyser) {
+          analyser.fftSize = 512;
+          source.connect(analyser);
+          samples = new Uint8Array(analyser.fftSize);
+        }
+      }
+      if (!analyser || source.context.state !== "running") {
+        setAudioLevel(0);
+        return;
+      }
+      analyser.getByteTimeDomainData(samples);
+      let sum = 0;
+      for (const sample of samples) sum += ((sample - 128) / 128) ** 2;
+      setAudioLevel(Math.min(1, Math.max(0, (Math.sqrt(sum / samples.length) - 0.012) * 12)));
+    }, 80);
+    return () => {
+      clearInterval(interval);
+      if (source && analyser) {
+        try {
+          source.disconnect(analyser);
+        } catch {
+          // Source was already disconnected.
+        }
+      }
+      analyser?.disconnect();
+    };
+  }, [isRecording, options.monitorAudioLevel]);
 
   const performStartRecording = useCallback(
     async ({ voiceAgentRequested = false, translationRequested = false } = {}) => {
@@ -371,6 +423,7 @@ export const useAudioRecording = (toast, options = {}) => {
     isProcessing,
     isStreaming,
     micCaptureStatus,
+    audioLevel,
     transcript,
     partialTranscript,
     startRecording: performStartRecording,
