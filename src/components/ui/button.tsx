@@ -27,6 +27,13 @@ const buttonVariants = cva(
           "transition-[background-color,border-color,color,transform] duration-200 ease-out",
         ].join(" "),
 
+        download: [
+          "relative rounded-full font-semibold tracking-[0.005em]",
+          "bg-download text-download-foreground border border-download/60 shadow-sm",
+          "enabled:hover:bg-download/95 enabled:hover:shadow",
+          "enabled:active:bg-download/90 enabled:active:scale-[0.985]",
+        ].join(" "),
+
         // Success — uses design tokens
         success: [
           "relative text-success-foreground font-semibold tracking-[0.01em]",

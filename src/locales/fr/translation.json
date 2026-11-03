@@ -1468,8 +1468,8 @@
         "title": "Apparence"
       },
       "floatingIcon": {
-        "autoHide": "Masquer automatiquement au repos",
-        "autoHideDescription": "Garder l'icône masquée jusqu'au début de la dictée",
+        "autoHide": "Afficher la barre au repos",
+        "autoHideDescription": "Si cette option est désactivée, la barre apparaît uniquement pendant la dictée.",
         "description": "Contrôlez quand l'icône de dictée est visible à l'écran",
         "title": "Icône flottante",
         "startPosition": "Position de départ",

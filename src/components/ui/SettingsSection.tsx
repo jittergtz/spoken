@@ -175,7 +175,7 @@ export function InferenceModeSelector({
                 }`}
               >
                 <div
-                  className={`transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}
+                  className={`transition-colors ${isActive ? "text-active-icon" : "text-muted-foreground"}`}
                 >
                   {mode.icon}
                 </div>

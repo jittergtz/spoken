@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { CopyableCommand } from "./ui/CopyableCommand";
 import { LogoTile } from "./ui/LogoTile";
 import { useToast } from "./ui/useToast";
-import logo from "../assets/logo.svg";
+import logo from "../assets/icon.png";
 import { AUTH_DISABLED } from "../lib/features";
 
 const CLI_DOCS_URL = "https://docs.spoken.com/cli/install";

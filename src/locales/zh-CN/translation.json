@@ -1415,8 +1415,8 @@
         "title": "外观"
       },
       "floatingIcon": {
-        "autoHide": "空闲时自动隐藏",
-        "autoHideDescription": "在开始听写前保持图标隐藏",
+        "autoHide": "空闲时显示指示条",
+        "autoHideDescription": "关闭后，指示条仅在听写时显示。",
         "description": "控制听写图标在屏幕上的显示",
         "title": "悬浮图标",
         "startPosition": "起始位置",

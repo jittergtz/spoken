@@ -2611,7 +2611,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
         const err = new Error(`API Error: ${response.status} ${errorText}`);
         if (response.status === 401) err.code = "INVALID_KEY";
         else if (response.status === 429) {
-          // The user's own provider rate-limited the request — not an OpenWhispr plan limit
+          // The user's own provider rate-limited the request — not a Spoken plan limit
           err.code = "PROVIDER_RATE_LIMITED";
           err.messageKey = "hooks.audioRecording.errorDescriptions.providerRateLimited";
         } else if (response.status >= 500) err.code = "SERVER_ERROR";
@@ -3158,12 +3158,12 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
     // Self-hosted transcription is batch HTTP to the user's server, never cloud realtime WS.
     if (isSelfHostedTranscription(s)) return false;
 
-    // Corti (BYOK) streams over its own WSS — independent of OpenWhispr Cloud.
+    // Corti (BYOK) streams over its own WSS — independent of Spoken Cloud.
     if (s.cloudTranscriptionProvider === "corti" && s.cloudTranscriptionMode === "byok") {
       return !!(s.cortiClientId && s.cortiClientSecret);
     }
 
-    // Tinfoil realtime streams without an OpenWhispr account.
+    // Tinfoil realtime streams without a Spoken account.
     if (s.cloudTranscriptionProvider === "tinfoil") {
       const provider = getTranscriptionProvider("tinfoil");
       const model = provider?.models.find((m) => m.id === s.cloudTranscriptionModel);
@@ -3605,7 +3605,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
       } else if (error.code === "AUTH_EXPIRED" || error.code === "AUTH_REQUIRED") {
         errorTitle = "Sign-in Required";
         errorDescription =
-          "Your OpenWhispr Cloud session is unavailable. Please sign in again from Settings.";
+          "Your Spoken Cloud session is unavailable. Please sign in again from Settings.";
       } else if (error.code === "NETWORK_ERROR") {
         errorTitle = "streaming.errors.cloudUnreachable.title";
         errorDescription = error.messageKey || "streaming.errors.cloudUnreachable.generic";
@@ -3895,7 +3895,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
       const target = resolveStreamingFallbackTarget(getSettings());
       if (target === "skip") {
         logger.warn(
-          "Skipping batch fallback: OpenWhispr Cloud session signed out",
+          "Skipping batch fallback: Spoken Cloud session signed out",
           {},
           "streaming"
         );

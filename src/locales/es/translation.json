@@ -1468,8 +1468,8 @@
         "title": "Apariencia"
       },
       "floatingIcon": {
-        "autoHide": "Ocultar automáticamente cuando está inactivo",
-        "autoHideDescription": "Mantén el ícono oculto hasta que comiences a dictar",
+        "autoHide": "Mostrar la barra en reposo",
+        "autoHideDescription": "Si está desactivado, la barra solo aparece al dictar.",
         "description": "Controla cuándo es visible el ícono de dictado en tu pantalla",
         "title": "Ícono flotante",
         "startPosition": "Posición inicial",

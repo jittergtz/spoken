@@ -1399,8 +1399,8 @@
         "title": "Aparência"
       },
       "floatingIcon": {
-        "autoHide": "Ocultar automaticamente quando ocioso",
-        "autoHideDescription": "Mantenha o ícone oculto até iniciar o ditado",
+        "autoHide": "Mostrar a barra quando inativa",
+        "autoHideDescription": "Quando desativada, a barra aparece apenas durante o ditado.",
         "description": "Controle quando o ícone de ditado fica visível na tela",
         "title": "Ícone flutuante",
         "startPosition": "Posição inicial",

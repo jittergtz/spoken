@@ -24,7 +24,7 @@ export function ActivationModeSelector({
   return (
     <div
       className={`
-        relative flex rounded-md border p-0.5 transition-colors duration-200
+        relative flex rounded-full border p-0.5 transition-colors duration-200
         bg-surface-1 border-border-subtle
         ${disabled ? "opacity-50 cursor-not-allowed" : ""}
       `}
@@ -32,10 +32,10 @@ export function ActivationModeSelector({
       {/* Sliding indicator */}
       <div
         className={`
-          absolute top-0.5 bottom-0.5 w-[calc(50%-2px)] rounded
+          absolute left-0.5 top-0.5 bottom-0.5 w-[calc(50%-2px)] rounded-full
           bg-surface-raised border border-border-subtle
           transition-transform duration-200 ease-out
-          ${value === "push" ? "translate-x-[calc(100%+4px)]" : "translate-x-0"}
+          ${value === "push" ? "translate-x-full" : "translate-x-0"}
         `}
       />
 
@@ -46,7 +46,7 @@ export function ActivationModeSelector({
           disabled={disabled}
           onClick={() => onChange(mode)}
           className={`
-            relative z-10 flex-1 flex items-center justify-center gap-1 rounded px-2.5 py-1
+            relative z-10 flex-1 flex items-center justify-center gap-1 rounded-full px-2.5 py-1
             transition-colors duration-150
             ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
             ${value === mode ? "text-foreground" : "text-muted-foreground hover:text-foreground"}

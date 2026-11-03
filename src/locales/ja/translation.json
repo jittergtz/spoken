@@ -1420,8 +1420,8 @@
         "title": "外観"
       },
       "floatingIcon": {
-        "autoHide": "使用していないときに自動で非表示",
-        "autoHideDescription": "ディクテーション開始までアイコンを非表示にする",
+        "autoHide": "待機中にバーを表示",
+        "autoHideDescription": "オフの場合、バーは音声入力中のみ表示されます。",
         "description": "画面上のディクテーションアイコンの表示を制御",
         "title": "フローティングアイコン",
         "startPosition": "開始位置",

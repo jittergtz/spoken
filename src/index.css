@@ -10,6 +10,10 @@
   --color-primary: oklch(51.853% 0.25058 265.362);
   --color-switch: #007aff;
   --color-primary-foreground: #ffffff;
+  --color-download: #0066df;
+  --color-download-foreground: #ffffff;
+  --color-active-icon: #000000;
+  --color-theme-selected: #e5e5e5;
   --color-secondary: #f5f5f5;
   --color-secondary-foreground: #171717;
   --color-muted: #f5f5f5;
@@ -99,6 +103,8 @@
   --color-popover-foreground: oklch(0.93 0 0);
   --color-primary: oklch(46.4% 0.00005 271.152);
   --color-primary-foreground: oklch(0.16 0 0);
+  --color-active-icon: #ffffff;
+  --color-theme-selected: oklch(0.30 0 0);
   --color-secondary: oklch(25.967% 0 0);
   --color-secondary-foreground: oklch(96.416% 0 0);
   --color-muted: oklch(0.29 0 0);
@@ -469,19 +475,6 @@ a:hover {
     transform: scale(1);
     opacity: 1;
   }
-}
-
-@keyframes dictation-processing {
-  0%, 100% { opacity: 0.45; }
-  50% { opacity: 1; }
-}
-
-.dictation-processing-dot {
-  animation: dictation-processing 900ms ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dictation-processing-dot { animation: none; }
 }
 
 @keyframes waveform-bar {

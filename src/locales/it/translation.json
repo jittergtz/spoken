@@ -1420,8 +1420,8 @@
         "title": "Aspetto"
       },
       "floatingIcon": {
-        "autoHide": "Nascondi automaticamente quando inattivo",
-        "autoHideDescription": "Mantieni l'icona nascosta finché non inizi a dettare",
+        "autoHide": "Mostra la barra quando inattiva",
+        "autoHideDescription": "Se disattivata, la barra appare solo durante la dettatura.",
         "description": "Controlla quando l'icona di dettatura è visibile sullo schermo",
         "title": "Icona flottante",
         "startPosition": "Posizione iniziale",

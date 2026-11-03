@@ -1415,8 +1415,8 @@
         "title": "外觀"
       },
       "floatingIcon": {
-        "autoHide": "閒置時自動隱藏",
-        "autoHideDescription": "在開始語音輸入前保持圖示隱藏",
+        "autoHide": "閒置時顯示指示條",
+        "autoHideDescription": "關閉後，指示條僅在聽寫時顯示。",
         "description": "控制語音輸入圖示在畫面上的顯示時機",
         "title": "浮動圖示",
         "startPosition": "起始位置",

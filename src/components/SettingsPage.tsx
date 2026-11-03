@@ -2446,7 +2446,7 @@ export default function SettingsPage({
                     label={t("settingsPage.general.appearance.theme")}
                     description={t("settingsPage.general.appearance.themeDescription")}
                   >
-                    <div className="inline-flex items-center gap-px p-0.5 bg-muted/60 dark:bg-surface-2 rounded-md">
+                    <div className="inline-flex items-center gap-px p-0.5 bg-muted/60 dark:bg-surface-2 rounded-full">
                       {(
                         [
                           {
@@ -2473,16 +2473,16 @@ export default function SettingsPage({
                             key={option.value}
                             onClick={() => setTheme(option.value)}
                             className={`
-                              flex items-center gap-1 px-2.5 py-1 rounded-[5px] text-xs font-medium
+                              flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium
                               transition-colors duration-100
                               ${
                                 isSelected
-                                  ? "bg-background dark:bg-surface-raised text-foreground shadow-sm"
+                                  ? "bg-theme-selected text-foreground shadow-sm"
                                   : "text-muted-foreground hover:text-foreground"
                               }
                             `}
                           >
-                            <Icon className={`w-3 h-3 ${isSelected ? "text-primary" : ""}`} />
+                            <Icon className={`w-3 h-3 ${isSelected ? "text-active-icon" : ""}`} />
                             {option.label}
                           </button>
                         );
@@ -2669,7 +2669,10 @@ export default function SettingsPage({
                     label={t("settingsPage.general.floatingIcon.autoHide")}
                     description={t("settingsPage.general.floatingIcon.autoHideDescription")}
                   >
-                    <Toggle checked={floatingIconAutoHide} onChange={setFloatingIconAutoHide} />
+                    <Toggle
+                      checked={!floatingIconAutoHide}
+                      onChange={(show) => setFloatingIconAutoHide(!show)}
+                    />
                   </SettingsRow>
                 </SettingsPanelRow>
                 <SettingsPanelRow>
@@ -3011,7 +3014,7 @@ export default function SettingsPage({
                           }),
                           desc: t("settingsPage.general.waylandPaste.guide.group.step2Desc", {
                             defaultValue:
-                              "Group changes only take effect after a new login session. Log out of your desktop and log back in, then reopen OpenWhispr.",
+                              "Group changes only take effect after a new login session. Log out of your desktop and log back in, then reopen Spoken.",
                           }),
                         },
                       ],

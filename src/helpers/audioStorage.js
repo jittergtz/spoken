@@ -28,10 +28,10 @@ class AudioStorageManager {
         const pad = (n) => String(n).padStart(2, "0");
         const date = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
         const time = `${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
-        return `OpenWhispr-${date}-${time}-${transcriptionId}.webm`;
+        return `Spoken-${date}-${time}-${transcriptionId}.webm`;
       }
     }
-    return `OpenWhispr-${transcriptionId}.webm`;
+    return `Spoken-${transcriptionId}.webm`;
   }
 
   saveAudio(transcriptionId, audioBuffer, timestamp) {

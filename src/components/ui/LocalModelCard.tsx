@@ -148,7 +148,7 @@ export function LocalModelCard({
               }}
               disabled={disabled}
               size="sm"
-              variant="default"
+              variant="download"
               className="h-6 px-2.5 text-xs"
             >
               <Download size={11} className="mr-1" />

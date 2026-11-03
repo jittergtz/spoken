@@ -9,19 +9,17 @@ import { formatHotkeyListLabel } from "./utils/hotkeys";
 import { useWindowDrag } from "./hooks/useWindowDrag";
 import { useAudioRecording } from "./hooks/useAudioRecording";
 import { useSettingsStore } from "./stores/settingsStore";
-const VoiceWaveIndicator = ({ level, processing }) => (
+const VoiceWaveIndicator = ({ level }) => (
   <div className="flex h-5 items-center justify-center gap-0.5" aria-hidden="true">
     {[0.5, 0.8, 1, 0.7, 0.9, 0.55].map((weight, i) => (
       <span
         key={i}
-        className={processing ? "dictation-processing-dot" : ""}
         style={{
           width: 2,
-          height: processing ? 2 : 2 + level * 12 * weight,
+          height: 2 + level * 12 * weight,
           borderRadius: 999,
           backgroundColor: "white",
           transition: "height 100ms ease-out",
-          animationDelay: `${i * 90}ms`,
         }}
       />
     ))}
@@ -292,28 +290,28 @@ export default function App() {
 
   const getMicButtonProps = () => {
     const baseClasses =
-      "rounded-full w-[60px] h-8 border border-white/25 flex items-center justify-center relative overflow-hidden cursor-pointer";
+      "rounded-full border flex items-center justify-center relative overflow-hidden cursor-pointer";
 
     switch (micState) {
       case "idle":
       case "hover":
         return {
-          className: `${baseClasses} bg-black cursor-pointer`,
+          className: `${baseClasses} w-9 h-2 border-white/50 bg-black/60 cursor-pointer`,
           tooltip: formatHotkeyListLabel(hotkey),
         };
       case "recording":
         return {
-          className: `${baseClasses} bg-black cursor-pointer`,
+          className: `${baseClasses} w-[60px] h-8 border-white/25 bg-black cursor-pointer`,
           tooltip: t("app.mic.recording"),
         };
       case "unavailable":
         return {
-          className: `${baseClasses} bg-neutral-500 cursor-pointer`,
+          className: `${baseClasses} w-[60px] h-8 border-white/25 bg-neutral-500 cursor-pointer`,
           tooltip: t("app.mic.waitingForMicrophone"),
         };
       case "processing":
         return {
-          className: `${baseClasses} bg-black cursor-not-allowed`,
+          className: `${baseClasses} w-9 h-2 border-white/50 bg-black/60 cursor-not-allowed`,
           tooltip: t("app.mic.processing"),
         };
       default:
@@ -420,7 +418,7 @@ export default function App() {
               }}
               onFocus={() => setIsHovered(true)}
               onBlur={() => setIsHovered(false)}
-              className={micProps.className}
+              className={`${micProps.className} ${floatingIconAutoHide && !isRecording ? "invisible" : ""}`}
               style={{
                 ...micProps.style,
                 cursor:
@@ -446,10 +444,8 @@ export default function App() {
               ></div>
 
               {/* Dynamic content based on state */}
-              {micState === "idle" || micState === "hover" || micState === "recording" ? (
-                <VoiceWaveIndicator level={micState === "recording" ? audioLevel : 0} />
-              ) : micState === "processing" ? (
-                <VoiceWaveIndicator level={0} processing />
+              {micState === "recording" ? (
+                <VoiceWaveIndicator level={audioLevel} />
               ) : micState === "unavailable" ? (
                 <span className="text-white text-base font-bold">!</span>
               ) : null}

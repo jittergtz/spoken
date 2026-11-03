@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import {
-  NotebookPen,
-  Upload,
   Blocks,
   Gift,
   UserPlus,
@@ -11,6 +9,8 @@ import {
 import logoIcon from "../assets/icon.png";
 import homeIcon from "../assets/icons/sidebar/home.png";
 import chatIcon from "../assets/icons/sidebar/chat.png";
+import notesIcon from "../assets/icons/sidebar/notes.png";
+import uploadIcon from "../assets/icons/sidebar/upload.png";
 import dictionaryIcon from "../assets/icons/sidebar/dictionary.png";
 import settingsIcon from "../assets/icons/sidebar/settings.png";
 import supportIcon from "../assets/icons/sidebar/support.png";
@@ -92,8 +92,8 @@ export default function ControlPanelSidebar({
   }[] = [
     { id: "home", label: t("sidebar.home"), image: homeIcon },
     { id: "chat", label: t("sidebar.chat"), image: chatIcon },
-    { id: "personal-notes", label: t("sidebar.notes"), icon: NotebookPen },
-    { id: "upload", label: t("sidebar.upload"), icon: Upload },
+    { id: "personal-notes", label: t("sidebar.notes"), image: notesIcon },
+    { id: "upload", label: t("sidebar.upload"), image: uploadIcon },
     { id: "dictionary", label: t("sidebar.dictionary"), image: dictionaryIcon },
     { id: "integrations", label: t("sidebar.integrations"), icon: Blocks },
   ];
@@ -159,7 +159,7 @@ export default function ControlPanelSidebar({
                     className={cn(
                       "shrink-0 transition-colors duration-150",
                       isActive
-                        ? "text-primary"
+                        ? "text-active-icon"
                         : "text-foreground/60 group-hover:text-foreground/75 dark:text-foreground/55 dark:group-hover:text-foreground/70"
                     )}
                   />

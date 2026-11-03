@@ -1593,8 +1593,8 @@
         "title": "Appearance"
       },
       "floatingIcon": {
-        "autoHide": "Auto-hide when idle",
-        "autoHideDescription": "Keep the icon hidden until you start dictating",
+        "autoHide": "Show pill when idle",
+        "autoHideDescription": "When off, the pill appears only while dictating.",
         "startPosition": "Start position",
         "startPositionDescription": "Where the voice recorder panel appears on screen",
         "bottomRight": "Bottom Right",

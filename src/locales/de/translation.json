@@ -1420,8 +1420,8 @@
         "title": "Darstellung"
       },
       "floatingIcon": {
-        "autoHide": "Automatisch ausblenden bei Inaktivität",
-        "autoHideDescription": "Symbol ausblenden, bis Sie mit dem Diktieren beginnen",
+        "autoHide": "Leiste im Ruhezustand anzeigen",
+        "autoHideDescription": "Wenn ausgeschaltet, erscheint die Leiste nur beim Diktieren.",
         "description": "Steuern Sie, wann das Diktat-Symbol auf Ihrem Bildschirm sichtbar ist",
         "title": "Schwebendes Symbol",
         "startPosition": "Startposition",

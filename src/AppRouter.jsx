@@ -1,3 +1,4 @@
+import spokenLogo from "./assets/icon.png";
 import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import App from "./App.jsx";
@@ -189,17 +190,11 @@ function LoadingFallback({ message }) {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="flex flex-col items-center gap-4 animate-[scale-in_300ms_ease-out]">
-        <svg
-          viewBox="0 0 1024 1024"
+        <img
+          src={spokenLogo}
+          alt="Spoken"
           className="w-12 h-12 drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)] dark:drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]"
-          aria-label="OpenWhispr"
-        >
-          <rect width="1024" height="1024" rx="241" fill="#262626" />
-          <circle cx="512" cy="512" r="314" fill="#262626" stroke="white" strokeWidth="74" />
-          <path d="M512 383V641" stroke="white" strokeWidth="74" strokeLinecap="round" />
-          <path d="M627 457V568" stroke="white" strokeWidth="74" strokeLinecap="round" />
-          <path d="M397 457V568" stroke="white" strokeWidth="74" strokeLinecap="round" />
-        </svg>
+        />
         <div className="w-7 h-7 rounded-full border-[2.5px] border-transparent border-t-primary animate-[spinner-rotate_0.8s_cubic-bezier(0.4,0,0.2,1)_infinite] motion-reduce:animate-none motion-reduce:border-t-muted-foreground motion-reduce:opacity-50" />
         {fallbackMessage && (
           <p className="text-[13px] font-medium text-muted-foreground dark:text-foreground/60 tracking-[-0.01em]">

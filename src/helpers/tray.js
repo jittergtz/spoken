@@ -159,20 +159,20 @@ class TrayManager {
 
     if (platform === "darwin") {
       if (isDevelopment) {
-        candidatePaths.push(path.join(__dirname, "..", "assets", "iconTemplate@3x.png"));
+        candidatePaths.push(path.join(__dirname, "..", "assets", "icon.png"));
       } else {
         candidatePaths.push(
-          path.join(process.resourcesPath, "src", "assets", "iconTemplate@3x.png"),
-          path.join(process.resourcesPath, "assets", "iconTemplate@3x.png"),
+          path.join(process.resourcesPath, "src", "assets", "icon.png"),
+          path.join(process.resourcesPath, "assets", "icon.png"),
           path.join(
             process.resourcesPath,
             "app.asar.unpacked",
             "src",
             "assets",
-            "iconTemplate@3x.png"
+            "icon.png"
           ),
-          path.join(__dirname, "..", "..", "src", "assets", "iconTemplate@3x.png"),
-          path.join(app.getAppPath(), "src", "assets", "iconTemplate@3x.png")
+          path.join(__dirname, "..", "..", "src", "assets", "icon.png"),
+          path.join(app.getAppPath(), "src", "assets", "icon.png")
         );
       }
     } else {
@@ -199,7 +199,7 @@ class TrayManager {
           const icon = nativeImage.createFromPath(testPath);
           if (icon && !icon.isEmpty()) {
             if (platform === "darwin") {
-              icon.setTemplateImage(true);
+              return icon.resize({ width: 18, height: 18 });
             }
             debugLogger.debug("Using tray icon", { path: testPath }, "tray");
             return icon;
