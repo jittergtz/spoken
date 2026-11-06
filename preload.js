@@ -60,6 +60,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.invoke("db-get-transcriptions", limit, options),
   clearTranscriptions: () => ipcRenderer.invoke("db-clear-transcriptions"),
   deleteTranscription: (id) => ipcRenderer.invoke("db-delete-transcription", id),
+  getGrammarHistory: (limit) => ipcRenderer.invoke("db-get-grammar-history", limit),
+  deleteGrammarHistoryItem: (id) => ipcRenderer.invoke("db-delete-grammar-history-item", id),
+  clearGrammarHistory: () => ipcRenderer.invoke("db-clear-grammar-history"),
+  onGrammarHistoryChanged: registerListener("grammar-history-changed", (callback) => () => callback()),
 
   // Audio storage functions
   saveTranscriptionAudio: (id, audioBuffer, metadata) =>
@@ -368,6 +372,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   stopWindowDrag: () => ipcRenderer.invoke("stop-window-drag"),
   setMainWindowInteractivity: (interactive) =>
     ipcRenderer.invoke("set-main-window-interactivity", interactive),
+  setMainWindowFocusable: (focusable) => ipcRenderer.invoke("set-main-window-focusable", focusable),
   setNotificationInteractivity: (interactive) =>
     ipcRenderer.invoke("set-notification-interactivity", interactive),
   resizeMainWindow: (sizeKey) => ipcRenderer.invoke("resize-main-window", sizeKey),
@@ -792,6 +797,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getVoiceAgentKey: () => ipcRenderer.invoke("get-voice-agent-key"),
   updateTranslationHotkey: (hotkey) => ipcRenderer.invoke("update-translation-hotkey", hotkey),
   getTranslationKey: () => ipcRenderer.invoke("get-translation-key"),
+  getGrammarCorrectionSettings: () => ipcRenderer.invoke("get-grammar-correction-settings"),
+  setGrammarCorrectionHotkey: (hotkey) => ipcRenderer.invoke("set-grammar-correction-hotkey", hotkey),
+  setGrammarCorrectionModel: (model) => ipcRenderer.invoke("set-grammar-correction-model", model),
   getAgentKey: () => ipcRenderer.invoke("get-agent-key"),
   saveAgentKey: (key) => ipcRenderer.invoke("save-agent-key", key),
   onAgentStartRecording: registerListener("agent-start-recording", (callback) => () => callback()),

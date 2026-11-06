@@ -3,11 +3,11 @@ import { getSettings, useSettingsStore } from "../stores/settingsStore";
 import { agentNameDictionaryChanges } from "../helpers/agentNameDictionary";
 
 const AGENT_NAME_KEY = "agentName";
-const DEFAULT_AGENT_NAME = "Spoken";
+const DEFAULT_AGENT_NAME = "Ducky";
 
 export const getAgentName = (): string => {
   const storedName = localStorage.getItem(AGENT_NAME_KEY);
-  return storedName && !/^(?:openwhispr|openwhisper|openwhipser)$/i.test(storedName.trim())
+  return storedName && !/^(?:waddle|spoken|openwhispr|openwhisper|openwhipser)$/i.test(storedName.trim())
     ? storedName
     : DEFAULT_AGENT_NAME;
 };
@@ -33,7 +33,7 @@ export const setAgentName = (name: string): void => {
 export const ensureAgentNameInDictionary = (): void => {
   const name = getAgentName();
   const storedName = localStorage.getItem(AGENT_NAME_KEY);
-  if (storedName && /^(?:openwhispr|openwhisper|openwhipser)$/i.test(storedName.trim())) {
+  if (storedName && /^(?:waddle|spoken|openwhispr|openwhisper|openwhipser)$/i.test(storedName.trim())) {
     setAgentName(name);
     return;
   }

@@ -6,6 +6,7 @@ const DragManager = require("./dragManager");
 const MenuManager = require("./menuManager");
 const DevServerManager = require("./devServerManager");
 const dockManager = require("./dockManager");
+const { isOverlayActivation } = require("./dockPolicy");
 const { i18nMain } = require("./i18nMain");
 const { DEV_SERVER_PORT } = DevServerManager;
 const {
@@ -44,6 +45,7 @@ class WindowManager {
     this.winPushState = null;
     this._cachedActivationMode = "tap";
     this._floatingIconAutoHide = false;
+    this._mainWindowInteractive = false;
     this._agentAnimationState = null;
     this._panelStartPosition = "bottom-right";
     this._isDictatingToggle = false;
@@ -109,6 +111,7 @@ class WindowManager {
   }
 
   setMainWindowInteractivity(shouldCapture) {
+    this._mainWindowInteractive = Boolean(shouldCapture);
     if (!this.mainWindow || this.mainWindow.isDestroyed()) {
       return;
     }
@@ -136,6 +139,23 @@ class WindowManager {
     } else {
       this.notificationWindow.setIgnoreMouseEvents(true, { forward: true });
     }
+  }
+
+  setMainWindowFocusable(focusable) {
+    if (!this.mainWindow || this.mainWindow.isDestroyed()) return;
+    if (process.platform !== "linux") this.mainWindow.setFocusable(focusable);
+    if (focusable) this.mainWindow.focus();
+    else if (process.env.XDG_SESSION_TYPE !== "wayland" && this.mainWindow.isFocused()) this.mainWindow.blur();
+  }
+
+  isMainWindowInteractionAtCursor() {
+    if (!this.mainWindow || this.mainWindow.isDestroyed()) return false;
+    return isOverlayActivation({
+      overlayVisible: this.mainWindow.isVisible(),
+      overlayInteractive: this._mainWindowInteractive,
+      bounds: this.mainWindow.getBounds(),
+      cursor: screen.getCursorScreenPoint(),
+    });
   }
 
   resizeMainWindow(sizeKey) {

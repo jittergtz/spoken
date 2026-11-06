@@ -8,10 +8,10 @@ Enable verbose logging to diagnose issues like "no audio detected" or transcript
 
 ```bash
 # macOS
-/Applications/Spoken.app/Contents/MacOS/Spoken --log-level=debug
+/Applications/Ducky.app/Contents/MacOS/Ducky --log-level=debug
 
 # Windows
-Spoken.exe --log-level=debug
+Ducky.exe --log-level=debug
 ```
 
 ### Option 2: Environment File
@@ -24,15 +24,15 @@ SPOKEN_LOG_LEVEL=debug
 
 **Env file locations:**
 
-- macOS: `~/Library/Application Support/Spoken/.env`
-- Windows: `%APPDATA%\Spoken\.env`
-- Linux: `~/.config/Spoken/.env`
+- macOS: `~/Library/Application Support/Ducky/.env`
+- Windows: `%APPDATA%\Ducky\.env`
+- Linux: `~/.config/Ducky/.env`
 
 ## Log File Locations
 
-- **macOS**: `~/Library/Application Support/Spoken/logs/debug-*.log`
-- **Windows**: `%APPDATA%\Spoken\logs\debug-*.log`
-- **Linux**: `~/.config/Spoken/logs/debug-*.log`
+- **macOS**: `~/Library/Application Support/Ducky/logs/debug-*.log`
+- **Windows**: `%APPDATA%\Ducky\logs\debug-*.log`
+- **Linux**: `~/.config/Ducky/logs/debug-*.log`
 
 ## What Gets Logged
 

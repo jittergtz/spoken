@@ -13,7 +13,8 @@ import {
   ArchiveRestore,
 } from "lucide-react";
 import type {
-  TranscriptionItem as TranscriptionItemType,
+  TextHistoryItem,
+  GrammarHistoryItem,
   TranscriptionErrorCode,
 } from "../../types/electron";
 import { cn } from "../lib/utils";
@@ -29,7 +30,8 @@ function getShowInFolderKey(): string {
 }
 
 interface TranscriptionItemProps {
-  item: TranscriptionItemType;
+  item: TextHistoryItem;
+  grammarOutcome?: GrammarHistoryItem["outcome"];
   onCopy: (text: string) => void;
   onDelete: (id: number) => void;
   onShowAudioInFolder?: (id: number) => void;
@@ -39,6 +41,7 @@ interface TranscriptionItemProps {
 
 export default function TranscriptionItem({
   item,
+  grammarOutcome,
   onCopy,
   onDelete,
   onShowAudioInFolder,
@@ -46,6 +49,7 @@ export default function TranscriptionItem({
   onOpenSettings,
 }: TranscriptionItemProps) {
   const { t, i18n } = useTranslation();
+  const isGrammar = grammarOutcome !== undefined;
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
@@ -172,9 +176,16 @@ export default function TranscriptionItem({
             </span>
           </div>
         ) : (
-          <p className="flex-1 min-w-0 text-foreground text-sm leading-normal wrap-break-word whitespace-pre-wrap">
-            {item.text}
-          </p>
+          <div className="flex-1 min-w-0">
+            <p className="text-foreground text-sm leading-normal wrap-break-word whitespace-pre-wrap">
+              {item.text}
+            </p>
+            {isGrammar && (
+              <p className="text-[10px] text-muted-foreground mt-1">
+                {t(`grammarHistory.outcomes.${grammarOutcome}`)}
+              </p>
+            )}
+          </div>
         )}
 
         <div
@@ -224,7 +235,11 @@ export default function TranscriptionItem({
             </Tooltip>
           )}
           {!isFailed && !isDiscarded && hasRawText && (
-            <Tooltip content={t("controlPanel.history.viewRawTranscript")}>
+            <Tooltip
+              content={t(
+                isGrammar ? "grammarHistory.viewOriginal" : "controlPanel.history.viewRawTranscript"
+              )}
+            >
               <Button
                 size="icon"
                 variant="ghost"
@@ -311,9 +326,15 @@ export default function TranscriptionItem({
             <div className="border-t border-border/20 mt-2 pt-2">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("controlPanel.history.rawTranscript")}
+                  {t(isGrammar ? "grammarHistory.original" : "controlPanel.history.rawTranscript")}
                 </span>
-                <Tooltip content={t("controlPanel.history.copyRawTranscript")}>
+                <Tooltip
+                  content={t(
+                    isGrammar
+                      ? "grammarHistory.copyOriginal"
+                      : "controlPanel.history.copyRawTranscript"
+                  )}
+                >
                   <Button
                     size="icon"
                     variant="ghost"
@@ -327,7 +348,9 @@ export default function TranscriptionItem({
               <p className="text-xs text-muted-foreground/80 leading-relaxed mt-1">{rawText}</p>
               {rawText === item.text && (
                 <p className="text-[10px] text-muted-foreground/50 italic mt-1">
-                  {t("controlPanel.history.noAiProcessing")}
+                  {t(
+                    isGrammar ? "grammarHistory.unchanged" : "controlPanel.history.noAiProcessing"
+                  )}
                 </p>
               )}
             </div>

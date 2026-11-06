@@ -1,4 +1,4 @@
-import spokenLogo from "./assets/icon.png";
+import duckyLogo from "./assets/icon.png";
 import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import App from "./App.jsx";
@@ -191,8 +191,8 @@ function LoadingFallback({ message }) {
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="flex flex-col items-center gap-4 animate-[scale-in_300ms_ease-out]">
         <img
-          src={spokenLogo}
-          alt="Spoken"
+          src={duckyLogo}
+          alt="Ducky"
           className="w-12 h-12 drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)] dark:drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]"
         />
         <div className="w-7 h-7 rounded-full border-[2.5px] border-transparent border-t-primary animate-[spinner-rotate_0.8s_cubic-bezier(0.4,0,0.2,1)_infinite] motion-reduce:animate-none motion-reduce:border-t-muted-foreground motion-reduce:opacity-50" />

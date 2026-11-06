@@ -168,7 +168,7 @@ export const CACHE_CONFIG = {
   PASTE_DELAY_MS: 50, // Delay before paste simulation to allow clipboard to settle
 } as const;
 
-// Spoken Cloud API
+// Ducky Cloud API
 export const SPOKEN_API_URL =
   (env.VITE_SPOKEN_API_URL as string) || (env.VITE_OPENWHISPR_API_URL as string) || "";
 export const OPENWHISPR_API_URL = SPOKEN_API_URL;

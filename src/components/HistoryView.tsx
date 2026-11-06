@@ -1,11 +1,11 @@
-import { Fragment, useMemo } from "react";
+import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
 import { Loader2, Sparkles, Cloud, X, Mic, Trash2, Archive } from "lucide-react";
 import TranscriptionItem from "./ui/TranscriptionItem";
 import type { TranscriptionItem as TranscriptionItemType } from "../types/electron";
 import { formatHotkeyLabel, parseHotkeyList } from "../utils/hotkeys";
-import { formatDateGroup } from "../utils/dateFormatting";
+import HistoryList from "./HistoryList";
 import { cn } from "./lib/utils";
 import { useUpcomingEvents } from "../hooks/useUpcomingEvents";
 import UpcomingMeetings from "./UpcomingMeetings";
@@ -51,26 +51,6 @@ export default function HistoryView({
   const { t } = useTranslation();
   const dataRetentionEnabled = useSettingsStore((s) => s.dataRetentionEnabled);
   const { events, isLoading: eventsLoading, isConnected } = useUpcomingEvents();
-
-  const groupedHistory = useMemo(() => {
-    if (history.length === 0) return [];
-
-    const groups: { label: string; items: TranscriptionItemType[] }[] = [];
-    let currentLabel: string | null = null;
-
-    for (const item of history) {
-      const label = formatDateGroup(item.timestamp, t);
-
-      if (label !== currentLabel) {
-        groups.push({ label, items: [item] });
-        currentLabel = label;
-      } else {
-        groups[groups.length - 1].items.push(item);
-      }
-    }
-
-    return groups;
-  }, [history, t]);
 
   const discardedToggle = (
     <button
@@ -296,42 +276,31 @@ export default function HistoryView({
                 </div>
               </div>
             ) : (
-              <div className="group">
-                {groupedHistory.map((group, index) => (
-                  <div key={group.label} className={index > 0 ? "mt-4" : ""}>
-                    <div className="sticky -top-1 z-10 -mx-4 px-5 pt-2 pb-2 flex items-center justify-between">
-                      <span className="text-[11px] font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wide">
-                        {group.label}
-                      </span>
-                      {index === 0 && (
-                        <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
-                          {discardedToggle}
-                          <button
-                            onClick={clearAllTranscriptions}
-                            className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] text-muted-foreground/60 hover:!text-destructive hover:!bg-destructive/8 dark:hover:!bg-destructive/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/30 transition-all duration-200"
-                          >
-                            <Trash2 size={11} />
-                            <span>{t("controlPanel.history.clearAll")}</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    <div className="space-y-1.5 relative z-0">
-                      {group.items.map((item) => (
-                        <TranscriptionItem
-                          key={item.id}
-                          item={item}
-                          onCopy={copyToClipboard}
-                          onDelete={deleteTranscription}
-                          onShowAudioInFolder={onShowAudioInFolder}
-                          onRetryTranscription={onRetryTranscription}
-                          onOpenSettings={() => onOpenSettings("transcription")}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <HistoryList
+                items={history}
+                actions={
+                  <>
+                    {discardedToggle}
+                    <button
+                      onClick={clearAllTranscriptions}
+                      className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] text-muted-foreground/60 hover:!text-destructive hover:!bg-destructive/8 dark:hover:!bg-destructive/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/30 transition-all duration-200"
+                    >
+                      <Trash2 size={11} />
+                      <span>{t("controlPanel.history.clearAll")}</span>
+                    </button>
+                  </>
+                }
+                renderItem={(item) => (
+                  <TranscriptionItem
+                    item={item}
+                    onCopy={copyToClipboard}
+                    onDelete={deleteTranscription}
+                    onShowAudioInFolder={onShowAudioInFolder}
+                    onRetryTranscription={onRetryTranscription}
+                    onOpenSettings={() => onOpenSettings("transcription")}
+                  />
+                )}
+              />
             )}
           </div>
 

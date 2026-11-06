@@ -28,10 +28,10 @@ class AudioStorageManager {
         const pad = (n) => String(n).padStart(2, "0");
         const date = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
         const time = `${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
-        return `Spoken-${date}-${time}-${transcriptionId}.webm`;
+        return `Ducky-${date}-${time}-${transcriptionId}.webm`;
       }
     }
-    return `Spoken-${transcriptionId}.webm`;
+    return `Ducky-${transcriptionId}.webm`;
   }
 
   saveAudio(transcriptionId, audioBuffer, timestamp) {

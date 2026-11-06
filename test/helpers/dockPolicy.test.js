@@ -27,3 +27,54 @@ test("there is no Dock to act on outside macOS", async () => {
     assert.equal(resolveDockVisibility({ platform, controlPanelVisible: true }), null);
   }
 });
+
+test("clicking the pill or its quick settings does not open the control panel", async () => {
+  const { isOverlayActivation } = await load();
+
+  for (const bounds of [
+    { x: 800, y: 850, width: 240, height: 280 },
+    { x: 720, y: 630, width: 400, height: 500 },
+    { x: -1600, y: 200, width: 400, height: 500 },
+  ]) {
+    assert.equal(
+      isOverlayActivation({
+        overlayVisible: true,
+        overlayInteractive: true,
+        bounds,
+        cursor: { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height - 20 },
+      }),
+      true
+    );
+  }
+});
+
+test("Dock clicks still open the app while quick settings are open", async () => {
+  const { isOverlayActivation } = await load();
+  const bounds = { x: 720, y: 630, width: 400, height: 500 };
+  assert.equal(
+    isOverlayActivation({
+      overlayVisible: true,
+      overlayInteractive: true,
+      bounds,
+      cursor: { x: 920, y: 1160 },
+    }),
+    false
+  );
+});
+
+test("a hidden or click-through pill does not suppress app activation", async () => {
+  const { isOverlayActivation } = await load();
+  const geometry = {
+    bounds: { x: 720, y: 630, width: 400, height: 500 },
+    cursor: { x: 920, y: 1100 },
+  };
+  assert.equal(
+    isOverlayActivation({ ...geometry, overlayVisible: false, overlayInteractive: true }),
+    false
+  );
+  assert.equal(
+    isOverlayActivation({ ...geometry, overlayVisible: true, overlayInteractive: false }),
+    false
+  );
+  assert.equal(isOverlayActivation({ overlayVisible: false, overlayInteractive: false }), false);
+});

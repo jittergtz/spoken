@@ -14,3 +14,15 @@ export function resolveDockVisibility({ platform, controlPanelVisible }) {
   if (platform !== "darwin") return null;
   return !!controlPanelVisible;
 }
+
+// Focusing a quick-settings field also activates the app. Treat activation
+// under the interactive overlay as a pill interaction, rather than a Dock click.
+export function isOverlayActivation({ overlayVisible, overlayInteractive, bounds, cursor }) {
+  if (!overlayVisible || !overlayInteractive || !bounds || !cursor) return false;
+  return (
+    cursor.x >= bounds.x &&
+    cursor.x < bounds.x + bounds.width &&
+    cursor.y >= bounds.y &&
+    cursor.y < bounds.y + bounds.height
+  );
+}

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="src/assets/icon.png" alt="Spoken" width="120" />
+  <img src="src/assets/icon.png" alt="Ducky" width="120" />
 </p>
 
-<h1 align="center">Spoken</h1>
+<h1 align="center">Ducky</h1>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat" alt="MIT License" /></a>
@@ -15,9 +15,9 @@
 
 ---
 
-Spoken is a fork of [OpenWhispr](https://github.com/OpenWhispr/openwhispr). It is 100% free, with all features included: no account login, premium tier, or payments.
+Ducky is a fork of [OpenWhispr](https://github.com/OpenWhispr/openwhispr). It is 100% free, with all features included: no account login, premium tier, or payments.
 
-Spoken turns your voice into text, notes, and actions from your desktop. Press a hotkey, speak, and your words appear at your cursor. Choose between offline transcription with local speech-to-text engines like Whisper and NVIDIA Parakeet, or cloud processing.
+Ducky turns your voice into text, notes, and actions from your desktop. Press a hotkey, speak, and your words appear at your cursor. Choose between offline transcription with local speech-to-text engines like Whisper and NVIDIA Parakeet, or cloud processing.
 
 ## Features
 
@@ -35,8 +35,8 @@ Spoken turns your voice into text, notes, and actions from your desktop. Press a
 ## Quick start
 
 ```bash
-git clone https://github.com/jittergtz/spoken.git
-cd spoken
+git clone https://github.com/jittergtz/spoken.git ducky
+cd ducky
 npm install
 npm run dev
 ```
@@ -71,7 +71,7 @@ We welcome contributions. Fork the repo, create a feature branch, and open a pul
 
 ## Acknowledgments
 
-- **[OpenWhispr](https://github.com/OpenWhispr/openwhispr)** — the project Spoken is forked from
+- **[OpenWhispr](https://github.com/OpenWhispr/openwhispr)** — the project Ducky is forked from
 - **[OpenAI Whisper](https://github.com/openai/whisper)** — speech recognition model powering local and cloud transcription
 - **[whisper.cpp](https://github.com/ggerganov/whisper.cpp)** — high-performance C++ implementation for local processing
 - **[NVIDIA Parakeet](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3)** — fast multilingual ASR model

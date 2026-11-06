@@ -1,4 +1,4 @@
-import spokenLogo from "../assets/icon.png";
+import duckyLogo from "../assets/icon.png";
 import { X } from "lucide-react";
 
 interface MeetingNotificationCardProps {
@@ -61,7 +61,7 @@ export function MeetingNotificationCard({
 
       <div className="flex items-center gap-2.5">
         <div className="shrink-0 bg-primary/10 rounded-md p-1">
-          <img src={spokenLogo} alt="Spoken" className="w-4.5 h-4.5" />
+          <img src={duckyLogo} alt="Ducky" className="w-4.5 h-4.5" />
         </div>
 
         <div className="flex-1 min-w-0">

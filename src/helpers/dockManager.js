@@ -1,5 +1,6 @@
 const { app } = require("electron");
 const { resolveDockVisibility } = require("./dockPolicy");
+const { getAppIconPath } = require("./appIdentity");
 
 // Single owner of the macOS Dock icon. Every caller that wants the icon shown
 // or hidden goes through here, and the icon simply tracks the control panel.
@@ -18,6 +19,9 @@ class DockManager {
   // Called once at startup, before any window exists: hides the Dock icon
   // until the control panel opens, so tray-only launches never show one.
   init() {
+    if (process.platform === "darwin" && app.dock) {
+      app.dock.setIcon(getAppIconPath());
+    }
     this._controlPanelVisible = false;
     this._applyVisibility();
   }

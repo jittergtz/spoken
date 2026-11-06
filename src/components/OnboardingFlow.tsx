@@ -136,7 +136,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [hotkey, setHotkey] = useState(
     () => parseHotkeyList(dictationKey)[0] || getDefaultHotkey()
   );
-  const [agentName, setAgentName] = useState("Spoken");
+  const [agentName, setAgentName] = useState("Ducky");
   const [skipAuth, setSkipAuth] = useState(() => AUTH_DISABLED || false);
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   const [isModelDownloaded, setIsModelDownloaded] = useState(false);
@@ -546,7 +546,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                 S
               </div>
               <div className="space-y-1 max-w-sm">
-                <h3 className="text-lg font-semibold text-foreground">Welcome to Spoken</h3>
+                <h3 className="text-lg font-semibold text-foreground">Welcome to Ducky</h3>
                 <p className="text-xs text-muted-foreground">
                   Running in Local & Custom API Key mode. No account or cloud login required.
                 </p>

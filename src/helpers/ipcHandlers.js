@@ -224,7 +224,7 @@ function resolveAllowedAudioPath(filePath) {
 }
 
 function buildMultipartBody(fileBuffer, fileName, contentType, fields = {}) {
-  const boundary = `----Spoken${Date.now()}`;
+  const boundary = `----Ducky${Date.now()}`;
   const parts = [];
 
   parts.push(
@@ -518,6 +518,7 @@ class IPCHandlers {
     this.audioStorageManager = new AudioStorageManager();
     this._retentionCleanupInterval = null;
     this._retentionSettings = { ...DEFAULT_RETENTION_SETTINGS }; // Synced from renderer
+    this._grammarHistoryEnabled = false; // Wait for the renderer's saved retention preference.
     this._noteFilesEnabled = false;
     this.speakerDiarizationEnabled = true;
     this.activeMeetingSpeakerConfig = null;
@@ -803,6 +804,9 @@ class IPCHandlers {
           this.audioStorageManager.deleteAudio(id);
           this.broadcastToWindows("transcription-deleted", { id });
         }
+        if (this.databaseManager.deleteGrammarHistoryExpiredBefore(transcriptRetentionDays) > 0) {
+          this.broadcastToWindows("grammar-history-changed");
+        }
       }
       if (audioRetentionDays > 0) {
         this.audioStorageManager.cleanupExpiredAudio(audioRetentionDays, this.databaseManager);
@@ -1001,6 +1005,12 @@ class IPCHandlers {
       return { success: true };
     });
 
+    ipcMain.handle("set-main-window-focusable", (event, focusable) => {
+      if (event.sender !== this.windowManager.mainWindow?.webContents) return { success: false };
+      this.windowManager.setMainWindowFocusable(focusable === true);
+      return { success: true };
+    });
+
     ipcMain.handle("set-notification-interactivity", (event, interactive) => {
       this.windowManager.setNotificationInteractivity(Boolean(interactive));
       return { success: true };
@@ -1027,6 +1037,23 @@ class IPCHandlers {
 
     ipcMain.handle("db-get-transcriptions", async (event, limit = 50, options = {}) => {
       return this.databaseManager.getTranscriptions(limit, options);
+    });
+
+    ipcMain.handle("db-get-grammar-history", (_event, limit = 50) => {
+      if (!Number.isInteger(limit) || limit < 1 || limit > 500)
+        throw new Error("Invalid history limit");
+      return this.databaseManager.getGrammarHistory(limit);
+    });
+    ipcMain.handle("db-delete-grammar-history-item", (_event, id) => {
+      if (!Number.isSafeInteger(id) || id < 1) throw new Error("Invalid history ID");
+      const result = this.databaseManager.deleteGrammarHistoryItem(id);
+      this.broadcastToWindows("grammar-history-changed");
+      return result;
+    });
+    ipcMain.handle("db-clear-grammar-history", () => {
+      const result = this.databaseManager.clearGrammarHistory();
+      this.broadcastToWindows("grammar-history-changed");
+      return result;
     });
 
     ipcMain.handle("db-clear-transcriptions", async (event) => {
@@ -1132,6 +1159,9 @@ class IPCHandlers {
     });
 
     ipcMain.on("retention-settings-changed", (_event, incoming) => {
+      if (typeof incoming?.dataRetentionEnabled === "boolean") {
+        this._grammarHistoryEnabled = incoming.dataRetentionEnabled;
+      }
       const { changed, settings } = applyRetentionSettings(this._retentionSettings, incoming);
       if (!changed) return;
       this._retentionSettings = settings;
@@ -1943,7 +1973,7 @@ class IPCHandlers {
         const resolved = path.resolve(filePath);
         const basename = path.basename(resolved);
         if (!basename.startsWith("ow-url-") && !basename.startsWith("ow-diarize-")) {
-          return { success: false, error: "Not a Spoken temp file" };
+          return { success: false, error: "Not a Ducky temp file" };
         }
         const real = fs.realpathSync(resolved);
         let tempDir = getSafeTempDir();
@@ -1952,7 +1982,7 @@ class IPCHandlers {
         } catch {}
         const rel = path.relative(tempDir, real);
         if (rel.startsWith("..") || path.isAbsolute(rel)) {
-          return { success: false, error: "Not a Spoken temp file" };
+          return { success: false, error: "Not a Ducky temp file" };
         }
         fs.unlinkSync(real);
         return { success: true };
@@ -4371,7 +4401,7 @@ class IPCHandlers {
     ipcMain.handle("cloud-transcribe", async (event, audioBuffer, opts = {}) => {
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -5224,7 +5254,7 @@ class IPCHandlers {
       const postServerToken = async (path, body = {}) => {
         const apiUrl = getApiUrl();
         if (!apiUrl) {
-          const err = new Error("Spoken API URL not configured");
+          const err = new Error("Ducky API URL not configured");
           err.code = "NO_API";
           throw err;
         }
@@ -6959,7 +6989,7 @@ class IPCHandlers {
     ipcMain.handle("cloud-reason", async (event, text, opts = {}) => {
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7046,7 +7076,7 @@ class IPCHandlers {
     ipcMain.on("cloud-agent-stream-start", async (event, messages, opts = {}) => {
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7138,7 +7168,7 @@ class IPCHandlers {
     ipcMain.handle("agent-web-search", async (event, query, numResults = 5) => {
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7181,7 +7211,7 @@ class IPCHandlers {
       async (event, text, audioDurationSeconds, opts = {}) => {
         try {
           const apiUrl = getApiUrl();
-          if (!apiUrl) throw new Error("Spoken API URL not configured");
+          if (!apiUrl) throw new Error("Ducky API URL not configured");
 
           const authHeader = await getAuthHeader(event);
           if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7243,7 +7273,7 @@ class IPCHandlers {
       }
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7276,7 +7306,7 @@ class IPCHandlers {
       }
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7320,7 +7350,7 @@ class IPCHandlers {
     ipcMain.handle("cloud-switch-plan", async (event, opts) => {
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7352,7 +7382,7 @@ class IPCHandlers {
     ipcMain.handle("cloud-preview-switch", async (event, opts) => {
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7384,7 +7414,7 @@ class IPCHandlers {
     ipcMain.handle("cloud-api-request", async (event, opts) => {
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         if (typeof opts?.path !== "string" || !opts.path.startsWith("/")) {
           return { success: false, error: "Invalid API path" };
@@ -7455,7 +7485,7 @@ class IPCHandlers {
       if (this.environmentManager?.isAuthDisabled()) return null;
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7486,7 +7516,7 @@ class IPCHandlers {
       if (this.environmentManager?.isAuthDisabled()) return null;
       try {
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7522,7 +7552,7 @@ class IPCHandlers {
         if (!realCloud) return { success: false, error: "File path not allowed" };
 
         const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("Spoken API URL not configured");
+        if (!apiUrl) throw new Error("Ducky API URL not configured");
 
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
@@ -7590,7 +7620,7 @@ class IPCHandlers {
       }
     });
 
-    // Unknown ids are a no-op: providers other tha Spoken cloud don't
+    // Unknown ids are a no-op: providers other tha Ducky cloud don't
     // register a controller, and the renderer fires this for every cancel.
     ipcMain.handle("cancel-upload-transcription", async (_event, requestId) => {
       const controller = this._uploadTranscriptionControllers.get(requestId);
@@ -7819,7 +7849,7 @@ class IPCHandlers {
       try {
         const apiUrl = getApiUrl();
         if (!apiUrl) {
-          throw new Error("Spoken API URL not configured");
+          throw new Error("Ducky API URL not configured");
         }
 
         const authHeader = await getAuthHeader(event);
@@ -7855,7 +7885,7 @@ class IPCHandlers {
       try {
         const apiUrl = getApiUrl();
         if (!apiUrl) {
-          throw new Error("Spoken API URL not configured");
+          throw new Error("Ducky API URL not configured");
         }
 
         const authHeader = await getAuthHeader(event);
@@ -7893,7 +7923,7 @@ class IPCHandlers {
       try {
         const apiUrl = getApiUrl();
         if (!apiUrl) {
-          throw new Error("Spoken API URL not configured");
+          throw new Error("Ducky API URL not configured");
         }
 
         const authHeader = await getAuthHeader(event);
@@ -8083,7 +8113,7 @@ class IPCHandlers {
     const fetchStreamingToken = async (event) => {
       const apiUrl = getApiUrl();
       if (!apiUrl) {
-        throw new Error("Spoken API URL not configured");
+        throw new Error("Ducky API URL not configured");
       }
 
       const authHeader = await getAuthHeader(event);
@@ -8284,7 +8314,7 @@ class IPCHandlers {
 
     const fetchDeepgramStreamingTokenFromWindow = async (windowId) => {
       const apiUrl = getApiUrl();
-      if (!apiUrl) throw new Error("Spoken API URL not configured");
+      if (!apiUrl) throw new Error("Ducky API URL not configured");
 
       const win = BrowserWindow.fromId(windowId);
       if (!win || win.isDestroyed()) throw new Error("Window not available for token refresh");
@@ -8314,7 +8344,7 @@ class IPCHandlers {
     const fetchDeepgramStreamingToken = async (event) => {
       const apiUrl = getApiUrl();
       if (!apiUrl) {
-        throw new Error("Spoken API URL not configured");
+        throw new Error("Ducky API URL not configured");
       }
 
       const authHeader = await getAuthHeader(event);
@@ -9717,6 +9747,13 @@ class IPCHandlers {
       this._asyncMirrorDelete(id);
     }
     return result;
+  }
+
+  recordGrammarCorrection(entry) {
+    if (!this._grammarHistoryEnabled) return;
+    const item = this.databaseManager.saveGrammarCorrection(entry);
+    this.broadcastToWindows("grammar-history-changed");
+    return item;
   }
 
   broadcastToWindows(channel, payload) {

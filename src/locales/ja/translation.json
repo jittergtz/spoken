@@ -4,7 +4,7 @@
       "sectionTitle": "言語",
       "sectionDescription": "インターフェースと文字起こしの言語を個別に設定",
       "uiLabel": "インターフェース言語",
-      "uiDescription": "Spoken のインターフェースで使用する言語を選択",
+      "uiDescription": "Ducky のインターフェースで使用する言語を選択",
       "transcriptionLabel": "文字起こし言語",
       "transcriptionDescription": "より正確な文字起こしのために話す言語を選択"
     },
@@ -34,12 +34,12 @@
     },
     "openControlPanel": "コントロールパネルを開く",
     "hideControlPanel": "コントロールパネルを非表示",
-    "quit": "Spoken を終了",
-    "tooltip": "Spoken - 音声ディクテーション"
+    "quit": "Ducky を終了",
+    "tooltip": "Ducky - 音声ディクテーション"
   },
   "menu": {
-    "appLabel": "Spoken",
-    "quit": "Spoken を終了",
+    "appLabel": "Ducky",
+    "quit": "Ducky を終了",
     "speech": "スピーチ",
     "settings": "設定...",
     "help": "ヘルプ",
@@ -58,8 +58,8 @@
       "message": "ブラウザでリンクを開けませんでした:\n{{url}}\n\nエラー: {{error}}"
     },
     "loadFailure": {
-      "title": "Spoken の読み込みに失敗しました",
-      "message": "Spoken の UI を読み込めませんでした。",
+      "title": "Ducky の読み込みに失敗しました",
+      "message": "Ducky の UI を読み込めませんでした。",
       "detail": {
         "window": "ウィンドウ: {{windowName}}",
         "error": "エラー {{errorCode}}: {{errorDescription}}",
@@ -70,17 +70,17 @@
   },
   "startup": {
     "error": {
-      "title": "Spoken 起動エラー",
+      "title": "Ducky 起動エラー",
       "message": "アプリケーションの起動に失敗しました:\n\n{{error}}\n\nこの問題を報告してください。"
     },
     "globeHotkey": {
       "title": "Globe ホットキーが使用できません",
-      "message": "Spoken は Globe キーのホットキーを有効にできませんでした。",
+      "message": "Ducky は Globe キーのホットキーを有効にできませんでした。",
       "details": {
         "unknown": "Globe リスナーの起動中に不明なエラーが発生しました。",
         "fallback": "Globe キーのショートカットは無効のままになります。既存のキーボードショートカットは引き続き使用できます。",
         "devHint": "`npm run compile:globe` を実行し、アプリを再ビルドしてリスナーバイナリを再生成してください。",
-        "reinstallHint": "Spoken を再インストールするか、問題が解決しない場合はサポートにお問い合わせください。"
+        "reinstallHint": "Ducky を再インストールするか、問題が解決しない場合はサポートにお問い合わせください。"
       }
     }
   },
@@ -193,7 +193,7 @@
       "accessibilityTitle": "アクセシビリティ",
       "accessibilityDescription": "完成したテキストを、今使っているアプリ（ドキュメント、メール、チャット）に直接入力します。",
       "testAndGrant": "テストして許可",
-      "requiredForApp": "Spoken の動作に必要です",
+      "requiredForApp": "Ducky の動作に必要です",
       "microphoneRequired": "マイクへのアクセスが必要です",
       "openSystemSettings": "システム設定を開く",
       "systemAudioTitle": "システムオーディオ",
@@ -236,7 +236,7 @@
       "optionalNote": "任意です。設定からいつでも追加・変更できます。"
     },
     "connectivity": {
-      "title": "このネットワークから Spoken Cloud に接続できません",
+      "title": "このネットワークから Ducky Cloud に接続できません",
       "body": "{{cause}} ローカルエンジンに切り替えるか、続行して後でもう一度お試しください。",
       "useLocal": "ローカルエンジンを使う",
       "continue": "そのまま続行"
@@ -277,13 +277,13 @@
     "meeting": {
       "title": "会議メモ",
       "description": "会議を記録して要約します",
-      "autoDetect": "Spoken は会議中であることを自動的に検出し、メモの開始を提案します。あなたの操作なしに録音されることはありません。",
+      "autoDetect": "Ducky は会議中であることを自動的に検出し、メモの開始を提案します。あなたの操作なしに録音されることはありません。",
       "hotkeyLabel": "会議ホットキー",
       "hotkeyHint": "任意 — 会議中に押すとすぐにメモを開始できます。"
     },
     "finish": {
       "title": "準備完了",
-      "cloudDescription": "Spoken Cloud をご利用中です — 高速・高精度、データ保持なし、毎週 2,000 ワード無料。すべてを端末内で処理したい場合は、設定からローカル処理に切り替えられます。",
+      "cloudDescription": "Ducky Cloud をご利用中です — 高速・高精度、データ保持なし、毎週 2,000 ワード無料。すべてを端末内で処理したい場合は、設定からローカル処理に切り替えられます。",
       "localDescription": "ローカル処理またはご自身の API キーで設定済みです。音声の処理方法はいつでも設定から変更できます。",
       "cleanupNote": "AI によるテキスト整形は適切な初期設定で動作します。設定からいつでも調整できます。",
       "openSettings": "設定を開く",
@@ -306,7 +306,7 @@
   "streaming": {
     "errors": {
       "cloudUnreachable": {
-        "title": "Spoken Cloud に接続できません",
+        "title": "Ducky Cloud に接続できません",
         "generic": "ネットワーク要求に失敗しました。接続を確認してください。",
         "dnsBlocked": "DNS が the server を解決できません — 広告ブロッカーやフィルターに遮断されている可能性があります。",
         "refused": "接続が拒否されました — ファイアウォールまたは VPN の可能性があります。",
@@ -323,7 +323,7 @@
       "problemTitle": "アップデートで問題が発生しました",
       "problemDescription": "アップデートを完了できませんでした。後でもう一度お試しください。",
       "installTitle": "アップデートをインストール",
-      "installDescription": "Spoken はアップデートを適用するために再起動します。作業中のデータは保存されます。",
+      "installDescription": "Ducky はアップデートを適用するために再起動します。作業中のデータは保存されます。",
       "couldNotInstallTitle": "アップデートをインストールできませんでした",
       "couldNotInstallDescription": "問題が発生しました。もう一度お試しください。",
       "couldNotDownloadTitle": "アップデートをダウンロードできませんでした",
@@ -338,7 +338,7 @@
     },
     "accessibilityMissing": {
       "title": "アクセシビリティの許可が必要です",
-      "description": "Spoken が正しく動作するにはアクセシビリティの許可が必要です。以下で有効にしてください。"
+      "description": "Ducky が正しく動作するにはアクセシビリティの許可が必要です。以下で有効にしてください。"
     },
     "billing": {
       "pastDueTitle": "お支払いを処理できませんでした",
@@ -404,8 +404,8 @@
       }
     },
     "cloudMigration": {
-      "title": "Spoken Cloud へようこそ",
-      "description": "より高速で正確な文字起こしのために Spoken Cloud に切り替えました。以前の設定は保存されています。設定からいつでも戻せます。",
+      "title": "Ducky Cloud へようこそ",
+      "description": "より高速で正確な文字起こしのために Ducky Cloud に切り替えました。以前の設定は保存されています。設定からいつでも戻せます。",
       "viewSettings": "設定を表示"
     },
     "aiCta": {
@@ -586,7 +586,7 @@
         "description": "録音の一部を文字起こしできませんでした。"
       },
       "errorDescriptions": {
-        "sessionExpired": "Spoken Cloud のセッションが利用できません。「設定」から再度サインインしてください。",
+        "sessionExpired": "Ducky Cloud のセッションが利用できません。「設定」から再度サインインしてください。",
         "offline": "オフラインです。クラウド文字起こしにはインターネット接続が必要です。",
         "dailyLimitReached": "本日の文字起こし上限に達しました。明日もう一度お試しいただくか、プランをアップグレードしてください。",
         "providerRateLimited": "文字起こしプロバイダーがリクエストを制限しました。しばらく待ってからもう一度お試しください。"
@@ -662,7 +662,7 @@
       "micErrors": {
         "accessFailed": "マイクへのアクセスに失敗しました。もう一度お試しください。",
         "noMicrophones": "マイクが検出されませんでした。{{settingsPath}} でマイクを接続または選択してください。",
-        "permissionDenied": "権限が拒否されました。{{privacyPath}} を開いて Spoken を許可してください。",
+        "permissionDenied": "権限が拒否されました。{{privacyPath}} を開いて Ducky を許可してください。",
         "couldNotStart": "選択したマイクを開始できませんでした。{{settingsPath}} で入力デバイスを選択してから、テストを再実行してください。",
         "noActiveInput": "アクティブな音声入力が見つかりませんでした。{{settingsPath}} でマイクを選択してください。",
         "unknown": "マイクへのアクセスに失敗しました: {{error}}。別の入力デバイスを選択してもう一度お試しください。",
@@ -691,8 +691,8 @@
         "accessibilityNeeded": "テキストの自動貼り付けを有効にするには、システム設定でアクセシビリティの権限を許可してください。",
         "windowsReady": "Windows では自動貼り付けに特別な権限は必要ありません。準備完了です！",
         "linuxReadyWithMethod": "{{method}} を使用した自動貼り付けが利用可能です。準備完了です！",
-        "waylandClipboardMode": "この Wayland セッションでは自動貼り付けが利用できません。Spoken はテキストをクリップボードにコピーしますので、Ctrl+V で貼り付けてください。",
-        "optionalPasteTool": "自動貼り付けには {{tool}} をインストールしてください:\n\n{{installCmd}}{{waylandNote}}\n\nインストールしなくても Spoken は使用できます。テキストがクリップボードにコピーされるので、Ctrl+V で貼り付けてください。"
+        "waylandClipboardMode": "この Wayland セッションでは自動貼り付けが利用できません。Ducky はテキストをクリップボードにコピーしますので、Ctrl+V で貼り付けてください。",
+        "optionalPasteTool": "自動貼り付けには {{tool}} をインストールしてください:\n\n{{installCmd}}{{waylandNote}}\n\nインストールしなくても Ducky は使用できます。テキストがクリップボードにコピーされるので、Ctrl+V で貼り付けてください。"
       },
       "alerts": {
         "accessibilityNeeded": "アクセシビリティの権限が必要です！システム設定で許可してください。"
@@ -705,7 +705,7 @@
         "defaultPasteTool": "xdotool",
         "xdotoolXwayland": "xdotool（XWayland アプリ）"
       },
-      "accessibilityTestText": "Spoken アクセシビリティテスト",
+      "accessibilityTestText": "Ducky アクセシビリティテスト",
       "warning": {
         "messages": {
           "macos": "サウンド設定で入力デバイスを確認してください",
@@ -784,7 +784,7 @@
       "protocolUnavailable": "ブラウザでのサインインを利用できません — システムの「既定のアプリ」設定で spoken:// プロトコルを再登録してください。"
     },
     "welcomeSubtitle": "音声でどこでもディクテーション",
-    "welcomeTitle": "Spoken へようこそ"
+    "welcomeTitle": "Ducky へようこそ"
   },
   "cleanupPrompt": "クリーンアップ",
   "developerSection": {
@@ -993,10 +993,10 @@
     "recheckChecking": "確認中...",
     "title": "自動貼り付け",
     "usingMethodPrefix": "使用中:",
-    "waylandClipboardDescription": "この Wayland セッションでは自動貼り付けが利用できません。Spoken はテキストをクリップボードにコピーしますので、Ctrl+V で手動で貼り付けてください。",
+    "waylandClipboardDescription": "この Wayland セッションでは自動貼り付けが利用できません。Ducky はテキストをクリップボードにコピーしますので、Ctrl+V で手動で貼り付けてください。",
     "waylandClipboardTitle": "Wayland でのクリップボードモード",
     "windowsReady": "Windows は自動貼り付けに標準対応しています。設定は不要です！",
-    "withoutToolPrefix": "このツールがない場合、Spoken はテキストをクリップボードにコピーします。Ctrl+V で手動で貼り付けてください。",
+    "withoutToolPrefix": "このツールがない場合、Ducky はテキストをクリップボードにコピーします。Ctrl+V で手動で貼り付けてください。",
     "xwaylandAppsOnly": "自動貼り付けは XWayland アプリのみで動作します"
   },
   "promptStudio": {
@@ -1049,7 +1049,7 @@
       "none": "なし",
       "outputLabel": "出力",
       "processing": "処理中...",
-      "spokenCloud": "Spoken Cloud",
+      "spokenCloud": "Ducky Cloud",
       "providerLabel": "プロバイダー",
       "run": "テスト実行",
       "customEndpoint": "カスタムエンドポイント",
@@ -1167,7 +1167,7 @@
           "price": "$0",
           "period": "永久",
           "features": [
-            "## Spoken Cloud",
+            "## Ducky Cloud",
             "週2,000ワードの文字起こし",
             "月5時間の会議録音",
             "## 永久無料",
@@ -1281,7 +1281,7 @@
         "button": "アカウントを削除",
         "deleting": "削除中...",
         "title": "アカウントを削除しますか？",
-        "description": "Spoken アカウント、すべてのクラウド同期ノート、すべてのローカルデータ（文字起こし、音声録音、ダウンロード済みモデル、カレンダー接続、設定を含む）が完全に削除されます。この操作は元に戻せません。",
+        "description": "Ducky アカウント、すべてのクラウド同期ノート、すべてのローカルデータ（文字起こし、音声録音、ダウンロード済みモデル、カレンダー接続、設定を含む）が完全に削除されます。この操作は元に戻せません。",
         "confirmText": "すべて削除",
         "successTitle": "アカウントが削除されました",
         "successDescription": "アカウントとすべてのデータが削除されました。アプリが再読み込みされます。",
@@ -1317,7 +1317,7 @@
       "enableTextCleanup": "テキスト補正を有効にする",
       "enableTextCleanupDescription": "AI がフィラーワードを除去し、文法と句読点を整える",
       "modes": {
-        "spoken": "Spoken Cloud",
+        "spoken": "Ducky Cloud",
         "providers": "クラウドプロバイダー",
         "local": "ローカル",
         "selfHosted": "セルフホスト",
@@ -1328,13 +1328,13 @@
         "enterprise": "エンタープライズ",
         "enterpriseDesc": "組織のクラウドアカウントを使用 (AWS, Azure, GCP)。"
       },
-      "spokenCloud": "Spoken Cloud",
+      "spokenCloud": "Ducky Cloud",
       "spokenCloudDescription": "信頼できる精度。設定不要。",
       "title": "AI テキスト補正",
       "toasts": {
         "switchedCloud": {
-          "description": "テキスト補正に Spoken のクラウドサービスを使用します。",
-          "title": "Spoken Cloud に切り替えました"
+          "description": "テキスト補正に Ducky のクラウドサービスを使用します。",
+          "title": "Ducky Cloud に切り替えました"
         },
         "switchedCustom": {
           "description": "独自のプロバイダーと API キーを設定してください。",
@@ -1413,7 +1413,7 @@
       "appearance": {
         "auto": "自動",
         "dark": "ダーク",
-        "description": "Spoken の外観を設定",
+        "description": "Ducky の外観を設定",
         "light": "ライト",
         "theme": "テーマ",
         "themeDescription": "ライト、ダーク、またはシステムに合わせる",
@@ -1441,8 +1441,8 @@
         "linuxPttSetupDescription": "キーボード入力デバイスへのアクセス権が必要です。",
         "linuxPttSetupNote": "コマンド実行後、ログアウトして再度ログインしてください。",
         "hyprlandConfigWriteWarningTitle": "Hyprland のキーバインドは永続化されません",
-        "hyprlandConfigWriteWarningDescription": "Spoken は {{path}} に書き込めないため、Hyprland の設定を再読み込みするとキーバインドは維持されません。ファイルが存在し、書き込み可能であることを確認してください。",
-        "hyprlandUnbindDescription": "Hyprland では、Spoken が選択したショートカットを使用します。同じキーの組み合わせを使う既存の Hyprland バインドは、Spoken がショートカットを登録すると解除されます。"
+        "hyprlandConfigWriteWarningDescription": "Ducky は {{path}} に書き込めないため、Hyprland の設定を再読み込みするとキーバインドは維持されません。ファイルが存在し、書き込み可能であることを確認してください。",
+        "hyprlandUnbindDescription": "Hyprland では、Ducky が選択したショートカットを使用します。同じキーの組み合わせを使う既存の Hyprland バインドは、Ducky がショートカットを登録すると解除されます。"
       },
       "meetingHotkey": {
         "title": "ミーティングモードホットキー",
@@ -1472,7 +1472,7 @@
       },
       "notifications": {
         "title": "通知",
-        "description": "Spoken が表示できる通知を設定します",
+        "description": "Ducky が表示できる通知を設定します",
         "disableAll": "すべての通知を無効にする",
         "disableAllDescription": "エラーメッセージ以外をすべて消音にする",
         "meetingDetection": "会議の検出",
@@ -1491,9 +1491,9 @@
       },
       "startup": {
         "launchAtLogin": "ログイン時に起動",
-        "launchAtLoginDescription": "ログイン時に Spoken を自動的に起動",
+        "launchAtLoginDescription": "ログイン時に Ducky を自動的に起動",
         "title": "起動設定",
-        "description": "Spoken の起動時の動作を制御",
+        "description": "Ducky の起動時の動作を制御",
         "startMinimized": "最小化で起動",
         "startMinimizedDescription": "コントロールパネルウィンドウを表示せずに起動"
       },
@@ -1539,7 +1539,7 @@
           "group": {
             "step1Title": "ユーザーを input グループに追加",
             "step2Title": "ログアウトして再ログイン",
-            "step2Desc": "グループの変更は新しいセッションでのみ有効になります。デスクトップからログアウトし、再ログインしてから Spoken を開き直してください。"
+            "step2Desc": "グループの変更は新しいセッションでのみ有効になります。デスクトップからログアウトし、再ログインしてから Ducky を開き直してください。"
           },
           "service": {
             "step1Title": "サービスディレクトリを作成",
@@ -1596,7 +1596,7 @@
           },
           "installUpdate": {
             "confirmText": "インストールして再起動",
-            "description": "Spoken はアップデートを適用するために再起動します。",
+            "description": "Ducky はアップデートを適用するために再起動します。",
             "title": "アップデートをインストール"
           },
           "noUpdates": {
@@ -1627,13 +1627,13 @@
     "permissions": {
       "accessibilityDescription": "文字起こし後の自動貼り付けに必要",
       "accessibilityTitle": "アクセシビリティ",
-      "description": "Spoken の正常動作に必要なシステム権限をテスト・管理",
+      "description": "Ducky の正常動作に必要なシステム権限をテスト・管理",
       "microphoneDescription": "ディクテーションと文字起こしのためにあなたの声を録音します",
       "microphoneTitle": "マイク",
       "resetAccessibility": {
-        "description": "Spoken をアクセシビリティの権限から削除します。システム設定 > プライバシーとセキュリティ > アクセシビリティ で再度許可する必要があります。",
+        "description": "Ducky をアクセシビリティの権限から削除します。システム設定 > プライバシーとセキュリティ > アクセシビリティ で再度許可する必要があります。",
         "label": "アクセシビリティの権限をリセット",
-        "rowDescription": "アプリの再インストールや再ビルド後の問題を修正するために、システム設定で Spoken を削除してから再追加",
+        "rowDescription": "アプリの再インストールや再ビルド後の問題を修正するために、システム設定で Ducky を削除してから再追加",
         "title": "アクセシビリティの権限をリセット"
       },
       "optional": "任意",
@@ -1654,7 +1654,7 @@
       "description": "デバイスからのデータ送信を管理します。初期設定ではすべてオフです。",
       "title": "プライバシー",
       "usageAnalytics": "使用状況の分析",
-      "usageAnalyticsDescription": "匿名のパフォーマンスデータを共有して Spoken の改善にご協力ください。文字起こしの内容は送信されません。タイミングとエラーデータのみです。",
+      "usageAnalyticsDescription": "匿名のパフォーマンスデータを共有して Ducky の改善にご協力ください。文字起こしの内容は送信されません。タイミングとエラーデータのみです。",
       "dataRetention": "データ保持",
       "dataRetentionDescription": "文字起こしと音声を履歴にローカル保存します。無効にすると、文字起こしは貼り付けられますが保存されません。",
       "transcriptRetention": "文字起こしの保持",
@@ -1710,9 +1710,9 @@
     "transcription": {
       "customSetup": "カスタム設定",
       "customSetupDescription": "独自のプロバイダーと API キーを使用。",
-      "description": "Spoken の音声文字起こし方法を選択",
+      "description": "Ducky の音声文字起こし方法を選択",
       "modes": {
-        "spoken": "Spoken Cloud",
+        "spoken": "Ducky Cloud",
         "providers": "クラウドプロバイダー",
         "local": "ローカル",
         "selfHosted": "セルフホスト",
@@ -1721,13 +1721,13 @@
         "localDesc": "端末上のモデル。完全プライベート。",
         "selfHostedDesc": "自前サーバーをネットワーク上に。"
       },
-      "spokenCloud": "Spoken Cloud",
+      "spokenCloud": "Ducky Cloud",
       "spokenCloudDescription": "信頼できる精度。設定不要。",
       "title": "音声テキスト変換",
       "toasts": {
         "switchedCloud": {
-          "description": "文字起こしに Spoken のクラウドサービスを使用します。",
-          "title": "Spoken Cloud に切り替えました"
+          "description": "文字起こしに Ducky のクラウドサービスを使用します。",
+          "title": "Ducky Cloud に切り替えました"
         },
         "switchedCustom": {
           "description": "独自のプロバイダーと API キーを設定してください。",
@@ -2168,7 +2168,7 @@
       "newFolder": "新しいフォルダ",
       "folderName": "フォルダ名",
       "create": "作成",
-      "spokenCloud": "Spoken Cloud",
+      "spokenCloud": "Ducky Cloud",
       "custom": "カスタム",
       "selectFolder": "フォルダを選択",
       "transcriptionFailed": "文字起こしに失敗しました",
@@ -2180,15 +2180,15 @@
       "fileTooLarge": "このファイルは 500 MB の制限を超えています。",
       "largeFileNote": "大容量ファイルは分割され、並列で文字起こしされます。",
       "chunkProgress": "パート {{completed}} / {{total}} を文字起こし中...",
-      "paidPlanRequired": "25 MB を超えるファイルのクラウド文字起こしには有料プランが必要です。大容量ファイルは Spoken Cloud で信頼性の高い高品質な結果を得られます。",
+      "paidPlanRequired": "25 MB を超えるファイルのクラウド文字起こしには有料プランが必要です。大容量ファイルは Ducky Cloud で信頼性の高い高品質な結果を得られます。",
       "byokTooLarge": "サードパーティの API キーは 25 MB までのファイルのみ対応しています。",
-      "byokTooLargeDetail": "25 MB を超えるファイルは、Spoken Cloud が分割・並列処理・結合を行います。サードパーティの制限に依存せず、信頼性の高い結果が得られます。",
-      "byokTooLargeNeedsAccount": "アカウントを作成し、有料プランにアップグレードすると、Spoken Cloud でより大きなファイルを文字起こしできます。",
-      "byokTooLargeNeedsUpgrade": "有料プランにアップグレードすると、Spoken Cloud でより大きなファイルを文字起こしできます。",
-      "switchToCloudForLargeFiles": "このファイルを文字起こしするには Spoken Cloud に切り替えてください。",
+      "byokTooLargeDetail": "25 MB を超えるファイルは、Ducky Cloud が分割・並列処理・結合を行います。サードパーティの制限に依存せず、信頼性の高い結果が得られます。",
+      "byokTooLargeNeedsAccount": "アカウントを作成し、有料プランにアップグレードすると、Ducky Cloud でより大きなファイルを文字起こしできます。",
+      "byokTooLargeNeedsUpgrade": "有料プランにアップグレードすると、Ducky Cloud でより大きなファイルを文字起こしできます。",
+      "switchToCloudForLargeFiles": "このファイルを文字起こしするには Ducky Cloud に切り替えてください。",
       "createAccount": "アカウント作成",
       "upgrade": "アップグレード",
-      "switchToCloud": "Spoken Cloud",
+      "switchToCloud": "Ducky Cloud",
       "orDivider": "または",
       "urlPlaceholder": "YouTubeまたは音声URLを貼り付け",
       "urlDownloading": "音声をダウンロード中...",
@@ -2311,7 +2311,7 @@
     "clearAll": "すべてクリア",
     "clearTitle": "辞書をクリアしますか？",
     "clearDescription": "カスタム辞書のすべての単語が削除されます。この操作は元に戻せません。",
-    "addPlaceholder": "カンマ区切りで単語を追加 — Spoken、Supabase、ARR など",
+    "addPlaceholder": "カンマ区切りで単語を追加 — Ducky、Supabase、ARR など",
     "add": "追加",
     "importWords": "単語をインポート",
     "importPlaceholder": "カンマまたは改行区切りの単語を貼り付け...",
@@ -2425,7 +2425,7 @@
     },
     "tryAgain": "再試行",
     "card": {
-      "brand": "Spoken",
+      "brand": "Ducky",
       "signalId": "Signal ID",
       "audioSignature": "あなたの音声シグネチャー",
       "stop": "停止",
@@ -2504,7 +2504,7 @@
     "submitBug": "バグを報告"
   },
   "postMigration": {
-    "title": "Spoken へおかえりなさい",
+    "title": "Ducky へおかえりなさい",
     "description": "ノートと設定は以前のバージョンから引き継がれています。ただし macOS はこれを新しいアプリとして扱うため、いくつかの権限を改めて付与していただく必要があります。",
     "done": "完了",
     "remindLater": "後で通知"
@@ -2533,6 +2533,23 @@
     "cancel": "キャンセル"
   },
   "app": {
+    "quickSettings": {
+      "speech": "音声からテキスト",
+      "grammar": "文法",
+      "provider": "プロバイダー",
+      "model": "モデル",
+      "providerModel": "プロバイダーとモデル",
+      "cleanup": "テキスト整形",
+      "toneHotkey": "トーンのショートカット",
+      "hotkey": "ショートカット",
+      "casualWarm": "親しみやすく温かい",
+      "notSet": "未設定",
+      "comingSoon": "近日対応",
+      "back": "ピルに戻る",
+      "selfHosted": "セルフホスト",
+      "loadFailed": "クイック設定を読み込めませんでした。",
+      "saveFailed": "設定を保存できませんでした。"
+    },
     "toasts": {
       "hotkeyChanged": {
         "title": "ホットキーが変更されました",
@@ -2554,7 +2571,7 @@
       "undo": "元に戻す",
       "accessibilityMissing": {
         "title": "アクセシビリティの許可が必要です",
-        "description": "Spoken がホットキーの検出とテキストの貼り付けを行うには、アクセシビリティの許可が必要です。コントロールパネルで有効にしてください。"
+        "description": "Ducky がホットキーの検出とテキストの貼り付けを行うには、アクセシビリティの許可が必要です。コントロールパネルで有効にしてください。"
       }
     },
     "mic": {
@@ -2565,6 +2582,8 @@
       "waitingForMicrophone": "マイクを待っています…"
     },
     "buttons": {
+      "pencil": "鉛筆",
+      "eye": "目",
       "cancelRecording": "録音をキャンセル",
       "cancelProcessing": "処理をキャンセル"
     },
@@ -2600,8 +2619,8 @@
     "enabled": "音声エージェントを有効にする",
     "enabledDescription": "エージェントに指示を口述できます。「{{agentName}}」と話しかけて起動します。設定は以下で行えます。",
     "modes": {
-      "spoken": "Spoken Cloud",
-      "spokenDesc": "Spoken が管理するエージェントを使用。API キーは不要です。",
+      "spoken": "Ducky Cloud",
+      "spokenDesc": "Ducky が管理するエージェントを使用。API キーは不要です。",
       "providers": "自分の API キーを使用",
       "providersDesc": "自分の API キーで OpenAI、Anthropic、Gemini、Groq に接続します。",
       "local": "ローカル",
@@ -2626,7 +2645,7 @@
       "systemPromptDescription": "エージェントへのカスタム指示",
       "systemPromptPlaceholder": "カスタムシステムプロンプトを入力...",
       "modes": {
-        "spoken": "Spoken Cloud",
+        "spoken": "Ducky Cloud",
         "providers": "クラウドプロバイダー",
         "local": "ローカル",
         "selfHosted": "セルフホスト",
@@ -2637,7 +2656,7 @@
         "enterprise": "エンタープライズ",
         "enterpriseDesc": "組織のクラウドアカウントを使用 (AWS, Azure, GCP)。"
       },
-      "spokenCloud": "Spoken Cloud",
+      "spokenCloud": "Ducky Cloud",
       "spokenCloudDescription": "信頼できる精度。設定不要。",
       "customSetup": "カスタム設定 (BYOK)",
       "customSetupDescription": "自分のAPIキーを使用してお好みのモデルを選択する"
@@ -2706,7 +2725,7 @@
       "disconnectConfirm": "{{email}} を切断しますか？",
       "disconnectDescription": "このカレンダーからの会議メモは記録されなくなります。",
       "systemAudioRequired": "システムオーディオの権限が必要です",
-      "systemAudioDescription": "会議を文字起こしするには、Spoken に他の参加者の音声を録音するためのシステムオーディオの権限が必要です。画面を録画することはありません。システム設定に移動して有効にします。",
+      "systemAudioDescription": "会議を文字起こしするには、Ducky に他の参加者の音声を録音するためのシステムオーディオの権限が必要です。画面を録画することはありません。システム設定に移動して有効にします。",
       "openSettings": "システム設定を開く"
     },
     "sections": {
@@ -2732,7 +2751,7 @@
       "learnMore": "詳細",
       "viewPlans": "プランを表示",
       "copyUrl": "MCP URLをコピー",
-      "proRequired": "Spoken を Claude、ChatGPT、Cursor に接続するには、有料プランへのアップグレードが必要です。",
+      "proRequired": "Ducky を Claude、ChatGPT、Cursor に接続するには、有料プランへのアップグレードが必要です。",
       "copied": "コピーしました"
     },
     "cli": {
@@ -2746,7 +2765,7 @@
       "local": {
         "label": "ローカル",
         "freeBadge": "無料",
-        "description": "ローカルのメモに直接アクセスできます。ログインや API キーは不要 — Spoken の起動中に利用できます。"
+        "description": "ローカルのメモに直接アクセスできます。ログインや API キーは不要 — Ducky の起動中に利用できます。"
       },
       "cloud": {
         "label": "クラウド",
@@ -2766,8 +2785,8 @@
       "upgrade": "アップグレード"
     },
     "notABot": {
-      "title": "Spoken はミーティング録音ツールであり、ボットではありません",
-      "description": "Spoken はシステムから直接オーディオをキャプチャします — 参加者としてミーティングに参加することはありません。カレンダーを接続して、通常通りノートを取るだけです。"
+      "title": "Ducky はミーティング録音ツールであり、ボットではありません",
+      "description": "Ducky はシステムから直接オーディオをキャプチャします — 参加者としてミーティングに参加することはありません。カレンダーを接続して、通常通りノートを取るだけです。"
     }
   },
   "calendar": {
@@ -2807,7 +2826,7 @@
     "signInDescription": "アカウントを作成またはログインして、会議を録音・文字起こしできます。",
     "connectCalendar": "カレンダーを接続",
     "connectCalendarDescription": "Google カレンダーを連携して、今後のミーティングを確認し、自動的にノートを記録します。",
-    "notABot": "Spoken はシステムオーディオで録音します — ボットとしてミーティングに参加することはありません。",
+    "notABot": "Ducky はシステムオーディオで録音します — ボットとしてミーティングに参加することはありません。",
     "connectCalendarButton": "カレンダーを接続"
   },
   "notesView": {
@@ -2882,13 +2901,13 @@
     }
   },
   "updateNotification": {
-    "title": "Spoken のアップデートあり",
+    "title": "Ducky のアップデートあり",
     "body": "バージョン {{version}} がダウンロード可能です",
     "cta": "今すぐ更新"
   },
   "permissionsGate": {
     "title": "権限が必要です",
-    "description": "Spoken がこのコンピュータで動作するために、いくつかの権限が必要です。",
+    "description": "Ducky がこのコンピュータで動作するために、いくつかの権限が必要です。",
     "continue": "続行"
   },
   "apiKeysSection": {

@@ -36,7 +36,7 @@ export default function QwenModelInstaller({
     try {
       const status = await window.electronAPI.qwenModelStatus(modelId);
       if (status.modelId !== modelId)
-        throw new Error("Restart Spoken to load the updated Qwen installer");
+        throw new Error("Restart Ducky to load the updated Qwen installer");
       setAvailable(true);
       setInstalled(status.installed);
       setBusy(status.downloading || installing.current);
@@ -47,7 +47,7 @@ export default function QwenModelInstaller({
       setError(
         t("qwenInstaller.statusError", {
           defaultValue:
-            "Could not connect to the Qwen installer. Restart Spoken and try again. ({{detail}})",
+            "Could not connect to the Qwen installer. Restart Ducky and try again. ({{detail}})",
           detail,
         })
       );
@@ -162,14 +162,14 @@ export default function QwenModelInstaller({
       {!window.electronAPI?.qwenModelStatus && (
         <p role="alert" className="text-xs text-destructive">
           {t("qwenInstaller.restartRequired", {
-            defaultValue: "Restart Spoken to enable the Qwen installer.",
+            defaultValue: "Restart Ducky to enable the Qwen installer.",
           })}
         </p>
       )}
       {window.electronAPI?.qwenModelStatus && !window.electronAPI?.transcribeLocalQwen && (
         <p role="alert" className="text-xs text-destructive">
           {t("qwenInstaller.restartTranscription", {
-            defaultValue: "Restart Spoken to enable Qwen transcription.",
+            defaultValue: "Restart Ducky to enable Qwen transcription.",
           })}
         </p>
       )}

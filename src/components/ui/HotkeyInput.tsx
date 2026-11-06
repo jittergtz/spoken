@@ -179,7 +179,7 @@ function mapKeyboardEventToHotkey(e: KeyboardEvent): string | null {
 }
 
 export interface HotkeyInputVariant {
-  variant?: "default" | "hero";
+  variant?: "default" | "hero" | "pill";
 }
 
 export function HotkeyInput({
@@ -495,6 +495,38 @@ export function HotkeyInput({
         <Trash2 className="w-3.5 h-3.5" />
       </button>
     ) : null;
+
+  if (variant === "pill") {
+    return (
+      <div
+        ref={containerRef}
+        tabIndex={disabled ? -1 : 0}
+        role="button"
+        aria-label={t("hotkeyInput.ariaLabel")}
+        aria-disabled={disabled || undefined}
+        data-capturing={isCapturing || undefined}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onMouseDown={handleMouseDown}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        className="pill-quick-field pill-quick-hotkey"
+      >
+        <span>
+          {isCapturing
+            ? [...activeModifiers, t("hotkeyInput.listening")].join(" + ")
+            : value
+              ? formatHotkeyLabel(value).replace(/\+/g, " + ")
+              : t("hotkeyInput.clickToSet")}
+        </span>
+        {validationWarning && (
+          <span role="alert" className="pill-quick-warning">
+            {validationWarning}
+          </span>
+        )}
+      </div>
+    );
+  }
 
   // Hero variant: large centered key display for onboarding
   if (variant === "hero") {

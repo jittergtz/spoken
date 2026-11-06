@@ -1,4 +1,5 @@
 const path = require("path");
+const { getAppIconPath } = require("./appIdentity");
 
 const isGnomeWayland =
   process.platform === "linux" &&
@@ -39,7 +40,8 @@ const WINDOW_SIZES = {
 const MAIN_WINDOW_CONFIG = {
   width: WINDOW_SIZES.BASE.width,
   height: WINDOW_SIZES.BASE.height,
-  title: "Voice Recorder",
+  title: "Ducky — Voice Recorder",
+  icon: getAppIconPath(),
   webPreferences: {
     preload: path.join(__dirname, "..", "..", "preload.js"),
     nodeIntegration: false,
@@ -52,7 +54,9 @@ const MAIN_WINDOW_CONFIG = {
   transparent: true,
   show: false,
   skipTaskbar: true,
-  focusable: false,
+  // Linux cannot toggle focusability at runtime; click-through keeps the idle
+  // overlay passive, while quick settings can explicitly request focus.
+  focusable: process.platform === "linux",
   visibleOnAllWorkspaces: process.platform !== "win32",
   fullScreenable: false,
   hasShadow: false,
@@ -80,7 +84,8 @@ const CONTROL_PANEL_CONFIG = {
     spellcheck: false,
     backgroundThrottling: false,
   },
-  title: "Control Panel",
+  title: "Ducky",
+  icon: getAppIconPath(),
   resizable: true,
   show: false,
   frame: false,

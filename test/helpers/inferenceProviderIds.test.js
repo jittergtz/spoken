@@ -12,9 +12,11 @@ function inferenceProviderIds() {
     path.join(__dirname, "../../src/services/ai/inferenceProviders/index.ts"),
     "utf8"
   );
-  const block = src.match(/PROVIDER_REGISTRY[^=]*=\s*Object\.freeze\(\{([\s\S]*?)\}\)/);
+  const block = src.match(/PROVIDER_REGISTRY[^=]*=\s*Object\.freeze\(\{([\s\S]*?)^\}\);/m);
   assert.ok(block, "PROVIDER_REGISTRY declared in inferenceProviders/index.ts");
-  const ids = [...block[1].matchAll(/^\s*([A-Za-z][\w-]*):/gm)].map((m) => m[1]);
+  const ids = [...block[1].matchAll(/^  (?:"([\w-]+)"|([A-Za-z][\w-]*)):/gm)].map(
+    ([, quoted, bare]) => quoted || bare
+  );
   assert.ok(ids.length > 0, "parsed at least one provider id");
   return ids;
 }

@@ -70,6 +70,7 @@ const DictionaryView = React.lazy(() => import("./DictionaryView"));
 const UploadAudioView = React.lazy(() => import("./notes/UploadAudioView"));
 const IntegrationsView = React.lazy(() => import("./IntegrationsView"));
 const ChatView = React.lazy(() => import("./chat/ChatView"));
+const GrammarHistoryView = React.lazy(() => import("./GrammarHistoryView"));
 const CommandSearch = React.lazy(() => import("./CommandSearch"));
 
 interface ControlPanelProps {
@@ -997,6 +998,11 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
                   setShowSettings(true);
                 }}
               />
+            )}
+            {activeView === "grammar" && (
+              <Suspense fallback={null}>
+                <GrammarHistoryView onCopy={copyToClipboard} />
+              </Suspense>
             )}
             {activeView === "chat" && (
               <Suspense fallback={null}>

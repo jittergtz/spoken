@@ -35,6 +35,19 @@ class DatabaseManager {
         )
       `);
 
+      this.db.exec(`
+        CREATE TABLE IF NOT EXISTS grammar_corrections (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          text TEXT NOT NULL,
+          raw_text TEXT NOT NULL,
+          model TEXT NOT NULL,
+          outcome TEXT NOT NULL CHECK (outcome IN ('applied', 'preview', 'changed', 'partial', 'unchanged')),
+          timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE INDEX IF NOT EXISTS idx_grammar_corrections_timestamp
+          ON grammar_corrections(timestamp DESC, id DESC);
+      `);
+
       // Audio retention columns
       try {
         this.db.exec("ALTER TABLE transcriptions ADD COLUMN raw_text TEXT");
@@ -671,6 +684,43 @@ class DatabaseManager {
       debugLogger.error("Database initialization failed", { error: error.message }, "database");
       throw error;
     }
+  }
+
+  saveGrammarCorrection({ text, raw_text, model, outcome }) {
+    const result = this.db
+      .prepare(
+        "INSERT INTO grammar_corrections (text, raw_text, model, outcome) VALUES (?, ?, ?, ?)"
+      )
+      .run(text, raw_text, model, outcome);
+    return this.db
+      .prepare("SELECT * FROM grammar_corrections WHERE id = ?")
+      .get(result.lastInsertRowid);
+  }
+
+  getGrammarHistory(limit = 50) {
+    return this.db
+      .prepare("SELECT * FROM grammar_corrections ORDER BY timestamp DESC, id DESC LIMIT ?")
+      .all(limit);
+  }
+
+  deleteGrammarHistoryItem(id) {
+    return {
+      success: true,
+      deleted: this.db.prepare("DELETE FROM grammar_corrections WHERE id = ?").run(id).changes,
+    };
+  }
+
+  clearGrammarHistory() {
+    return {
+      success: true,
+      cleared: this.db.prepare("DELETE FROM grammar_corrections").run().changes,
+    };
+  }
+
+  deleteGrammarHistoryExpiredBefore(retentionDays) {
+    return this.db
+      .prepare("DELETE FROM grammar_corrections WHERE timestamp < datetime('now', ?)")
+      .run(`-${retentionDays} days`).changes;
   }
 
   saveTranscription(

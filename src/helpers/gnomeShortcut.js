@@ -9,23 +9,23 @@ const DBUS_INTERFACE = "com.spoken.App";
 const SLOT_CONFIG = {
   dictation: {
     path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken/",
-    name: "Spoken Toggle",
+    name: "Ducky Toggle",
   },
   agent: {
     path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken-agent/",
-    name: "Spoken Agent",
+    name: "Ducky Agent",
   },
   meeting: {
     path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken-meeting/",
-    name: "Spoken Meeting",
+    name: "Ducky Meeting",
   },
   voiceAgent: {
     path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken-voice-agent/",
-    name: "Spoken Voice Agent",
+    name: "Ducky Voice Agent",
   },
   translation: {
     path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/spoken-translation/",
-    name: "Spoken Translation",
+    name: "Ducky Translation",
   },
 };
 

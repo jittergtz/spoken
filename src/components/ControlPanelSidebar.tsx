@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import logoIcon from "../assets/icon.png";
 import homeIcon from "../assets/icons/sidebar/home.png";
+import grammarIcon from "../assets/icons/sidebar/grammar.png";
 import chatIcon from "../assets/icons/sidebar/chat.png";
 import notesIcon from "../assets/icons/sidebar/notes.png";
 import uploadIcon from "../assets/icons/sidebar/upload.png";
@@ -34,7 +35,7 @@ const rowButtonClass =
   "group flex items-center gap-2.5 w-full h-8 px-2.5 rounded-md text-left outline-none hover:bg-foreground/4 dark:hover:bg-white/4 focus-visible:ring-1 focus-visible:ring-primary/30 transition-colors duration-150";
 
 export type ControlPanelView =
-  "home" | "chat" | "personal-notes" | "dictionary" | "upload" | "integrations";
+  "home" | "grammar" | "chat" | "personal-notes" | "dictionary" | "upload" | "integrations";
 
 interface ControlPanelSidebarProps {
   activeView: ControlPanelView;
@@ -91,6 +92,7 @@ export default function ControlPanelSidebar({
     image?: string;
   }[] = [
     { id: "home", label: t("sidebar.home"), image: homeIcon },
+    { id: "grammar", label: t("sidebar.grammar"), image: grammarIcon },
     { id: "chat", label: t("sidebar.chat"), image: chatIcon },
     { id: "personal-notes", label: t("sidebar.notes"), image: notesIcon },
     { id: "upload", label: t("sidebar.upload"), image: uploadIcon },

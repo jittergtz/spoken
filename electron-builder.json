@@ -1,9 +1,9 @@
 {
-  "appId": "com.gizmolabs.spoken",
+  "appId": "com.gizmolabs.ducky",
   "afterPack": "scripts/afterPack.js",
-  "productName": "Spoken",
+  "productName": "Ducky",
   "protocols": {
-    "name": "Spoken Protocol",
+    "name": "Ducky Protocol",
     "schemes": ["spoken"]
   },
   "directories": {
@@ -152,9 +152,9 @@
     "notarize": true,
     "extendInfo": {
       "LSUIElement": false,
-      "NSMicrophoneUsageDescription": "Spoken uses the microphone to capture your voice for transcription.",
-      "NSAudioCaptureUsageDescription": "Spoken uses system audio to capture other participants' audio from calls and meetings.",
-      "NSAccessibilityUsageDescription": "Spoken needs accessibility permissions to paste transcribed text into other applications."
+      "NSMicrophoneUsageDescription": "Ducky uses the microphone to capture your voice for transcription.",
+      "NSAudioCaptureUsageDescription": "Ducky uses system audio to capture other participants' audio from calls and meetings.",
+      "NSAccessibilityUsageDescription": "Ducky needs accessibility permissions to paste transcribed text into other applications."
     }
   },
   "win": {
@@ -247,7 +247,7 @@
     "include": "resources/nsis/installer.nsh"
   },
   "dmg": {
-    "title": "Spoken",
+    "title": "Ducky",
     "icon": "src/assets/icon.icns",
     "window": {
       "width": 540,

@@ -213,8 +213,10 @@ class KDEShortcutManager {
     // Map friendly names back to slot names
     const friendlyToSlot = {};
     for (const slotName of this.registeredSlots) {
+      friendlyToSlot[`Ducky ${slotName}`] = slotName;
+      friendlyToSlot[`Ducky`] = "dictation";
       friendlyToSlot[`Spoken ${slotName}`] = slotName;
-      friendlyToSlot[`Spoken`] = "dictation";
+      friendlyToSlot[`Spoken`] = "dictation"; // legacy compat
       friendlyToSlot[`OpenWhispr ${slotName}`] = slotName;
       friendlyToSlot[`OpenWhispr`] = "dictation"; // legacy compat
     }
@@ -250,7 +252,7 @@ class KDEShortcutManager {
     }
 
     // actionId: [componentUnique, actionUnique, componentFriendly, actionFriendly]
-    const actionId = [COMPONENT_NAME, slotName, "Spoken", `Spoken ${slotName}`];
+    const actionId = [COMPONENT_NAME, slotName, "Ducky", `Ducky ${slotName}`];
 
     try {
       // Pre-registration conflict check via low-level D-Bus call
@@ -374,7 +376,7 @@ class KDEShortcutManager {
   async unregisterKeybinding(slotName = "dictation") {
     if (!this.kglobalaccel) return;
 
-    const actionId = [COMPONENT_NAME, slotName, "Spoken", `Spoken ${slotName}`];
+    const actionId = [COMPONENT_NAME, slotName, "Ducky", `Ducky ${slotName}`];
 
     try {
       await new Promise((resolve, reject) => {
@@ -397,7 +399,7 @@ class KDEShortcutManager {
     // clean up stale registrations from dead processes anyway.
     const promises = [];
     for (const slotName of this.registeredSlots) {
-      const actionId = [COMPONENT_NAME, slotName, "Spoken", `Spoken ${slotName}`];
+      const actionId = [COMPONENT_NAME, slotName, "Ducky", `Ducky ${slotName}`];
       try {
         promises.push(
           new Promise((resolve, reject) => {

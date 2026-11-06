@@ -51,6 +51,18 @@ export interface TranscriptionItem {
   deleted_at: string | null;
 }
 
+export interface GrammarHistoryItem {
+  id: number;
+  text: string;
+  raw_text: string;
+  model: string;
+  timestamp: string;
+  outcome: "applied" | "preview" | "changed" | "partial" | "unchanged";
+}
+
+export type TextHistoryItem = Pick<TranscriptionItem, "id" | "text" | "raw_text" | "timestamp"> &
+  Partial<TranscriptionItem>;
+
 export interface NoteItem {
   id: number;
   title: string;
@@ -603,6 +615,10 @@ declare global {
       ) => Promise<TranscriptionItem[]>;
       clearTranscriptions: () => Promise<{ cleared: number; success: boolean }>;
       deleteTranscription: (id: number) => Promise<{ success: boolean }>;
+      getGrammarHistory: (limit?: number) => Promise<GrammarHistoryItem[]>;
+      deleteGrammarHistoryItem: (id: number) => Promise<{ success: boolean; deleted: number }>;
+      clearGrammarHistory: () => Promise<{ success: boolean; cleared: number }>;
+      onGrammarHistoryChanged: (callback: () => void) => () => void;
       getTranscriptionById: (id: number) => Promise<TranscriptionItem | null>;
 
       // Audio retention operations
@@ -626,6 +642,7 @@ declare global {
       syncRetentionSettings?: (settings: {
         audioRetentionDays: number;
         transcriptRetentionDays: number;
+        dataRetentionEnabled?: boolean;
       }) => void;
       retryTranscription: (
         id: number,
@@ -1104,6 +1121,7 @@ declare global {
       startWindowDrag: () => Promise<void>;
       stopWindowDrag: () => Promise<void>;
       setMainWindowInteractivity: (interactive: boolean) => Promise<void>;
+      setMainWindowFocusable?: (focusable: boolean) => Promise<{ success: boolean }>;
       setNotificationInteractivity: (interactive: boolean) => Promise<void>;
 
       // App management
@@ -1591,6 +1609,13 @@ declare global {
       getVoiceAgentKey?: () => Promise<string>;
       updateTranslationHotkey?: (hotkey: string) => Promise<{ success: boolean; message: string }>;
       getTranslationKey?: () => Promise<string>;
+      getGrammarCorrectionSettings: () => Promise<{
+        hotkey: string;
+        model: string;
+        registrationError: string;
+      }>;
+      setGrammarCorrectionHotkey: (hotkey: string) => Promise<{ success: boolean; message?: string }>;
+      setGrammarCorrectionModel: (model: string) => Promise<{ success: boolean; message?: string }>;
       getAgentKey?: () => Promise<string>;
       saveAgentKey?: (key: string) => Promise<void>;
       createAgentConversation?: (

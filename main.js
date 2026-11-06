@@ -23,6 +23,7 @@ const {
   systemPreferences,
 } = require("electron");
 const path = require("path");
+const { APP_NAME, APP_ID, resolveUserDataPath } = require("./src/helpers/appIdentity");
 const http = require("http");
 const tls = require("tls");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
@@ -47,7 +48,7 @@ const DEFAULT_OAUTH_PROTOCOL_BY_CHANNEL = {
   staging: "spoken-staging",
   production: "spoken",
 };
-const BASE_WINDOWS_APP_ID = "com.gizmolabs.spoken";
+const BASE_WINDOWS_APP_ID = APP_ID;
 const DEFAULT_AUTH_BRIDGE_PORT = 5199;
 
 function isElectronBinaryExec() {
@@ -81,16 +82,11 @@ function resolveAppChannel() {
 const APP_CHANNEL = resolveAppChannel();
 process.env.SPOKEN_CHANNEL = APP_CHANNEL;
 
-function configureChannelUserDataPath() {
-  if (APP_CHANNEL === "production") {
-    return;
-  }
-
-  const isolatedPath = path.join(app.getPath("appData"), `Spoken-${APP_CHANNEL}`);
-  app.setPath("userData", isolatedPath);
-}
-
-configureChannelUserDataPath();
+app.setName(APP_NAME);
+const userDataPath = resolveUserDataPath(app.getPath("appData"), APP_CHANNEL);
+require("fs").mkdirSync(userDataPath, { recursive: true });
+app.setPath("userData", userDataPath);
+app.setPath("sessionData", userDataPath);
 
 // Load userData .env (contains DICTATION_KEY, API keys, etc.) early — before
 // hotkey registration, which needs DICTATION_KEY before the renderer loads.
@@ -118,7 +114,7 @@ if (process.platform === "linux" && process.env.XDG_SESSION_TYPE === "wayland") 
 // Set desktop filename so Wayland compositors can match windows to the .desktop entry.
 // This allows XDG portals (e.g. PipeWire) to persist permissions across sessions.
 if (process.platform === "linux") {
-  app.setDesktopName("open-whispr.desktop");
+  app.setDesktopName("ducky.desktop");
 }
 
 // Group all windows under single taskbar entry on Windows
@@ -235,11 +231,6 @@ if (!gotSingleInstanceLock) {
 }
 
 const isLiveWindow = (window) => window && !window.isDestroyed();
-
-// Ensure macOS menus use the proper casing for the app name
-if (process.platform === "darwin" && app.getName() !== "Spoken") {
-  app.setName("Spoken");
-}
 
 // Add global error handling for uncaught exceptions
 process.on("uncaughtException", (error) => {
@@ -840,7 +831,7 @@ function startAuthBridgeServer() {
 
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(
-      "<html><body><h3>Spoken sign-in complete.</h3><p>You can close this tab.</p></body></html>"
+      "<html><body><h3>Ducky sign-in complete.</h3><p>You can close this tab.</p></body></html>"
     );
   });
 
@@ -865,6 +856,11 @@ async function startApp() {
 
   // Phase 1: Core managers + IPC handlers before windows
   initializeCoreManagers();
+  const restoreGrammarCorrectionHotkey = require("./src/helpers/grammarCorrection")(
+    hotkeyManager,
+    textEditMonitor,
+    (entry) => ipcHandlers.recordGrammarCorrection(entry)
+  );
   await environmentManager.init();
   registerSidecars();
   const authDisabled = environmentManager.isAuthDisabled();
@@ -1035,6 +1031,8 @@ async function startApp() {
       return { success: true };
     }
   });
+
+  restoreGrammarCorrectionHotkey();
 
   // Phase 2: Initialize remaining managers after windows are visible
   initializeDeferredManagers();
@@ -1700,6 +1698,13 @@ if (gotSingleInstanceLock) {
   });
 
   app.on("activate", () => {
+    // Quick settings need keyboard focus, which can activate the app too.
+    // Keep that interaction in the floating panel instead of opening the app.
+    if (windowManager?.isMainWindowInteractionAtCursor()) {
+      windowManager.enforceMainWindowOnTop();
+      return;
+    }
+
     // On macOS, re-create windows when dock icon is clicked
     if (BrowserWindow.getAllWindows().length === 0) {
       if (windowManager) {

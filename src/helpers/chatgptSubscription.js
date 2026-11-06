@@ -110,7 +110,7 @@ async function signIn() {
       code_challenge_method: "S256",
       code_challenge: challenge,
     });
-    if (!previous?.clientId) params.set("agent_name_hint", "Spoken");
+    if (!previous?.clientId) params.set("agent_name_hint", "Ducky");
     try {
       const callback = new Promise((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error("Sign-in timed out.")), 180000);
@@ -125,7 +125,7 @@ async function signIn() {
             return;
           }
           clearTimeout(timer);
-          res.writeHead(200, { "content-type": "text/plain" }).end("You can return to Spoken.");
+          res.writeHead(200, { "content-type": "text/plain" }).end("You can return to Ducky.");
           resolve(url.searchParams);
         });
       });
@@ -221,8 +221,9 @@ async function generate({ text, model, instructions }) {
   });
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
-    throw new Error(
-      data.error?.message || data.detail || `ChatGPT request failed (${response.status}).`
+    throw Object.assign(
+      new Error(data.error?.message || data.detail || `ChatGPT request failed (${response.status}).`),
+      { code: data.error?.code || data.code }
     );
   }
   let buffer = "",
@@ -247,10 +248,13 @@ async function generate({ text, model, instructions }) {
         item.type === "response.failed" ||
         item.type === "response.incomplete" ||
         item.type === "error"
-      )
-        throw new Error(
-          item.response?.error?.message || item.message || "ChatGPT could not complete the request."
+      ) {
+        const error = item.response?.error || item;
+        throw Object.assign(
+          new Error(error.message || "ChatGPT could not complete the request."),
+          { code: error.code }
         );
+      }
     }
   }
   if (!completed || !output.trim()) throw new Error("ChatGPT returned an incomplete response.");

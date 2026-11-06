@@ -159,20 +159,20 @@ class TrayManager {
 
     if (platform === "darwin") {
       if (isDevelopment) {
-        candidatePaths.push(path.join(__dirname, "..", "assets", "icon.png"));
+        candidatePaths.push(path.join(__dirname, "..", "assets", "iconTemplate.png"));
       } else {
         candidatePaths.push(
-          path.join(process.resourcesPath, "src", "assets", "icon.png"),
-          path.join(process.resourcesPath, "assets", "icon.png"),
+          path.join(process.resourcesPath, "src", "assets", "iconTemplate.png"),
+          path.join(process.resourcesPath, "assets", "iconTemplate.png"),
           path.join(
             process.resourcesPath,
             "app.asar.unpacked",
             "src",
             "assets",
-            "icon.png"
+            "iconTemplate.png"
           ),
-          path.join(__dirname, "..", "..", "src", "assets", "icon.png"),
-          path.join(app.getAppPath(), "src", "assets", "icon.png")
+          path.join(__dirname, "..", "..", "src", "assets", "iconTemplate.png"),
+          path.join(app.getAppPath(), "src", "assets", "iconTemplate.png")
         );
       }
     } else {
@@ -199,7 +199,9 @@ class TrayManager {
           const icon = nativeImage.createFromPath(testPath);
           if (icon && !icon.isEmpty()) {
             if (platform === "darwin") {
-              return icon.resize({ width: 18, height: 18 });
+              // Keep the 1x/2x/3x representations and let macOS tint the alpha mask.
+              icon.setTemplateImage(true);
+              return icon;
             }
             debugLogger.debug("Using tray icon", { path: testPath }, "tray");
             return icon;

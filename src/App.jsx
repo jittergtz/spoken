@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import "./index.css";
-import { X } from "lucide-react";
+import "./components/FloatingPill.css";
+import { AudioLines, Eye, Pencil, X } from "lucide-react";
 import { useToast } from "./components/ui/useToast";
-import { LoadingDots } from "./components/ui/LoadingDots";
-import { useHotkey } from "./hooks/useHotkey";
-import { formatHotkeyListLabel } from "./utils/hotkeys";
 import { useWindowDrag } from "./hooks/useWindowDrag";
 import { useAudioRecording } from "./hooks/useAudioRecording";
 import { useSettingsStore } from "./stores/settingsStore";
+import PillQuickSettings from "./components/PillQuickSettings";
 const VoiceWaveIndicator = ({ level }) => (
   <div className="flex h-5 items-center justify-center gap-0.5" aria-hidden="true">
     {[0.5, 0.8, 1, 0.7, 0.9, 0.55].map((weight, i) => (
@@ -26,44 +25,18 @@ const VoiceWaveIndicator = ({ level }) => (
   </div>
 );
 
-// Tooltip Component
-const Tooltip = ({ children, content, emoji, align = "center" }) => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const alignClass =
-    align === "right" ? "right-0" : align === "left" ? "left-0" : "left-1/2 -translate-x-1/2";
-
-  const arrowClass =
-    align === "right" ? "right-3" : align === "left" ? "left-3" : "left-1/2 -translate-x-1/2";
-
-  return (
-    <div className="relative inline-block">
-      <div onMouseEnter={() => setIsVisible(true)} onMouseLeave={() => setIsVisible(false)}>
-        {children}
-      </div>
-      {isVisible && (
-        <div
-          className={`absolute bottom-full ${alignClass} mb-2 px-1.5 py-1 text-[10px] text-popover-foreground bg-popover border border-border rounded-md z-10 shadow-lg transition-opacity duration-150 whitespace-nowrap`}
-        >
-          {emoji && <span className="mr-1">{emoji}</span>}
-          {content}
-          <div
-            className={`absolute top-full ${arrowClass} w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-popover`}
-          ></div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 export default function App() {
   const [isHovered, setIsHovered] = useState(false);
   const [isCommandMenuOpen, setIsCommandMenuOpen] = useState(false);
+  const [quickSettings, setQuickSettings] = useState(null);
+  const isQuickSettingsOpen = Boolean(quickSettings);
   const commandMenuRef = useRef(null);
   const buttonRef = useRef(null);
+  const hoverExitTimeoutRef = useRef(null);
+  const pillRef = useRef(null);
+  const canvasSizeRef = useRef("BASE");
   const { toast, dismiss, toastCount } = useToast();
   const { t } = useTranslation();
-  const { hotkey } = useHotkey();
   const { isDragging, handleMouseDown, handleMouseUp } = useWindowDrag();
 
   const [dragStartPos, setDragStartPos] = useState(null);
@@ -80,7 +53,10 @@ export default function App() {
 
   useEffect(() => {
     setWindowInteractivity(false);
-    return () => setWindowInteractivity(false);
+    return () => {
+      clearTimeout(hoverExitTimeoutRef.current);
+      setWindowInteractivity(false);
+    };
   }, [setWindowInteractivity]);
 
   useEffect(() => {
@@ -158,29 +134,65 @@ export default function App() {
   }, [toast, dismiss, t]);
 
   useEffect(() => {
-    if (isCommandMenuOpen || toastCount > 0) {
+    if (isCommandMenuOpen || quickSettings || toastCount > 0) {
       setWindowInteractivity(true);
-    } else if (!isHovered) {
-      setWindowInteractivity(false);
+    } else {
+      setWindowInteractivity(isHovered);
     }
-  }, [isCommandMenuOpen, isHovered, toastCount, setWindowInteractivity]);
+  }, [isCommandMenuOpen, quickSettings, isHovered, toastCount, setWindowInteractivity]);
 
   useEffect(() => {
-    const resizeWindow = () => {
-      if (isCommandMenuOpen && toastCount > 0) {
-        window.electronAPI?.resizeMainWindow?.("EXPANDED");
-      } else if (isCommandMenuOpen) {
-        window.electronAPI?.resizeMainWindow?.("WITH_MENU");
-      } else if (toastCount > 0) {
-        window.electronAPI?.resizeMainWindow?.("WITH_TOAST");
-      } else {
-        window.electronAPI?.resizeMainWindow?.("BASE");
-      }
+    window.electronAPI?.setMainWindowFocusable?.(isQuickSettingsOpen);
+    return () => {
+      if (isQuickSettingsOpen) window.electronAPI?.setMainWindowFocusable?.(false);
     };
-    resizeWindow();
-  }, [isCommandMenuOpen, toastCount]);
+  }, [isQuickSettingsOpen]);
+
+  useEffect(() => {
+    if (!quickSettings) return;
+    const closeOutside = (event) => {
+      if (!pillRef.current?.contains(event.target)) setQuickSettings(null);
+    };
+    const closeOnBlur = () => setQuickSettings(null);
+    document.addEventListener("mousedown", closeOutside);
+    window.addEventListener("blur", closeOnBlur);
+    return () => {
+      document.removeEventListener("mousedown", closeOutside);
+      window.removeEventListener("blur", closeOnBlur);
+    };
+  }, [quickSettings]);
+
+  useLayoutEffect(() => {
+    // Expand the native canvas too: CSS cannot draw outside an Electron window.
+    // WITH_MENU is also understood by an already-running main process after HMR.
+    const sizeKey =
+      quickSettings || (isCommandMenuOpen && toastCount > 0)
+        ? "EXPANDED"
+        : isCommandMenuOpen || isHovered
+          ? "WITH_MENU"
+          : toastCount > 0
+            ? "WITH_TOAST"
+            : "BASE";
+
+    const sizes = { BASE: 0, WITH_MENU: 1, WITH_TOAST: 2, EXPANDED: 2 };
+    const resize = () => {
+      canvasSizeRef.current = sizeKey;
+      window.electronAPI?.resizeMainWindow?.(sizeKey);
+    };
+
+    if (sizes[sizeKey] < sizes[canvasSizeRef.current]) {
+      // Keep the larger canvas until the 380 ms pill collapse has finished.
+      const timeout = setTimeout(() => {
+        resize();
+      }, 420);
+      return () => clearTimeout(timeout);
+    }
+
+    resize();
+  }, [isCommandMenuOpen, quickSettings, isHovered, toastCount]);
 
   const handleDictationToggle = React.useCallback(() => {
+    setQuickSettings(null);
     setIsCommandMenuOpen(false);
     setWindowInteractivity(false);
   }, [setWindowInteractivity]);
@@ -264,7 +276,10 @@ export default function App() {
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === "Escape") {
-        if (isCommandMenuOpen) {
+        if (e.defaultPrevented) return;
+        if (quickSettings) {
+          setQuickSettings(null);
+        } else if (isCommandMenuOpen) {
           setIsCommandMenuOpen(false);
         } else {
           handleClose();
@@ -274,7 +289,7 @@ export default function App() {
 
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [isCommandMenuOpen]);
+  }, [isCommandMenuOpen, quickSettings]);
 
   // Determine current mic state
   const getMicState = () => {
@@ -288,42 +303,31 @@ export default function App() {
 
   const micState = getMicState();
 
-  const getMicButtonProps = () => {
-    const baseClasses =
-      "rounded-full border flex items-center justify-center relative overflow-hidden cursor-pointer";
+  const isExpanded =
+    !isRecording && !isProcessing && (isHovered || isCommandMenuOpen || Boolean(quickSettings));
+  const isPillHidden = floatingIconAutoHide && !isRecording && !isProcessing;
+  const micLabel =
+    micState === "unavailable"
+      ? t("app.mic.waitingForMicrophone")
+      : isRecording
+        ? t("app.mic.recording")
+        : isProcessing
+          ? t("app.mic.processing")
+          : t("app.quickSettings.speech");
 
-    switch (micState) {
-      case "idle":
-      case "hover":
-        return {
-          className: `${baseClasses} w-9 h-2 border-white/50 bg-black/60 cursor-pointer`,
-          tooltip: formatHotkeyListLabel(hotkey),
-        };
-      case "recording":
-        return {
-          className: `${baseClasses} w-[60px] h-8 border-white/25 bg-black cursor-pointer`,
-          tooltip: t("app.mic.recording"),
-        };
-      case "unavailable":
-        return {
-          className: `${baseClasses} w-[60px] h-8 border-white/25 bg-neutral-500 cursor-pointer`,
-          tooltip: t("app.mic.waitingForMicrophone"),
-        };
-      case "processing":
-        return {
-          className: `${baseClasses} w-9 h-2 border-white/50 bg-black/60 cursor-not-allowed`,
-          tooltip: t("app.mic.processing"),
-        };
-      default:
-        return {
-          className: `${baseClasses} bg-black/50 cursor-pointer`,
-          style: { transform: "scale(0.8)" },
-          tooltip: t("app.mic.clickToSpeak"),
-        };
-    }
+  const enterPill = () => {
+    clearTimeout(hoverExitTimeoutRef.current);
+    setIsHovered(true);
+    setWindowInteractivity(true);
   };
 
-  const micProps = getMicButtonProps();
+  const leavePill = () => {
+    clearTimeout(hoverExitTimeoutRef.current);
+    hoverExitTimeoutRef.current = setTimeout(() => {
+      if (pillRef.current?.contains(document.activeElement)) return;
+      setIsHovered(false);
+    }, 500);
+  };
 
   return (
     <div className="dictation-window ">
@@ -338,16 +342,13 @@ export default function App() {
         }`}
       >
         <div
-          className="relative flex items-center gap-2"
-          onMouseEnter={() => {
-            setIsHovered(true);
-            setWindowInteractivity(true);
-          }}
-          onMouseLeave={() => {
-            setIsHovered(false);
-            if (!isCommandMenuOpen) {
-              setWindowInteractivity(false);
-            }
+          ref={pillRef}
+          className={`relative flex items-center ${isPillHidden ? "invisible" : ""}`}
+          onMouseEnter={enterPill}
+          onMouseLeave={leavePill}
+          onFocusCapture={enterPill}
+          onBlurCapture={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) leavePill();
           }}
         >
           {(isRecording || isProcessing) && isHovered && (
@@ -359,7 +360,7 @@ export default function App() {
                 e.stopPropagation();
                 isRecording ? cancelRecording() : cancelProcessing();
               }}
-              className="group/cancel w-5 h-5 rounded-full bg-surface-2/90 hover:bg-destructive border border-border hover:border-destructive/70 flex items-center justify-center transition-colors duration-150 shadow-sm backdrop-blur-sm"
+              className={`absolute ${panelStartPosition === "bottom-left" ? "left-full ml-2" : "right-full mr-2"} group/cancel w-5 h-5 rounded-full bg-surface-2/90 hover:bg-destructive border border-border hover:border-destructive/70 flex items-center justify-center transition-colors duration-150 shadow-sm backdrop-blur-sm`}
             >
               <X
                 size={10}
@@ -368,18 +369,39 @@ export default function App() {
               />
             </button>
           )}
-          <Tooltip
-            content={micProps.tooltip}
-            align={
-              panelStartPosition === "bottom-left"
-                ? "left"
-                : panelStartPosition === "center"
-                  ? "center"
-                  : "right"
-            }
+          <div
+            className="floating-pill"
+            data-state={micState}
+            data-expanded={isExpanded}
+            data-panel={Boolean(quickSettings)}
+            data-dragging={isDragging}
           >
             <button
+              type="button"
+              className="floating-pill-action floating-pill-action-left"
+              onMouseDown={(event) => event.preventDefault()}
+              aria-label={t("app.buttons.pencil")}
+              title={t("app.buttons.pencil")}
+              aria-haspopup="dialog"
+              aria-expanded={quickSettings === "grammar"}
+              disabled={!isExpanded}
+              tabIndex={isExpanded && !quickSettings ? 0 : -1}
+              onClick={() => {
+                setIsCommandMenuOpen(false);
+                setQuickSettings("grammar");
+              }}
+            >
+              <Pencil size={20} strokeWidth={1.7} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
               ref={buttonRef}
+              aria-label={micLabel}
+              aria-haspopup={!isRecording ? "dialog" : undefined}
+              aria-expanded={quickSettings === "speech"}
+              title={isExpanded ? micLabel : undefined}
+              disabled={isProcessing}
+              tabIndex={quickSettings ? -1 : 0}
               onMouseDown={(e) => {
                 setIsCommandMenuOpen(false);
                 setDragStartPos({ x: e.clientX, y: e.clientY });
@@ -405,7 +427,8 @@ export default function App() {
               onClick={(e) => {
                 if (!hasDragged) {
                   setIsCommandMenuOpen(false);
-                  toggleListening();
+                  if (isRecording) toggleListening();
+                  else setQuickSettings("speech");
                 }
                 e.preventDefault();
               }}
@@ -416,45 +439,42 @@ export default function App() {
                   setIsCommandMenuOpen((prev) => !prev);
                 }
               }}
-              onFocus={() => setIsHovered(true)}
-              onBlur={() => setIsHovered(false)}
-              className={`${micProps.className} ${floatingIconAutoHide && !isRecording ? "invisible" : ""}`}
-              style={{
-                ...micProps.style,
-                cursor:
-                  micState === "processing"
-                    ? "not-allowed !important"
-                    : isDragging
-                      ? "grabbing !important"
-                      : "pointer !important",
-                transition:
-                  "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease-out",
-              }}
+              className="floating-pill-mic"
             >
-              {/* Background effects */}
-              <div
-                className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent transition-opacity duration-150"
-                style={{ opacity: micState === "hover" ? 0.8 : 0 }}
-              ></div>
-              <div
-                className="absolute inset-0 transition-colors duration-150"
-                style={{
-                  backgroundColor: micState === "hover" ? "rgba(255,255,255,0.08)" : "transparent",
-                }}
-              ></div>
-
-              {/* Dynamic content based on state */}
+              <span className="floating-pill-idle-icon" aria-hidden="true">
+                <AudioLines size={22} strokeWidth={1.8} />
+              </span>
               {micState === "recording" ? (
                 <VoiceWaveIndicator level={audioLevel} />
               ) : micState === "unavailable" ? (
                 <span className="text-white text-base font-bold">!</span>
               ) : null}
-
               {micState === "unavailable" && (
-                <div className="absolute inset-0 rounded-full border-2 border-neutral-200/70 animate-pulse"></div>
+                <div className="absolute inset-0 rounded-full border-2 border-neutral-200/70 animate-pulse" />
               )}
             </button>
-          </Tooltip>
+            <button
+              type="button"
+              className="floating-pill-action floating-pill-action-right"
+              onMouseDown={(event) => event.preventDefault()}
+              aria-label={t("app.buttons.eye")}
+              title={t("app.buttons.eye")}
+              tabIndex={isExpanded && !quickSettings ? 0 : -1}
+              disabled={!isExpanded}
+            >
+              <Eye size={20} strokeWidth={1.7} aria-hidden="true" />
+            </button>
+            {quickSettings && (
+              <PillQuickSettings
+                key={quickSettings}
+                view={quickSettings}
+                onClose={() => {
+                  setQuickSettings(null);
+                  setIsHovered(true);
+                }}
+              />
+            )}
+          </div>
           {isCommandMenuOpen && (
             <div
               ref={commandMenuRef}

@@ -9,7 +9,7 @@ const SPOKEN_HOST_PATTERNS = [
 
 // Electron's file:// renderer sends Origin: null, which Better Auth's
 // trustedOrigins check rejects. Spoof Origin to the request's own URL so calls
-// to Spoken's auth and API hosts are treated as same-origin. Every session
+// to Ducky's auth and API hosts are treated as same-origin. Every session
 // that talks to those hosts needs this — webRequest hooks are per-session, so
 // an isolated partition gets none of the default session's.
 function applySpokenOriginHeader(targetSession) {

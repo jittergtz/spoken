@@ -4,6 +4,8 @@ const path = require("path");
 const { app, safeStorage } = require("electron");
 const debugLogger = require("./debugLogger");
 
+// Keep the existing keychain namespace so saved API keys remain decryptable
+// after the Ducky rebrand.
 const SERVICE = "Spoken";
 const ACCOUNT = "secrets-master-key";
 const ALGO = "aes-256-gcm";
